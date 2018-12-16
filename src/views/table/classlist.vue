@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <el-input placeholder="请输入教师名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
+    <el-input placeholder="请输入班级名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
     <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchTeacher">{{ 'search' }}</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addTeacher">{{ '新增教师' }}</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addTeacher">{{ '创建班级' }}</el-button>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -15,51 +15,24 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="姓名">
+      <el-table-column label="班级名称">
         <template slot-scope="scope">
           {{ scope.row.title.substring(0, 8) }}
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
+      <el-table-column label="班级人数" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ sexMock[randomNum(0, 1)] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="生日" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
           {{ scope.row.display_time.substring(0, 10) }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="手机" width="110" align="center">
-        <template slot-scope="scope">
-           {{ phoneMock[randomNum(0, 9)] }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="邮箱" width="200">
-        <template slot-scope="scope">
-          {{ scope.row.title.substring(0, 8) + "@tencent.com" }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="注册时间" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="角色" width="200">
-        <template slot-scope="scope">
-         {{ roleMock[randomNum(0, 1)] }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="密码" width="200">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="updateTeacher">{{ '编辑' }}</el-button>
-          <el-button size="mini" type="danger" @click="deletedTeacher">{{ '删除' }}
+          <el-button type="primary" size="mini" @click="updateTeacher">{{ '进入班级' }}</el-button>
           </el-button>
         </template>
       </el-table-column>
@@ -68,33 +41,22 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="姓名" prop="title">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="班级" prop="type">
           <el-input v-model="temp.teachername"/>
         </el-form-item>
-        <el-form-item label="性别" prop="type">
-          <el-select v-model="temp.sex" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in sexTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-          </el-select>
+        <el-form-item label="选择课程" prop="timestamp">
+          <el-input v-model="temp.teachername"/>
         </el-form-item>
-        <el-form-item label="生日" prop="timestamp">
-          <el-date-picker v-model="temp.birthday" type="datetime" placeholder="Please pick a date"/>
-        </el-form-item>
-        <el-form-item label="手机号" prop="title">
-          <el-input v-model="temp.phone"/>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="temp.mail"/>
-        </el-form-item>
-         <el-form-item label="角色" prop="type">
+         <el-form-item label="选择教师" prop="type">
           <el-select v-model="temp.role" class="filter-item" placeholder="Please select">
             <el-option v-for="item in roleTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ 'cancel' }}</el-button>
-        <el-button type="primary" @click="">{{ 'confirm' }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="">{{ '创建' }}</el-button>
       </div>
     </el-dialog>
   </div>

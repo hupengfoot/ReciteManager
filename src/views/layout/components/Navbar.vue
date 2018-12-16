@@ -8,11 +8,9 @@
         <i class="el-icon-caret-bottom"/>
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            <span style="display:block;" @click="logout">修改密码</span>
-          </el-dropdown-item>
-        </router-link>
+        <el-dropdown-item divided>
+          <span style="display:block;" @click="logout">修改密码</span>
+        </el-dropdown-item>
         <el-dropdown-item divided>
           <span style="display:block;" @click="logout">退出登录</span>
         </el-dropdown-item>

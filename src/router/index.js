@@ -28,7 +28,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/teachermanager',
+    redirect: '/teachermanager/index',
     name: '主页',
     hidden: true,
     children: [{
@@ -58,8 +58,8 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '班级管理',
-        component: () => import('@/views/form/index'),
-        meta: { title: '班级管理', icon: 'form' }
+        component: () => import('@/views/table/classlist'),
+        meta: { title: '班级管理', icon: 'table' }
       }
     ]
   },
