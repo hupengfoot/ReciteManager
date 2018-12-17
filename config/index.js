@@ -9,7 +9,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      // '/api':{
+      //   target:'http://47.100.25.249:8080/jeefast/',
+      //   changeOrigin:true,
+      //   pathRewrite:{
+      //     '^/api':''
+      //   }
+      // }
+      '/api': {    //将www.exaple.com印射为/apis
+          target: 'http://47.100.25.249:8080/jeefast/',  // 接口域名
+          secure: false,  // 如果是https接口，需要配置这个参数
+          changeOrigin: true,  //是否跨域
+          pathRewrite: {
+              '^/api': ''   //需要rewrite的,
+          }              
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
