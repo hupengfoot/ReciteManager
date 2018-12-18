@@ -1,5 +1,5 @@
 import axios from 'axios'
-axios.defaults.headers.post['Content-Type'] = 'application/json';
+// axios.defaults.headers.post['Content-Type'] = 'application/json';
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
@@ -13,6 +13,7 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
+		config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     // config.headers['Accept'] = '*/*'
     // config.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
 //     if (store.getters.token) {

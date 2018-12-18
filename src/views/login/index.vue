@@ -38,7 +38,7 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-
+import request from '@/utils/request'
 export default {
   name: 'Login',
   data() {
@@ -90,12 +90,14 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
-            this.loading = false
-          })
+					// let d = JSON.parse(this.loginForm)
+					request.post('/api/pkLogin/login',this.loginForm)
+//           this.$store.dispatch('Login', this.loginForm).then(() => {
+//             this.loading = false
+//             this.$router.push({ path: this.redirect || '/' })
+//           }).catch(() => {
+//             this.loading = false
+//           })
         } else {
           console.log('error submit!!')
           return false
