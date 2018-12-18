@@ -13,7 +13,7 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    //config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     let myToken = window.localStorage.ReciteManager_Token
     if(myToken !== null && myToken !== undefined){
       config.headers['token'] = myToken
