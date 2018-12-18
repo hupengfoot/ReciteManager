@@ -2,12 +2,9 @@ import request from '@/utils/request'
 
 export function login(username, password) {
   return request({
-    url: '/api/pkLogin/login',
+    url: '/api/pkLogin/login'+'?username='+username+'&password='+password,
     method: 'post',
-    data: {
-      username,
-      password
-    }
+
   })
 }
 

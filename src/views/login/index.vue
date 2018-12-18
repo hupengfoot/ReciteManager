@@ -29,7 +29,7 @@
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">username: admin1</span>
+        <span style="margin-right:20px;">username: teacher</span>
         <span> password: 123456</span>
       </div>
     </el-form>
@@ -90,14 +90,17 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-					// let d = JSON.parse(this.loginForm)
-					request.post('/api/pkLogin/login',this.loginForm)
-//           this.$store.dispatch('Login', this.loginForm).then(() => {
-//             this.loading = false
-//             this.$router.push({ path: this.redirect || '/' })
-//           }).catch(() => {
-//             this.loading = false
-//           })
+// 					request.post('/api/pkLogin/login?username=teacher&password=123456',this.loginForm).then(res =>{
+// 						console.log(222)
+// 					}).catch(res =>{
+// 						console.log(res)
+// 					})
+          this.$store.dispatch('Login', this.loginForm).then(() => {
+            this.loading = false
+            this.$router.push({ path: '/' })
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false
