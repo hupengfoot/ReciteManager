@@ -28,10 +28,10 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const username = userInfo.username.trim()
-			console.log(username)
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          console.log('666')
+          //localStorage添加token
+          localStorage.setItem("ReciteManager_Token", response.data.token)
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)

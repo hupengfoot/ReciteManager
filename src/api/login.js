@@ -10,7 +10,7 @@ export function login(username, password) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/api/pkLogin/getInfo',
     method: 'get',
     params: { token }
   })
