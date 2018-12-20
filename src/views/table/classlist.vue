@@ -382,6 +382,7 @@ export default {
     fetchData() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
+        alert(JSON.stringify(response))
         this.list = response.data.items
         this.listLoading = false
       })
