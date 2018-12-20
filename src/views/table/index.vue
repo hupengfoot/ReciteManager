@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-input placeholder="请输入教师名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchTeacher">{{ 'search' }}</el-button>
+    <el-input placeholder="请输入教师名称或关键字进行查询" v-model="listQuery.username" style="width: 400px;" class="filter-item" @keyup.enter.native="fetchData"/>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="fetchData">{{ 'search' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addTeacher">{{ '新增教师' }}</el-button>
     <el-table
       v-loading="listLoading"
@@ -13,6 +13,11 @@
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ scope.$index }}
+        </template>
+      </el-table-column>
+       <el-table-column label="用户名">
+        <template slot-scope="scope">
+          {{ scope.row.username }}
         </template>
       </el-table-column>
       <el-table-column label="姓名">
@@ -144,7 +149,7 @@ export default {
         page: 1,
         limit: 20,
         importance: undefined,
-        title: undefined,
+        username: undefined,
         type: undefined,
       },
       textMap: {
