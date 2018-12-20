@@ -15,7 +15,7 @@
         <el-input
           :type="pwdType"
           v-model="loginForm.password"
-          name="password"
+          name="password" 
           auto-complete="on"
           placeholder="password"
           @keyup.enter.native="handleLogin" />

@@ -1,45 +1,18 @@
 <template>
-  <div class="app-container">
+  <div class="classContent">
     <el-input placeholder="请输入班级名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
     <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchTeacher">{{ 'search' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addClass">{{ '创建班级' }}</el-button>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row>
-      <el-table-column align="center" label="ID" width="95">
-        <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="班级名称">
-        <template slot-scope="scope">
-          {{ scope.row.title.substring(0, 8) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="班级人数" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ sexMock[randomNum(0, 1)] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.display_time.substring(0, 10) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="updateTeacher">{{ '进入班级' }}</el-button>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="" />
-
+    <h3>班级列表<small></small><el-checkbox type="checkbox" class="fr">显示全部班级</el-checkbox></h3>
+    <div class="classList">
+      <div class="classDeatils">
+          <p class="serialNumber">编号：202819323</p>
+          <h5 class="grade">六年级一班</h5>
+          <p class="peopleNum">40人</p>
+          <el-button class="joinClass">进入班级</el-button>
+          <div class="createTime">创建时间：2018.02.02 12:30</div>
+      </div>
+    </div>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px; margin-left:50px;">
         
@@ -133,7 +106,7 @@ export default {
     return {
       total:100,
       list: null,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         page: 1,
         limit: 20,
@@ -380,12 +353,12 @@ export default {
       } 
     },
     fetchData() {
-      this.listLoading = true
-      getList(this.listQuery).then(response => {
-        alert(JSON.stringify(response))
-        this.list = response.data.items
-        this.listLoading = false
-      })
+      //this.listLoading = true
+      // getList(this.listQuery).then(response => {
+      //   alert(JSON.stringify(response))
+      //   this.list = response.data.items
+      //   this.listLoading = false
+      // })
     },
     searchTeacher(){
       alert('xxx');
@@ -433,3 +406,56 @@ export default {
   }
 }
 </script>
+<style lang="less" scope>
+.classContent{
+  padding:20px 20px 0;
+  font-size:14px;
+  h3{
+    font-size:18px;
+    .el-checkbox{
+      font-size:15px;
+    }
+    border-bottom:2px solid #f1eaea;
+    padding-bottom:10px;
+  }
+  .classList{
+    .classDeatils{
+      height:254px;
+      width:240px;
+      background:rgba(48,155,255,1); 
+      border-radius:10px;
+      color:#fff;
+      text-align:center;
+      .serialNumber{
+        display:inline-block;
+        width:140px;
+        color:gray;
+        background:#fff;
+        border-bottom-left-radius:10px;
+        border-bottom-right-radius:10px;
+        height:30px;
+        line-height:30px;
+        margin-top:0px;
+      }
+      .grade{
+        font-size:32px;
+        margin:20px 0 10px;
+      }
+      .peopleNum{
+        font-size:24px;
+        line-height:30px;
+        height:30px;
+      }
+      .joinClass{
+        width:100px;
+        height:40px;
+        line-height:40px;
+        padding:0;
+      }
+      .createClass{
+        margin-top:10px;
+      }
+    }
+  }
+}
+</style>
