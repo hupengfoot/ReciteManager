@@ -16,6 +16,13 @@ export function createClass(params) {
     params:params
   })
 }
+export function getUserList(params){
+  return request({
+    url: getUrlBase() + '/pkUser/userList',
+    method: 'get',
+    params:params
+  })
+}
 // export function create(params) {
 //   return request({//查询班级列表
 //     url: '/api/pkClass/getAllClassByTeacherId',

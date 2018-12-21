@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-input placeholder="请输入教师名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchTeacher">{{ 'search' }}</el-button>
+    <el-input placeholder="请输入教师名称或关键字进行查询" v-model="listQuery.username" style="width: 400px;" class="filter-item" @keyup.enter.native="fetchData"/>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="fetchData">{{ 'search' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addTeacher">{{ '新增教师' }}</el-button>
     <el-table
       v-loading="listLoading"
@@ -15,45 +15,45 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
+       <el-table-column label="用户名">
+        <template slot-scope="scope">
+          {{ scope.row.username }}
+        </template>
+      </el-table-column>
       <el-table-column label="姓名">
         <template slot-scope="scope">
-          {{ scope.row.title.substring(0, 8) }}
+          {{ scope.row.realName }}
         </template>
       </el-table-column>
       <el-table-column label="性别" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ sexMock[randomNum(0, 1)] }}</span>
+          <span>{{ sexChange[scope.row.gender] === undefined ? "男" :  sexChange[scope.row.gender]}}</span>
         </template>
       </el-table-column>
       <el-table-column label="生日" align="center">
         <template slot-scope="scope">
-          {{ scope.row.display_time.substring(0, 10) }}
+          {{ scope.row.birthday }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="手机" width="110" align="center">
         <template slot-scope="scope">
-           {{ phoneMock[randomNum(0, 9)] }}
+           {{ scope.row.mobile }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="邮箱" width="200">
         <template slot-scope="scope">
-          {{ scope.row.title.substring(0, 8) + "@tencent.com" }}
+          {{ scope.row.email }}
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="注册时间" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
-          <span>{{ scope.row.display_time }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" prop="created_at" label="角色" width="200">
         <template slot-scope="scope">
-         {{ roleMock[randomNum(0, 1)] }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="密码" width="200">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+         {{ roleMock[scope.row.roleId - 1] }}
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
@@ -65,7 +65,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -101,12 +101,11 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getUserList } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 
-
-
+//教师编辑模态框下拉选项
 const sexTypeOptions = [
   { key: 'male', display_name: '男' },
   { key: 'female', display_name: '女' },
@@ -120,19 +119,6 @@ const roleTypeOptions = [
 const sexMock = [
   "男",
   "女"
-]
-
-const phoneMock = [
-  "13917628345",
-  "13875637481",
-  "19113348414",
-  "18713413412",
-  "15613412341",
-  "14514132412",
-  "16713412342",
-  "138123412343",
-  "181132413241",
-  "134512341234"
 ]
 
 const roleMock = [
@@ -156,14 +142,14 @@ export default {
   },
   data() {
     return {
-      total:100,
+      total:0,
       list: null,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
         importance: undefined,
-        title: undefined,
+        username: undefined,
         type: undefined,
       },
       textMap: {
@@ -185,10 +171,14 @@ export default {
         mail: '',
         role: ''
       },
+      //性别转换[1, 2] -> [男，女]
+      sexChange: {
+        "1": "男",
+        "2": "女"
+      },
       sexTypeOptions,
       roleTypeOptions,
       sexMock,
-      phoneMock,
       roleMock, 
     }
   },
@@ -211,8 +201,12 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      getList(this.listQuery).then(response => {
-        this.list = response.data.items
+      getUserList(this.listQuery).then(response => {
+        alert(JSON.stringify(response.data.page))
+        this.total = response.data.page.total;
+        this.listQuery.page = response.data.page.current;
+        this.listQuery.limit = response.data.page.size;
+        this.list = response.data.page.records
         this.listLoading = false
       })
     },
