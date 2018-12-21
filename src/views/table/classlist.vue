@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getList,createClass } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 import {successShow,errorShow} from '@/utils/notice.js'
