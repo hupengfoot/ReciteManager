@@ -10,7 +10,8 @@ export function successShow(content){
 }
 
 export function errorShow(content){
-	return message({
+	return Notification({
+		title:'Error',
 		center:true,
 		message:content,
 		type:'error',
@@ -24,5 +25,12 @@ export function warningShowShow(content){
 		message:content,
 		type:'warning',
 		customClass:'z1000'
+	})
+}
+export function deleteShow() {console.log(111)
+	return this.$confirm('是否确定删除?', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
 	})
 }

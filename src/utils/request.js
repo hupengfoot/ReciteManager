@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
-
+import {successShow,errorShow} from '@/utils/notice.js'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api 的 base_url
@@ -35,7 +35,10 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    
+    if(response.data.code === 500){
+      errorShow(response.data.msg);
+      return Promise.reject(response)
+    }
     return response
     
   },
