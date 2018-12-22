@@ -231,7 +231,6 @@ export default {
     fetchData() {
       this.listLoading = true
       getUserManagerList(this.listQuery).then(response => {
-        alert(JSON.stringify(response.data.page))
         this.total = response.data.page.total;
         this.listQuery.page = response.data.page.current;
         this.listQuery.limit = response.data.page.size;
