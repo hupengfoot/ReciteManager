@@ -30,6 +30,20 @@ export function createUser(params){
     data:params
   })
 }
+export function updateUserForAdmin(params){
+  return request({
+    url:getUrlBase() + '/pkUser/updateForAdmin',
+    method: 'PUT',
+    data:params
+  })
+}
+export function deleteUserFromAdmin(params){
+  return request({
+    url:getUrlBase() + '/pkUser/delete',
+    method: 'DELETE',
+    params:params
+  })
+}
 // export function create(params) {
 //   return request({//查询班级列表
 //     url: '/api/pkClass/getAllClassByTeacherId',

@@ -58,8 +58,8 @@
       </el-table-column>
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="updateTeacher">{{ '编辑' }}</el-button>
-          <el-button size="mini" type="danger" @click="deletedTeacher">{{ '删除' }}
+          <el-button type="primary" size="mini" @click="updateTeacher(scope.row)">{{ '编辑' }}</el-button>
+          <el-button size="mini" type="danger" @click="deletedTeacher(scope.row)">{{ '删除' }}
           </el-button>
         </template>
       </el-table-column>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { getUserList, createUser } from '@/api/table'
+import { getUserList, createUser, updateUserForAdmin, deleteUserFromAdmin } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 
@@ -233,56 +233,105 @@ export default {
         this.$refs['dataForm'].clearValidate        
       })
     },
-    updateTeacher(){
+    updateTeacher(row){
       this.resetTemp(),
+      this.temp = Object.assign({}, row)
       this.dialogStatus = 'update';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate        
+          this.$refs['dataForm'].clearValidate        
       })
     },
-    deletedTeacher(){
-      alert('delete teacher')
-    },
-    createUserInterface() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          if(this.temp.gender === 'male'){
-            this.temp.gender = 1
-          }
-          if(this.temp.gender === 'female'){
-            this.temp.gender = 2
-          }
-          if(this.temp.roleId === "teacher"){
-            this.temp.roleId = 1;
-          }
-          if(this.temp.roleId === "manager"){
-            this.temp.roleId = 2;
-          }
-          this.temp.password = "000000"
-          var tempDate = new Date(this.temp.birthday)
-          this.temp.birthday = tempDate.getFullYear()+ '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate() + " 00:00:00"
-          createUser(this.temp).then((response) => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            if(response.data.code === 0){
-              this.$notify({
-                title: '成功',
-                message: '创建成功',
-                type: 'success',
-                duration: 2000
-              })
-            }else{
-              this.$notify({
-                title: '创建失败',
-                message: response.data.msg,
-                type: 'failed',
-                duration: 2000
-              })
-            }
+
+    deletedTeacher(row){
+      let obj = {
+        userId : row.userId
+      }
+      deleteUserFromAdmin(obj).then((response) => {
+        if(response.data.code === 0){
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          //删除后重新加载页面
+          location.reload()
+        }else{
+          this.$notify({
+            title: '删除失败',
+            message: response.data.msg,
+            type: 'failed',
+            duration: 2000
           })
         }
       })
+    },
+    createUserInterface() {
+      if(this.dialogStatus === 'create'){
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            if(this.temp.gender === 'male'){
+              this.temp.gender = 1
+            }
+            if(this.temp.gender === 'female'){
+              this.temp.gender = 2
+            }
+            if(this.temp.roleId === "teacher"){
+              this.temp.roleId = 1;
+            }
+            if(this.temp.roleId === "manager"){
+              this.temp.roleId = 2;
+            }
+            this.temp.password = "000000"
+            var tempDate = new Date(this.temp.birthday)
+            this.temp.birthday = tempDate.getFullYear()+ '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate() + " 00:00:00"
+            createUser(this.temp).then((response) => {
+              this.list.unshift(this.temp)
+              this.dialogFormVisible = false
+              if(response.data.code === 0){
+                this.$notify({
+                  title: '成功',
+                  message: '创建成功',
+                  type: 'success',
+                  duration: 2000
+                })
+              }else{
+                this.$notify({
+                  title: '创建失败',
+                  message: response.data.msg,
+                  type: 'failed',
+                  duration: 2000
+                })
+              }
+            })
+          }
+        })
+      }
+
+      if(this.dialogStatus === 'update'){
+        this.temp.birthday = this.temp.birthday + " 00:00:00"
+        updateUserForAdmin(this.temp).then((response) => {
+          this.list.unshift(this.temp)
+          this.dialogFormVisible = false
+          if(response.data.code === 0){
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
+              duration: 2000
+            })
+          }else{
+            this.$notify({
+              title: '更新失败',
+              message: response.data.msg,
+              type: 'failed',
+              duration: 2000
+            })
+          }
+        })
+      }
+     
     },
   }
 }
