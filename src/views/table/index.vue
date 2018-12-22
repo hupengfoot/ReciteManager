@@ -69,39 +69,42 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="姓名" prop="title">
-          <el-input v-model="temp.teachername"/>
+         <el-form-item label="用户名">
+          <el-input v-model="temp.username"/>
         </el-form-item>
-        <el-form-item label="性别" prop="type">
-          <el-select v-model="temp.sex" class="filter-item" placeholder="Please select">
+        <el-form-item label="姓名">
+          <el-input v-model="temp.realName"/>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="temp.gender" class="filter-item" placeholder="Please select">
             <el-option v-for="item in sexTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="生日" prop="timestamp">
+        <el-form-item label="生日">
           <el-date-picker v-model="temp.birthday" type="datetime" placeholder="Please pick a date"/>
         </el-form-item>
-        <el-form-item label="手机号" prop="title">
-          <el-input v-model="temp.phone"/>
+        <el-form-item label="手机号">
+          <el-input v-model="temp.mobile"/>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="temp.mail"/>
+          <el-input v-model="temp.email"/>
         </el-form-item>
-         <el-form-item label="角色" prop="type">
-          <el-select v-model="temp.role" class="filter-item" placeholder="Please select">
+         <el-form-item label="角色">
+          <el-select v-model="temp.roleId" class="filter-item" placeholder="Please select">
             <el-option v-for="item in roleTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ 'cancel' }}</el-button>
-        <el-button type="primary" @click="">{{ 'confirm' }}</el-button>
+        <el-button type="primary" @click="createUserInterface">{{ 'confirm' }}</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserList } from '@/api/table'
+import { getUserList, createUser } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 
@@ -164,12 +167,13 @@ export default {
         title: [{ required: true, message: 'title is required', trigger: 'blur' }]
       },
       temp: {
-        teachername: '',
-        sex: undefined,
+        username: '',
+        realName: '',
+        gender: undefined,
         birthday: '',
-        phone: '',
-        mail: '',
-        role: ''
+        mobile: '',
+        email: '',
+        roleId: '',
       },
       //性别转换[1, 2] -> [男，女]
       sexChange: {
@@ -210,17 +214,15 @@ export default {
         this.listLoading = false
       })
     },
-    searchTeacher(){
-      alert('xxx');
-    },
     resetTemp(){
       this.temp = {
-        teachername: '',
-        sex: undefined,
+        username: '',
+        realName: '',
+        gender: undefined,
         birthday: '',
-        phone: '',
-        mail: '',
-        role: ''
+        mobile: '',
+        email: '',
+        roleId: ''
       }
     },
     addTeacher(){
@@ -241,7 +243,47 @@ export default {
     },
     deletedTeacher(){
       alert('delete teacher')
-    }
+    },
+    createUserInterface() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          if(this.temp.gender === 'male'){
+            this.temp.gender = 1
+          }
+          if(this.temp.gender === 'female'){
+            this.temp.gender = 2
+          }
+          if(this.temp.roleId === "teacher"){
+            this.temp.roleId = 1;
+          }
+          if(this.temp.roleId === "manager"){
+            this.temp.roleId = 2;
+          }
+          this.temp.password = "000000"
+          var tempDate = new Date(this.temp.birthday)
+          this.temp.birthday = tempDate.getFullYear()+ '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate() + " 00:00:00"
+          createUser(this.temp).then((response) => {
+            this.list.unshift(this.temp)
+            this.dialogFormVisible = false
+            if(response.data.code === 0){
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
+            }else{
+              this.$notify({
+                title: '创建失败',
+                message: response.data.msg,
+                type: 'failed',
+                duration: 2000
+              })
+            }
+          })
+        }
+      })
+    },
   }
 }
 </script>
