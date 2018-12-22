@@ -39,6 +39,13 @@ export function getUserList(params){
     params:params
   })
 }
+export function getUserManagerList(params){
+  return request({
+    url: getUrlBase() + '/pkUser/userList',
+    method: 'get',
+    params:params
+  })
+}
 export function getSingleClass(id) {
   return request({//查询单个班级信息
     url: getUrlBase()+'/pkClass/getSingleClass/'+id,
@@ -110,7 +117,13 @@ export function sudentImport(id) {
 
 /**学生 -E */
 
-
+export function createUser(params){
+  return request({
+    url:getUrlBase() + '/pkUser/create',
+    method: 'post',
+    data:params
+  })
+}
 export function updateUserForAdmin(params){
   return request({
     url:getUrlBase() + '/pkUser/updateForAdmin',
@@ -125,6 +138,7 @@ export function deleteUserFromAdmin(params){
     params:params
   })
 }
+
 // export function create(params) {
 //   return request({//查询班级列表
 //     url: '/api/pkClass/getAllClassByTeacherId',

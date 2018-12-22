@@ -77,8 +77,8 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '教学管理',
-        component: () => import('@/views/form/index'),
-        meta: { title: '教学管理', icon: 'form' }
+        component: () => import('@/views/table/teachingmanager'),
+        meta: { title: '教学管理', icon: 'table' }
       }
     ]
   },

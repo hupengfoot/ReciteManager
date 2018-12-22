@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { getUserList, createUser, updateUserForAdmin, deleteUserFromAdmin } from '@/api/table'
+import { getUserManagerList, createUser, updateUserForAdmin, deleteUserFromAdmin } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 
@@ -230,7 +230,7 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      getUserList(this.listQuery).then(response => {
+      getUserManagerList(this.listQuery).then(response => {
         alert(JSON.stringify(response.data.page))
         this.total = response.data.page.total;
         this.listQuery.page = response.data.page.current;
