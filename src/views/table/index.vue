@@ -25,7 +25,7 @@
           {{ scope.row.realName }}
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="110" align="center">
+      <el-table-column label="性别" align="center">
         <template slot-scope="scope">
           <span>{{ sexChange[scope.row.gender] === undefined ? "男" :  sexChange[scope.row.gender]}}</span>
         </template>
@@ -56,11 +56,11 @@
          {{ roleMock[scope.row.roleId - 1] }}
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="updateTeacher(scope.row)">{{ '编辑' }}</el-button>
-          <el-button size="mini" type="danger" @click="deletedTeacher(scope.row)">{{ '删除' }}
-          </el-button>
+          <el-button size="mini" type="primary" @click="modifyPasswd(scope.row)">{{ '密码重置' }}</el-button>
+          <el-button size="mini" type="danger" @click="deletedTeacher(scope.row)">{{ '删除' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -98,6 +98,24 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ 'cancel' }}</el-button>
         <el-button type="primary" @click="createUserInterface">{{ 'confirm' }}</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog :title="passwdModifyUser" :visible.sync="passwdFromVisible">
+      <el-form ref="passwdForm" :rules="rules" :model="tempPasswd" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="旧密码" prop="password">
+          <el-input v-model="tempPasswd.oldpasswd" type="password"/>
+        </el-form-item>   
+        <el-form-item label="新密码">
+          <el-input v-model="tempPasswd.newpasswd1" type="password"/>
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input v-model="tempPasswd.newpasswd2" type="password"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="passwdFromVisible = false">{{ 'cancel' }}</el-button>
+        <el-button type="primary" @click="realModifyPasswd">{{ 'confirm' }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -161,6 +179,13 @@ export default {
       },
       dialogStatus: '',
       dialogFormVisible: false,
+      passwdFromVisible: false,
+      passwdModifyUser: '',
+      tempPasswd : {
+        oldpasswd : '',
+        newpasswd1 : '',
+        newpasswd2 : ''
+      },
       rules: {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
@@ -224,6 +249,38 @@ export default {
         email: '',
         roleId: ''
       }
+    },
+    modifyPasswd(row){
+      this.passwdModifyUser = row.username
+      this.passwdFromVisible = true
+      this.temp = Object.assign({}, row)
+      this.$nextTick(() => {
+        this.$refs['passwdForm'].clearValidate        
+      })
+    },
+    realModifyPasswd(){
+      this.temp.password = this.tempPasswd.newpasswd1
+      this.temp.birthday = this.temp.birthday + " 00:00:00"
+      updateUserForAdmin(this.temp).then((response) => {
+        this.list.unshift(this.temp)
+        this.passwdModifyUser = ""
+        this.passwdFromVisible = false
+        if(response.data.code === 0){
+          this.$notify({
+            title: '成功',
+            message: '密码更新成功',
+            type: 'success',
+            duration: 2000
+          })
+        }else{
+          this.$notify({
+            title: '密码更新失败',
+            message: response.data.msg,
+            type: 'failed',
+            duration: 2000
+          })
+        }
+      })
     },
     addTeacher(){
       this.resetTemp(),
