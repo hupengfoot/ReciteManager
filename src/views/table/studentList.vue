@@ -5,8 +5,9 @@
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addStudent">{{ '新增学生' }}</el-button>
     <h3>学生列表（{{pageInfo.totalNum}}人）
       <small class="fr">
-        <el-button>批量导入学生</el-button>
-        <el-button>下载导入模板</el-button>
+        <el-button class="batchDownload">批量导入学生<input type="file" @change="sudentImport($event)"  /></el-button>
+        
+        <el-button @click="downloadtemplet">下载导入模板</el-button>
         <el-button @click="exportExcel">导出学生列表</el-button>
         <el-button @click="isClasssDialog=true">班级设置</el-button>
       </small>
@@ -94,12 +95,14 @@
 </template>
 
 <script>
-import { getStuAndGroupInClass,createStu,deleteStu,updateStu,updateClass,resetPassword,exportExcel } from '@/api/table'
+import { getStuAndGroupInClass,createStu,deleteStu,updateStu,updateClass,resetPassword,exportExcel,templet,sudentImport } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 import {successShow,errorShow,deleteShow} from '@/utils/notice.js'
 import stuDialog from '@/components/dialog/stuDialog'
 import classDialog from '@/components/dialog/classDialog'
+import {download} from '@/utils/download.js'
+
 
 //教师编辑模态框下拉选项
 const sexTypeOptions = [
@@ -138,7 +141,6 @@ export default {
   },
   data() {
     return {
-     
       stuList: [],
       listLoading: true,
       pageInfo: {
@@ -174,10 +176,16 @@ export default {
       isClasssDialog:false,
       editId:null,
       userId:null,
+      bathFileName:null,
     }
   },
   created() {
     this.getStuAndGroupInClass()
+  },
+  watch:{
+    bathFileName(new_,old){console.log(222)
+      this.sudentImport()
+    }
   },
   methods: {
     getStuAndGroupInClass() {//查询学生列表
@@ -257,9 +265,25 @@ export default {
 
       })
     },
-    exportExcel(){//导出excel
+    exportExcel(){//导出学生信息excel
       exportExcel(this.$route.query.classId).then(res => {
-        
+        download(res.data,"stu_import_template.xlsx")
+      })
+    },
+    downloadtemplet(){//导出模板
+      templet().then(res => {
+        download(res.data,res['headers']['content-disposition'].split('filename=')[1])
+      })
+    },
+    sudentImport($event){//批量上传
+    console.log($event.target.files[0]);
+      let formData = new FormData();
+      formData.append('file',$event.target.files[0]);
+      sudentImport(this.$route.query.classId,formData).then(res => {
+        if(res.data.code === 0) {
+          successShow(res.data.msg)
+        }
+        this.getStuAndGroupInClass()
       })
     }
   }
@@ -278,6 +302,21 @@ export default {
     border-bottom:2px solid #f1eaea;
     padding-bottom:10px;
     line-height:40px;
+  }
+  .batchDownload{
+    position:relative;
+    z-index: 1;
+      input{
+        position:absolute;
+        width:100%;
+        height:100%;
+        left:0;
+        top:0;
+        z-index: 2;
+        opacity:0;
+      }
+    
+   
   }
 }
 </style>

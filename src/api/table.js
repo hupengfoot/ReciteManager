@@ -108,10 +108,17 @@ export function exportExcel(id) {
     method: 'get'
   })
 }
-export function sudentImport(id) {
-  return request({//导出学生信息
+export function templet(id) {
+  return request({//导出模板
+    url: getUrlBase()+'/import-template/stu_import_template.xlsx',
+    method: 'get'
+  })
+}
+export function sudentImport(id,params) {
+  return request({//导入学生信息
     url: getUrlBase()+'/pkStudent/import/'+id,
-    method: 'post'
+    method: 'post',
+    data:params
   })
 }
 
