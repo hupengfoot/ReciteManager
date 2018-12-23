@@ -60,10 +60,16 @@ export const constantRouterMap = [
         name: '班级管理',
         component: () => import('@/views/table/classlist'),
         meta: { title: '班级管理', icon: 'table' }
+      },
+      {
+        path: '/student',
+        name: '学生管理',
+        component: () => import('@/views/table/studentList'),
+        meta: { title: '学生管理', icon: 'table' },
+        hidden:true
       }
     ]
   },
-
   {
     path: '/teachingmanager',
     component: Layout,
@@ -71,8 +77,8 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '教学管理',
-        component: () => import('@/views/form/index'),
-        meta: { title: '教学管理', icon: 'form' }
+        component: () => import('@/views/table/teachingmanager'),
+        meta: { title: '教学管理', icon: 'table' }
       }
     ]
   },

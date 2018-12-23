@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
-
+import {successShow,errorShow} from '@/utils/notice.js'
 // 创建axios实例
 const service = axios.create({
   // baseURL: process.env.BASE_API, // api 的 base_url
@@ -20,9 +20,6 @@ service.interceptors.request.use(
     }
     // config.headers['Accept'] = '*/*'
     // config.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
-    if (store.getters.token) {
-      config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-    }
     return config
   },
   error => {
@@ -35,7 +32,11 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    
+    if(response.data.code === 500){
+      errorShow(response.data.msg);
+      return Promise.reject(response)
+    }
+
     return response
     
   },
