@@ -5,7 +5,7 @@
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addClass">{{ '创建班级' }}</el-button>
     <h3>班级列表<small></small><el-checkbox type="checkbox" v-model="isAllClass" class="fr">显示全部班级</el-checkbox></h3>
     <div class="classList">
-      <div class="classDeatils" v-for="item in classList">
+      <div class="classDeatils" v-for="(item,index) in classList" :key="index">
           <p class="serialNumber">编号：{{item.id}}</p>
           <h5 class="grade">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>

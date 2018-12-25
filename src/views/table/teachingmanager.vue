@@ -2,6 +2,7 @@
   <div class="classContent">
     <el-input placeholder="请输入班级名称或关键字进行查询" style="width: 400px;" class="filter-item" @keyup.enter.native="searchTeacher"/>
     <h3>班级列表</h3>
+    <teaching-tab></teaching-tab>
     <div class="classList">
       <div class="classDeatils">
           <p class="serialNumber">编号：202819323</p>
@@ -48,6 +49,7 @@ import { getList } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 import {successShow,errorShow} from '@/utils/notice.js'
+import teachingTab from '@/components/teaching/teachingTab'
 
 
 const sexTypeOptions = [
@@ -85,7 +87,7 @@ const roleMock = [
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination,teachingTab },
   directives: { waves },
   filters: {
     statusFilter(status) {

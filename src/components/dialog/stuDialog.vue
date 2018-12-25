@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="生日" prop="birthday">
-        <el-date-picker v-model="temp.birthday" value-format="yyyy-MM-dd hh:mm:ss"  placeholder="请选择生日"/>
+        <el-date-picker v-model="temp.birthday" value-format="yyyy-MM-dd"  placeholder="请选择生日"/>
       </el-form-item>
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="temp.mobile" placeholder="请填写手机号" />
@@ -57,7 +57,7 @@ export default {
       rules: {
         realName: [{ required: true, message: '真实姓名不能为空', trigger: 'change' }],
         gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
-        birthday: [{  type: 'date',required: true, message: '请选择生日', trigger: 'blur' }],
+        birthday: [{required: true, message: '请选择生日', trigger: 'blur' }],
         mobile:[{ required: true, message: '请输入手机号', trigger: 'change' }],
         email:[{ required: true, message: '请输入邮箱', trigger: 'change' }],
         school:[{ required: true, message: '请输入学校', trigger: 'change' }],
@@ -84,7 +84,8 @@ export default {
       this.$refs['temp'].validate((valid) => {
         if (valid) {
           this.temp.gender = this.temp.gender*1;
-          this.temp.classId=this.$route.query.classId
+          this.temp.classId=this.$route.query.classId;
+					this.temp.birthday=this.temp.birthday+" 00:00:00";
           this.$emit('create',this.temp);
         }else{
           errorShow('表单提交失败')
@@ -97,6 +98,7 @@ export default {
         if (valid) {
           this.temp.gender = this.temp.gender*1;
           this.temp.userId=this.userId;
+					this.temp.birthday=this.temp.birthday+" 00:00:00";
           this.$emit('update',this.temp);
         }else{
           errorShow('表单提交失败')

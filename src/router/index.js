@@ -76,10 +76,17 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        name: '教学管理',
+        name: 'teachingmanager',
         component: () => import('@/views/table/teachingmanager'),
         meta: { title: '教学管理', icon: 'table' }
-      }
+      },
+      {
+        path: 'educationManager',
+        name: 'educationManager',
+        component: () => import('@/views/educationManager/resultsCenter'),
+        meta: { title: '成绩列表', icon: 'table' },
+        hidden:true,
+      },
     ]
   },
 

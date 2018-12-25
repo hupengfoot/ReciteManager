@@ -7,8 +7,8 @@
       <small class="fr">
         <el-button class="batchDownload">批量导入学生<input type="file" @change="sudentImport($event)"  /></el-button>
         
-        <el-button @click="downloadtemplet">下载导入模板</el-button>
-        <el-button @click="exportExcel">导出学生列表</el-button>
+        <a :href="downloadUrl"><el-button>下载导入模板</el-button></a>
+        <a :href="downloadStuUrl" target="_blank"><el-button>导出学生列表</el-button></a>
         <el-button @click="isClasssDialog=true">班级设置</el-button>
       </small>
     </h3>
@@ -102,7 +102,7 @@ import {successShow,errorShow,deleteShow} from '@/utils/notice.js'
 import stuDialog from '@/components/dialog/stuDialog'
 import classDialog from '@/components/dialog/classDialog'
 import {download} from '@/utils/download.js'
-
+import { getToken } from '@/utils/auth' // 验权
 
 //教师编辑模态框下拉选项
 const sexTypeOptions = [
@@ -141,6 +141,8 @@ export default {
   },
   data() {
     return {
+			downloadUrl:null,
+			downloadStuUrl:null,
       stuList: [],
       listLoading: true,
       pageInfo: {
@@ -181,7 +183,9 @@ export default {
   },
   created() {
     this.getStuAndGroupInClass()
-  },
+		this.downloadUrl = process.env.BASE_API+'/import-template/stu_import_template.xlsx?token='+getToken()
+		this.downloadStuUrl = process.env.BASE_API+'/pkStudent/exportExcel/'+this.$route.query.classId+'?token='+getToken()
+	},
   watch:{
     bathFileName(new_,old){console.log(222)
       this.sudentImport()
@@ -267,12 +271,13 @@ export default {
     },
     exportExcel(){//导出学生信息excel
       exportExcel(this.$route.query.classId).then(res => {
-        download(res.data,"stu_import_template.xlsx")
+        
+				download(res.data,res['headers']['content-disposition'].split('filename=')[1])
       })
     },
     downloadtemplet(){//导出模板
       templet().then(res => {
-        download(res.data,res['headers']['content-disposition'].split('filename=')[1])
+        download(res.data,"stu_import_template.xlsx")
       })
     },
     sudentImport($event){//批量上传

@@ -5,7 +5,7 @@ function getUrlBase(){
 /*班级 -S */
 export function getAllClassByTeacherId(params) {
   return request({//查询班级列表
-    url: getUrlBase()+'/pkClass/getAllClassByTeacherId',
+    url: getUrlBase()+'/pkClass/getAllClass',
     method: 'get',
     params:params
   })
