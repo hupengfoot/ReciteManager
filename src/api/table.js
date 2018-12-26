@@ -121,15 +121,26 @@ export function sudentImport(id,params) {
     data:params
   })
 }
+
+/**学生 -E */
+
+/**成绩列表 -S */
+
+export function getClassGrade(id,params) {
+  return request({//导入学生信息
+    url: getUrlBase()+'/pkStuUnitExam/getClassGrade/'+id,
+    method: 'get',
+    params:params
+  })
+}
 export function getClassGroupGrade(id,params){
-  return request({//查询班级成绩
+  return request({//查询分组成绩
     url:getUrlBase()+'/pkStuUnitExam/getClassGroupGrade/'+id,
     method:'get',
     params:params
   })
 }
-
-/**学生 -E */
+/**成绩列表 -E */
 
 export function createUser(params){
   return request({
@@ -152,11 +163,3 @@ export function deleteUserFromAdmin(params){
     params:params
   })
 }
-
-// export function create(params) {
-//   return request({//查询班级列表
-//     url: '/api/pkClass/getAllClassByTeacherId',
-//     method: 'get',
-//     params:params
-//   })
-// }
