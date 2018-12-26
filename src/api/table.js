@@ -3,20 +3,20 @@ function getUrlBase(){
 	return '/api'
 }
 /*班级 -S */
-export function getAllClassByTeacherId(params) {
+export function getAllClass(params) {
   return request({//查询班级列表
     url: getUrlBase()+'/pkClass/getAllClass',
     method: 'get',
     params:params
   })
 }
-// export function getAllClass(params) {
-//   return request({//查询所有课程或未完成课程
-//     url: getUrlBase()+'/pkClass/getAllClass',
-//     method: 'get',
-//     params:params
-//   })
-// }
+export function getAllClassByTeacherId(params) {
+  return request({//根据老师查询班级列表
+    url: getUrlBase()+'/pkClass/getAllClassByTeacherId',
+    method: 'get',
+    params:params
+  })
+}
 export function getSubjectList(params) {
   return request({//查询所有课程或未完成课程
     url: getUrlBase()+'/pkCourse/getNoUnitList',
@@ -119,6 +119,13 @@ export function sudentImport(id,params) {
     url: getUrlBase()+'/pkStudent/import/'+id,
     method: 'post',
     data:params
+  })
+}
+export function getClassGroupGrade(id,params){
+  return request({//查询班级成绩
+    url:getUrlBase()+'/pkStuUnitExam/getClassGroupGrade/'+id,
+    method:'get',
+    params:params
   })
 }
 

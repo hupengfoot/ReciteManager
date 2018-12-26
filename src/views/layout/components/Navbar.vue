@@ -5,6 +5,7 @@
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img src="@/assets/avatar/header.png" class="user-avatar">
+        <span class="name">{{$store.getters.name}}</span>
         <i class="el-icon-caret-bottom"/>
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -23,6 +24,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import store from '@/store'
 
 export default {
   components: {
@@ -32,7 +34,6 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
     ])
   },
   methods: {
@@ -80,10 +81,14 @@ export default {
         height: 40px;
         border-radius: 10px;
       }
+      .name{
+        position:relative;
+        top:-10px;
+      }
       .el-icon-caret-bottom {
         position: absolute;
         right: -20px;
-        top: 25px;
+        top:19px;
         font-size: 12px;
       }
     }

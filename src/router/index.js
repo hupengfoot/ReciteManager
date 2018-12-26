@@ -28,7 +28,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/teachermanager/index',
+    redirect: '/classmanager/index',
     name: '主页',
     hidden: true,
     children: [{
@@ -37,19 +37,7 @@ export const constantRouterMap = [
     }]
   },
 
-  {
-    path: '/teachermanager',
-    component: Layout,
-    meta: { title: '教师管理', icon: 'example' },
-    children: [
-      {
-        path: 'index',
-        name: '教师管理',
-        component: () => import('@/views/table/index'),
-        meta: { title: '教师管理', icon: 'table' }
-      }
-    ]
-  },
+  
 
   {
     path: '/classmanager',
@@ -67,6 +55,19 @@ export const constantRouterMap = [
         component: () => import('@/views/table/studentList'),
         meta: { title: '学生管理', icon: 'table' },
         hidden:true
+      }
+    ]
+  },
+  {
+    path: '/teachermanager',
+    component: Layout,
+    meta: { title: '教师管理', icon: 'example' },
+    children: [
+      {
+        path: 'index',
+        name: '教师管理',
+        component: () => import('@/views/table/index'),
+        meta: { title: '教师管理', icon: 'table' }
       }
     ]
   },

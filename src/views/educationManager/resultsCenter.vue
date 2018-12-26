@@ -101,6 +101,7 @@ export default {
         margin-right:20px;
         font-size:14px;
         line-height:35px; 
+        cursor:pointer;
       }
     }
     .el-table{

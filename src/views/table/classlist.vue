@@ -24,6 +24,7 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 import waves from '@/directive/waves' // Waves directive
 import {successShow,errorShow} from '@/utils/notice.js'
 import classDialog from '@/components/dialog/classDialog'
+import store from '@/store'
 
 
 // const roleTypeOptions = [
@@ -109,9 +110,16 @@ export default {
     getAllClassByTeacherId() {//查询班级列表
       this.listLoading = true
       let isAll = this.isAllClass?1:0;
-      getAllClassByTeacherId({isAll:isAll,pattern:this.pattern}).then(res => {
-        this.classList = res.data.classList
-      })
+      if(store.getters.roles==1){
+        getAllClassByTeacherId({isAll:isAll,pattern:this.pattern}).then(res => {
+          this.classList = res.data.classList
+        })
+      }else{
+        getAllClass({isAll:isAll,pattern:this.pattern}).then(res => {
+          this.classList = res.data.classList
+        })
+      }
+      
     },
     randomNum(minNum,maxNum){ 
       switch(arguments.length){ 

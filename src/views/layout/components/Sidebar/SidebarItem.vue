@@ -2,7 +2,7 @@
   <div v-if="!item.hidden&&item.children" class="menu-wrapper">
 
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link :to="resolvePath(onlyOneChild.path)">
+      <app-link v-if="$store.getters.roles!==1||onlyOneChild.meta.title !=='教师管理'" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
           <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon||item.meta.icon" :title="onlyOneChild.meta.title" />
         </el-menu-item>
@@ -38,6 +38,7 @@ import path from 'path'
 import { isExternal } from '@/utils'
 import Item from './Item'
 import AppLink from './Link'
+import store from '@/store'
 
 export default {
   name: 'SidebarItem',
