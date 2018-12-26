@@ -43,7 +43,6 @@ export default {
 </script>
 <style lang="less" scope>
 .teachingTab{
-  padding-left:20px;
   h3{
     font-size:14px;
     margin:10px 0;
