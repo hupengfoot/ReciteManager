@@ -2,7 +2,7 @@
     <div class="teachingTab">
         <h3>教学管理</h3>
         <ul>
-          <li @click="tab('classList','teachingmanager')" :class="{'default':teachingTab==''||teachingTab=='classList'}">班级列表</li>
+          <li @click="tab('classList')" :class="{'default':teachingTab==''||teachingTab=='classList'}">班级列表</li>
           <li>分组管理</li>
           <li>测试管理</li>
           <li @click="tab('resultsCenter','educationManager')" :class="{'default':teachingTab=='resultsCenter'}">成绩列表</li>

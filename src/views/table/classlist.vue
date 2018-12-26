@@ -104,9 +104,6 @@ export default {
     }
   },
   methods: {
-    
-    
-    
     getAllClassByTeacherId() {//查询班级列表
       this.listLoading = true
       let isAll = this.isAllClass?1:0;
@@ -119,7 +116,6 @@ export default {
           this.classList = res.data.classList
         })
       }
-      
     },
     randomNum(minNum,maxNum){ 
       switch(arguments.length){ 
