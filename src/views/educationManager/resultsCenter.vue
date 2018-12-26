@@ -7,6 +7,15 @@
       <el-button type="primary" icon="el-icon-search"> </el-button>
     </form>
     <teaching-tab></teaching-tab>
+    <div class="resultsMain">
+      <div class="mainTop">
+        <div class="mainTopButton">
+          <el-button class="dafult">班级成绩</el-button>
+          <el-button>小组成绩</el-button>
+        </div>
+        <span class="fr">升序</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,5 +51,34 @@ export default {
 
     }
   }
+  .resultsMain{
+    .mainTop{
+      margin-top:20px;
+      text-align:center;
+      .el-button{
+        height:35px;
+        line-height:35px;
+        padding:0;
+        width:325px;
+        border-radius:0;
+        &:first-child{
+          border-top-left-radius:20px;
+          border-bottom-left-radius:20px;
+        }
+        &:nth-child(2){
+          border-top-right-radius:20px;
+          border-bottom-right-radius:20px;
+          position:relative;
+          left:-15px;
+          border-left:none;
+        }
+        &.dafult{
+          background:#409EFF;
+          color:#fff;
+        }
+      }
+    }
+  }
+  
 }
 </style>
