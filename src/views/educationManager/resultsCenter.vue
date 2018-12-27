@@ -1,10 +1,10 @@
 <template>
   <div class="resultsCenter">
     <form class="searchForm">
-      <el-date-picker v-model="search.startDate" placeholder="请选择开始时间"></el-date-picker>
-      <el-date-picker v-model="search.endDate" placeholder="请选择结束时间"></el-date-picker>
+      <el-date-picker v-model="search.startDate" value-format="yyyy-MM-dd" placeholder="请选择开始时间"></el-date-picker>
+      <el-date-picker v-model="search.endDate"  value-format="yyyy-MM-dd" placeholder="请选择结束时间"></el-date-picker>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
-      <el-button type="primary" icon="el-icon-search"> </el-button>
+      <el-button type="primary" icon="el-icon-search" @click="getClassGrade"> </el-button>
     </form>
     <teaching-tab></teaching-tab>
     <div class="resultsMain">
@@ -18,7 +18,7 @@
           </span>
       </div>
       <div v-if="type==1">
-        <el-table border :data="eduList">
+        <el-table border :data="eduList"  @row-click="stuInfo">
           <el-table-column label="ID" prop="stuId"></el-table-column>
           <el-table-column label="姓名" prop="realName"></el-table-column>
           <el-table-column label="性别">
@@ -84,6 +84,15 @@ export default {
     this.getClassGroupGrade();
   },
   methods:{
+    stuInfo(row){//链接
+      this.$router.push({
+        name:'stuInfo',
+        query:{
+          stuId:row.stuId,
+          classId:this.$route.query.classId
+        }
+      })
+    },
     getClassGrade(){//查询班级成绩
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;

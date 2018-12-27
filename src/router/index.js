@@ -88,6 +88,13 @@ export const constantRouterMap = [
         meta: { title: '成绩列表', icon: 'table' },
         hidden:true,
       },
+      {
+        path: 'stuInfo',
+        name: 'stuInfo',
+        component: () => import('@/views/educationManager/stuInfo'),
+        meta: { title: '学生学习信息', icon: 'table' },
+        hidden:true,
+      },
     ]
   },
 

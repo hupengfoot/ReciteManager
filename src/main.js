@@ -20,6 +20,7 @@ import echarts from 'echarts'
  
 Vue.prototype.$echarts = echarts 
 
+
 Vue.use(ElementUI, { locale })
 
 Vue.config.productionTip = false

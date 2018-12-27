@@ -127,7 +127,7 @@ export function sudentImport(id,params) {
 /**成绩列表 -S */
 
 export function getClassGrade(id,params) {
-  return request({//导入学生信息
+  return request({//查询班级成绩
     url: getUrlBase()+'/pkStuUnitExam/getClassGrade/'+id,
     method: 'get',
     params:params
@@ -140,6 +140,22 @@ export function getClassGroupGrade(id,params){
     params:params
   })
 }
+
+export function getClassUnitNum(id,params){
+  return request({//总单元数
+    url:getUrlBase()+'/pkCourse/getClassUnitNum/'+id,
+    method:'get',
+    params:params
+  })
+}
+export function getStuUnitPassNum(id,params){
+  return request({//通过的单元数
+    url:getUrlBase()+'/pkStuUnitLearning/getStuUnitPassNum/'+id,
+    method:'get',
+    params:params
+  })
+}
+
 /**成绩列表 -E */
 
 export function createUser(params){
