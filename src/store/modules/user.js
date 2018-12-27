@@ -27,7 +27,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
           //localStorage添加token
-          localStorage.setItem("ReciteManager_Token", response.data.token)
+          //localStorage.setItem("ReciteManager_Token", response.data.token)
           const data = response.data
           setToken(data.token)
           commit('SET_TOKEN', data.token)
@@ -58,6 +58,7 @@ const user = {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', '')
         removeToken()
+        
         resolve()
       })
     },

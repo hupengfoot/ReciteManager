@@ -47,7 +47,7 @@
           <el-table-column label="词汇量" prop="wordNum"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
-              <p class="progress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+              <p class="progress groupProgress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
             </template>
           </el-table-column>
         </el-table>
@@ -162,20 +162,50 @@ export default {
     }
     
   }
-  .progress{
-    height:5px;
-    width:300px;
-    background:rgba(233, 233, 233, 1);
-    border-radius:20px;
-    position:relative;
-    span{
-      position:absolute;
-      left:0;
-      top:0;
-      display:inline-block;
-      background:rgb(255,210,21,1);
+  .el-table{
+    .progress{
       height:5px;
+      width:300px;
+      background:rgba(233, 233, 233, 1);
+      border-radius:20px;
+      position:relative;
+      span{
+        position:absolute;
+        left:0;
+        top:0;
+        display:inline-block;
+        background:rgb(255,210,21,1);
+        height:5px;
+      }
     }
+    
+      &:nth-child(1){
+        .groupProgress{
+          span{
+            background:#409eff;
+          }
+        }
+      }
+      &:nth-child(2){
+        .groupProgress{
+          span{
+            background:#67c23a;
+          }
+        }
+      }
+      // &:nth-child(3){
+      //   span{
+      //     background:#e6a23c;
+      //   }
+      // }
+      // &:nth-child(4){
+      //   span{
+      //     background:#f56c6c;
+      //   }
+      // }
+    
+
   }
+  
 }
 </style>
