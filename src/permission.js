@@ -18,8 +18,8 @@ router.beforeEach((to, from, next) => {
         next()
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           
-          if(res.data.code==500){console.log(111)
-            errorShow('token失效，请重新登录')
+          if(res.data.code==500){
+            //errorShow('token失效，请重新登录')
             store.dispatch('LogOut').then(() => {
               
               next({ path: '/' })
@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
           }
           
         }).catch((err) => {
-          errorShow('token失效，请重新登录')
+          //errorShow('token失效，请重新登录')
           store.dispatch('LogOut').then(() => {
             
             next({ path: '/' })
@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next()
     } else {
-      errorShow('token失效，请重新登录')
+      //errorShow('token失效，请重新登录')
       next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
       NProgress.done()
     }

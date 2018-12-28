@@ -155,6 +155,28 @@ export function getStuUnitPassNum(id,params){
     params:params
   })
 }
+export function getStuWordNum(id,params){
+  return request({//查询生词、夹生词等
+    url:getUrlBase()+'/pkStuWordLearning/getStuWordNum/'+id,
+    method:'get',
+    params:params
+  })
+}
+export function getStuUnitCompleteInfo(id,params){
+  return request({//查询学生学习详情
+    url:getUrlBase()+'/pkStuUnitLearning/getStuUnitCompleteInfo/'+id,
+    method:'get',
+    params:params
+  })
+}
+export function getStuExamCorrectRate(id,params){
+  return request({//查询题型得分率分析
+    url:getUrlBase()+'/pkStuExamAnswer/getStuExamCorrectRate/'+id,
+    method:'get',
+    params:params
+  })
+}
+
 
 /**成绩列表 -E */
 
