@@ -2,14 +2,14 @@
   <div class="splitScreen">
     <div class="first">
         <div>
-            <label><span>战神队</span></label>
+            <label><span>{{first.groupItemName}}</span></label>
             <h5>
                 <span>排名 1</span>
                 <span>平均分 99 分</span>
             </h5>
         </div>
         <ul>
-            <li v-for="(list,index) in firstData" :key="index">
+            <li v-for="(list,index) in first.stuInfoList" :key="index">
                 <p>{{list.realName}} {{list.wordNum}}</p>
                 <p class="progress groupProgress"><span :style="{width:list.wordNum*3+'px'}"></span></p>
             </li>
@@ -25,7 +25,7 @@
             </h5>
         </div>
         <ul>
-            <li v-for="(list,index) in secondData" :key="index">
+            <li v-for="(list,index) in second.stuInfoList" :key="index">
                 <p>{{list.realName}} {{list.wordNum}}</p>
                 <p class="progress groupProgress"><span :style="{width:list.wordNum*3+'px'}"></span></p>
             </li>
@@ -35,9 +35,6 @@
 </template>
 
 <script>
-import { getStuInfoInGroup } from '@/api/table'
-
-
 export default {
   name: 'splitScreen',
 
@@ -50,24 +47,17 @@ export default {
     }
   },
   created() {
-    this.first = this.$route.query.first;
-    this.second = this.$route.query.second;
-    this.getStuInfoInGroup()
+    this.first = JSON.parse(this.$route.query.first);
+    this.second = JSON.parse(this.$route.query.second);
+    // for(let i=0;i<this.second.stuInfoList.length;i++){
+    //     this.second.stuInfoList[i].average = this.second.stuInfoList;
+    // }
   },
   watch:{
     
   },
   methods: {
-    getStuInfoInGroup(){
-        getStuInfoInGroup({classId:this.$route.query.classId,groupItemId:this.$route.query.first}).then(res=>{
-            this.firstData = res.data.stuList;
-        })
-        if(this.$route.query.second){
-            getStuInfoInGroup({classId:this.$route.query.classId,groupItemId:this.$route.query.second}).then(res=>{
-                this.secondData = res.data.stuList;
-            })
-        }
-    }
+
   }
 }
 </script>

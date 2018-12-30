@@ -63,7 +63,7 @@ export default {
       StuUnitCompleteInfoData:{},
       stuInfoPage:{
         page:1,
-        limit:15
+        limit:10
       },
       stuInfoTotal:0,
       ClassExamCorrectRateData:[]
