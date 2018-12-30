@@ -101,7 +101,6 @@ export default {
         })
      },
      addGold(stuId){
-         alert(stuId);
          this.stuId = stuId;
          this.goldFormVisible = true;
          this.$nextTick(() => {
