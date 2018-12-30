@@ -4,7 +4,7 @@
       <el-date-picker v-model="search.startDate" value-format="yyyy-MM-dd" placeholder="请选择开始时间"></el-date-picker>
       <el-date-picker v-model="search.endDate"  value-format="yyyy-MM-dd" placeholder="请选择结束时间"></el-date-picker>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
-      <el-button type="primary" icon="el-icon-search" @click="getClassGrade"> </el-button>
+      <el-button type="primary" icon="el-icon-search" @click="selectFrom"> </el-button>
     </form>
     <teaching-tab ></teaching-tab>
     <div class="resultsMain">
@@ -15,7 +15,8 @@
         </div>
         <span class="fr sort" @click="orderButton('DESC')" v-if="search.order=='ASC'&&type==1">升序</span>
         <span class="fr sort" @click="orderButton('ASC')" v-if="search.order=='DESC'&&type==1">降序</span>
-          </span>
+        <span class="fr sort" v-if="type==2" @click="splitScreen">分屏展示</span>
+          
       </div>
       <div v-if="type==1">
         <el-table border :data="eduList"  @row-click="stuInfo">
@@ -70,7 +71,7 @@ export default {
       totalNum:0,
       search:{
         page:1,
-        limit:15,
+        limit:10,
         startDate:'',
         endDate:'',
         pattern:'',
@@ -84,6 +85,10 @@ export default {
     this.getClassGroupGrade();
   },
   methods:{
+    selectFrom(){
+      this.getClassGrade();
+      this.getClassGroupGrade();
+    },
     stuInfo(row){//链接
       this.$router.push({
         name:'stuInfo',
@@ -96,7 +101,7 @@ export default {
     getClassGrade(){//查询班级成绩
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;
-        this.totalNum = res.data.stuList.pages;
+        this.totalNum = res.data.stuList.total;
       })
     },
     orderButton(order){//排序
@@ -114,6 +119,17 @@ export default {
         }
         this.groupList = res.data.groupItemList;
       })
+    },
+    splitScreen(){
+      for(let i=0;i<this.groupList.length/2;i++){
+        if(this.groupList.length>2*i+1){
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&second='+JSON.stringify(this.groupList[2*i+1]),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        }else{
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i]),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        }
+      }
+      
+      
     },
   }
 }

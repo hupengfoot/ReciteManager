@@ -26,11 +26,17 @@
       <div class="details" v-show="type=='details'">
         <div class="detailsMain">
           <el-table border :data="StuUnitCompleteInfoData.records">
-            <el-table-column label="单元章节" prop="course"></el-table-column>
+            <el-table-column label="章节" prop="chapter"></el-table-column>
+            <el-table-column label="组名" prop="group"></el-table-column>
+            <el-table-column label="单元" prop="unit"></el-table-column>
             <el-table-column label="首次掌握" prop="firstPass"></el-table-column>
             <el-table-column label="二次掌握" prop="timesPass"></el-table-column>
             <el-table-column label="未掌握" prop="noPass"></el-table-column>
-            <el-table-column label="学习时间"></el-table-column>
+            <el-table-column label="学习时间" prop="learnTime">
+              <template slot-scope="scope">
+                {{scope.row.learnTime | timestamp}}
+              </template>
+            </el-table-column>
           </el-table>
           <pagination v-show="stuInfoTotal>0" :total="stuInfoTotal" :page.sync="stuInfoPage.page" :limit.sync="stuInfoPage.limit" @pagination="getStuUnitCompleteInfo" />
         </div>
@@ -57,7 +63,7 @@ export default {
       StuUnitCompleteInfoData:{},
       stuInfoPage:{
         page:1,
-        limit:15
+        limit:10
       },
       stuInfoTotal:0,
       ClassExamCorrectRateData:[]
@@ -99,7 +105,13 @@ export default {
     },
     getStuUnitCompleteInfo(){
       getStuUnitCompleteInfo(this.$route.query.stuId,this.stuInfoPage).then(res=>{
+        for(let i=0;i<res.data.stuUnitLearningInfo.records.length;i++){
+          res.data.stuUnitLearningInfo.records[i].chapter = res.data.stuUnitLearningInfo.records[i].course.split(';')[0]
+          res.data.stuUnitLearningInfo.records[i].group = res.data.stuUnitLearningInfo.records[i].course.split(';')[1]
+          res.data.stuUnitLearningInfo.records[i].unit = res.data.stuUnitLearningInfo.records[i].course.split(';')[2]
+        }
         this.StuUnitCompleteInfoData = res.data.stuUnitLearningInfo
+        console.log(this.StuUnitCompleteInfoData)
         this.stuInfoTotal = res.data.stuUnitLearningInfo.pages
       })
     },
@@ -107,7 +119,7 @@ export default {
       getStuExamCorrectRate(this.$route.query.stuId).then(res=>{
         this.ClassExamCorrectRateData.name = ['英文选义','听音选英','中文选词','看义拼词'];
         this.ClassExamCorrectRateData.percentage = [isUndefined(res.data.examCorrectNum.EnglishToChinese),isUndefined(res.data.examCorrectNum.ListenToEnglish),isUndefined(res.data.examCorrectNum.ChineseToChoice),isUndefined(res.data.examCorrectNum.ChineseToEnglish)]
-        console.log(this.ClassExamCorrectRateData)
+        //console.log(this.ClassExamCorrectRateData)
         this.ClassExamCorrectRate()
       })
     },
@@ -184,6 +196,7 @@ export default {
         wordNum.setOption({
             color: ['#3398DB'],
             tooltip : {
+              formatter:'{c}%'
             },
             grid: {
                 left: '3%',
@@ -210,6 +223,7 @@ export default {
                     name:'',
                     type:'bar',
                     barWidth: '60%',
+                    formatter: '{b}\n{c}%',
                     data:this.ClassExamCorrectRateData.percentage
                 }
             ]
