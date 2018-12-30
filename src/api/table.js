@@ -177,6 +177,21 @@ export function getStuExamCorrectRate(id,params){
   })
 }
 
+export function getStuWordNumPerDay(id,params){
+  return request({//查询早晚生词熟词夹生词
+    url:getUrlBase()+'/pkStuWordLearning/getStuWordNumPerDay/'+id,
+    method:'get',
+    params:params
+  })
+}
+
+export function getStuInfoInGroup(params){
+  return request({//查询小组内学生信息
+    url:getUrlBase()+'/pkGroupItem/getStuInfoInGroup',
+    method:'get',
+    params:params
+  })
+}
 
 /**成绩列表 -E */
 

@@ -15,7 +15,8 @@
         </div>
         <span class="fr sort" @click="orderButton('DESC')" v-if="search.order=='ASC'&&type==1">升序</span>
         <span class="fr sort" @click="orderButton('ASC')" v-if="search.order=='DESC'&&type==1">降序</span>
-          </span>
+        <span class="fr sort" v-if="type==2" @click="splitScreen">分屏展示</span>
+          
       </div>
       <div v-if="type==1">
         <el-table border :data="eduList"  @row-click="stuInfo">
@@ -114,6 +115,21 @@ export default {
         }
         this.groupList = res.data.groupItemList;
       })
+    },
+    splitScreen(){
+      
+
+
+      for(let i=0;i<this.groupList.length/2;i++){
+        if(this.groupList.length>2*i+1){
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&second='+this.groupList[2*i+1].id,'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        // console.log('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&second='+this.groupList[2*i+1].id);
+        }else{
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id,'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        }
+      }
+      
+      
     },
   }
 }

@@ -24,7 +24,13 @@ import Layout from '../views/layout/Layout'
 export const constantRouterMap = [
   { path: '/login', component: () => import('@/views/login/index'), hidden: true },
   { path: '/404', component: () => import('@/views/404'), hidden: true },
-
+  {
+    path: '/splitScreen',
+    name: 'splitScreen',
+    component: () => import('@/views/educationManager/splitScreen'),
+    meta: { title: '分屏展示学生信息', icon: 'table' },
+    hidden:true,
+  },
   {
     path: '/',
     component: Layout,
@@ -95,6 +101,7 @@ export const constantRouterMap = [
         meta: { title: '学生学习信息', icon: 'table' },
         hidden:true,
       },
+      
     ]
   },
 
