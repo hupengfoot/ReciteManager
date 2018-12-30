@@ -92,7 +92,7 @@ export default {
     }
   },
   created() { 
-    this.classId = this.$route.query.classId;
+    this.classId = Number(this.$route.query.classId);
     this.getStuAndGroupInClass()
   },
   methods:{

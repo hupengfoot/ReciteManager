@@ -216,3 +216,10 @@ export function deleteUserFromAdmin(params){
     params:params
   })
 }
+export function getGroupItemList(id, params){
+  return request({
+    url:getUrlBase() + '/pkGroupItem/getGroupItemList/' + id,
+    method: 'GET',
+    params: params
+  })
+}
