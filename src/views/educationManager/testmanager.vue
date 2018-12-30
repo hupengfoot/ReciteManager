@@ -6,9 +6,9 @@
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="testmanagerMain">
       <div class="testDetails" v-for="(item,index) in testList" :key="index">
-        <p class="serialNumber">编号：{{item.id}}</p>
-        <h5 class="grade">{{item.groupItemName}}</h5>
-        <p class="peopleNum">{{item.stuNum}}人</p>
+        <p class="serialNumber">{{item.id}}</p>
+        <h5 class="grade">{{item.title}}</h5>
+        <p class="peopleNum">词汇量:{{item.questionNum}}个</p>
         <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">试卷详情</el-button></router-link>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {getStuInfoInGroup, rewardGold } from '@/api/table'
+import {getPaperListByClassId } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'testmanager',
@@ -49,9 +49,19 @@ export default {
     this.classId = Number(this.$route.query.classId);
     this.pattern = "";
     this.dialogFormVisible = false;
+    this.getPaperListByClassId();
   },
   methods:{
-    
+    getPaperListByClassId(){
+        getPaperListByClassId(this.classId, {
+            classId: this.classId,
+            page: 1,
+            limit: 200,
+            pattern: ""
+        }).then(res => {
+            this.testList = res.data.paperList.records;
+        })
+    }
   }
 }
 </script>

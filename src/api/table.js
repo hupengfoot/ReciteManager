@@ -251,3 +251,10 @@ export function deleteLink(params){
     params: params
   })
 }
+export function getPaperListByClassId(id, params){
+  return request({
+    url: getUrlBase() + '/pkPaper/getPaperListByClassId/' + id,
+    method: 'GET',
+    params: params
+  })
+}
