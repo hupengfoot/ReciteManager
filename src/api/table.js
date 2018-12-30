@@ -223,3 +223,17 @@ export function getGroupItemList(id, params){
     params: params
   })
 }
+export function createGroupItemBatch(id, params){
+  return request({
+    url:getUrlBase() + '/pkGroupItem/createGroupItemBatch/' + id,
+    method: 'PUT',
+    params: params
+  })
+}
+export function rewardGold(params){
+  return request({
+    url: getUrlBase() + '/pkStudent/rewardGold',
+    method: 'PUT',
+    params: params
+  })
+}

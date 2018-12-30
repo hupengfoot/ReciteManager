@@ -102,6 +102,13 @@ export const constantRouterMap = [
         hidden:true,
       },
       {
+        path: 'groupmembermanager',
+        name: 'groupmembermanager',
+        component: () => import('@/views/educationManager/groupmembermanager'),
+        meta: {title: '分组成员管理', icon: 'table'},
+        hidden:true,
+      },
+      {
         path: 'educationManager',
         name: 'educationManager',
         component: () => import('@/views/educationManager/resultsCenter'),

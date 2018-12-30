@@ -1,23 +1,35 @@
 <template>
   <div class="groupmanager">
-    <el-input placeholder="请输入分组名称或关键字进行查询" style="width: 400px;" class="filter-item"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" >{{ '查找' }}</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="">{{ '创建小组' }}</el-button>
+    <el-input placeholder="请输入分组名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getGroupItemList"/>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getGroupItemList">{{ '查找' }}</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addGroup">{{ '创建小组' }}</el-button>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="groupmanagerMain">
       <div class="groupDeatils" v-for="(item,index) in groupList" :key="index">
         <p class="serialNumber">编号：{{item.id}}</p>
         <h5 class="grade">{{item.groupItemName}}</h5>
         <p class="peopleNum">{{item.stuNum}}人</p>
-        <router-link :to="{path:'/student',query:{classId:item.id}}"><el-button class="joinClass">进入班级</el-button></router-link>
+        <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">进入小组</el-button></router-link>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
     </div>
+
+     <el-dialog title="创建小组" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="组数">
+          <el-input v-model="newgroupnum"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="createGroupItemBatch">{{ '创建' }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getGroupItemList } from '@/api/table'
+import {getGroupItemList, createGroupItemBatch } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'groupmanager',
@@ -31,10 +43,14 @@ export default {
         limit: 200,
         totalNum:0,
       },
+      pattern: "",
+      dialogFormVisible: false,
+      newgroupnum: "",
     }
   },
   created() { 
     this.classId = Number(this.$route.query.classId);
+    this.pattern = "";
     this.getGroupItemList();
   },
   methods:{
@@ -43,11 +59,40 @@ export default {
             page:this.pageInfo.page,
             limit:this.pageInfo.limit,
             classId:this.classId,
-            pattern:""
+            pattern:this.pattern
         }).then(res=>{
             this.groupList = res.data.groupItemList.records;
             this.pageInfo.totalNum = res.data.groupItemList.total;
         })
+      },
+      addGroup(){
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate        
+        })
+      },
+      createGroupItemBatch(){
+          this.dialogFormVisible = false
+          createGroupItemBatch(this.classId, {
+              classId: this.classId,
+              num: this.newgroupnum
+          }).then(res=>{
+              if(res.data.code === 0){
+                this.$notify({
+                  title: '成功',
+                  message: '创建学习小组成功',
+                  type: 'success',
+                  duration: 2000
+                })
+              }else{
+                this.$notify({
+                  title: '创建学习小组失败',
+                  message: res.data.msg,
+                  type: 'failed',
+                  duration: 2000
+                })
+              }
+          })
       }
   }
 }

@@ -1,0 +1,234 @@
+<template>
+  <div class="groupmembermanager">
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addStudent">{{ '新增组员' }}</el-button>
+    <teaching-tab :classId="classId" ></teaching-tab>
+    <div class="groupmembermanagerMain">
+      <el-table border :data="stuList">
+        <el-table-column align="center" label="序号" width="95">
+          <template slot-scope="scope">
+            {{ scope.$index }}
+          </template>
+        </el-table-column>
+        <el-table-column label="ID" prop="stuId"></el-table-column>
+        <el-table-column label="姓名" prop="realName"></el-table-column>
+        <el-table-column label="性别">
+          <template slot-scope="scope">
+            {{scope.row.gender | gender}}
+          </template>
+        </el-table-column>
+        <el-table-column label="进度" width="400">
+          <template slot-scope="scope">
+            <p class="progress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+          </template>
+        </el-table-column>
+        <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button type="primary" size="mini" @click="addGold(scope.row.stuId)">{{ '奖励金币' }}</el-button>
+            <el-button size="mini" type="danger" @click="deletedTeacher(scope.row)">{{ '删除' }}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <el-dialog title="新增组员" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="ID">
+          <el-input v-model="stuId"/>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="realName"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="createGroupItemBatch">{{ '确定' }}</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="奖励金币" :visible.sync="goldFormVisible">
+      <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="金币">
+          <el-input v-model="goldNum"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="goldFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="rewardGold">{{ '确定' }}</el-button>
+      </div>
+    </el-dialog>
+
+  </div>
+</template>
+
+<script>
+import {getStuInfoInGroup, rewardGold } from '@/api/table'
+import teachingTab from '@/components/teaching/teachingTab'
+export default {
+  name: 'groupmembermanager',
+  components: { teachingTab },
+  data(){
+    return{
+      classId: 0,
+      groupItemId: 0,
+      stuList: [],
+      dialogFormVisible: false,
+      goldFormVisible: false,
+      goldNum: 0,
+      stuId: "",
+      realName: "",
+    }
+  },
+  created() { 
+    this.classId = Number(this.$route.query.classId);
+    this.groupItemId = Number(this.$route.query.groupItemId);
+    this.pattern = "";
+    this.dialogFormVisible = false;
+    this.getStuInfoInGroup();
+  },
+  methods:{
+     getStuInfoInGroup(){
+         getStuInfoInGroup({
+             groupItemId: this.groupItemId,
+             classId: this.classId
+         }).then(res=>{
+            this.stuList = res.data.stuList;
+         })
+     },
+     addStudent(){
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate        
+        })
+     },
+     addGold(stuId){
+         alert(stuId);
+         this.stuId = stuId;
+         this.goldFormVisible = true;
+         this.$nextTick(() => {
+             this.$refs['goldForm'].clearValidate 
+         })
+     },
+     rewardGold(){
+         this.goldFormVisible = false;
+         rewardGold({
+             stuId: this.stuId,
+             gold: this.goldNum
+         }).then(res=>{
+            if(res.data.code === 0){
+              this.$notify({
+                title: '成功',
+                message: '添加金币成功',
+                type: 'success',
+                duration: 2000
+              })
+            }else{
+              this.$notify({
+                title: '添加金币失败',
+                message: res.data.msg,
+                type: 'failed',
+                duration: 2000
+              })
+            }
+         })
+     }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.groupmembermanager {
+  padding:20px;
+  .searchForm{
+    height:50px;
+    line-height:50px;
+    .el-input{
+      width:220px;
+      margin-left:20px;
+
+    }
+  }
+  .groupmembermanagerMain{
+    .mainTop{
+      margin:20px 0;
+      text-align:center;
+      .mainTopButton{
+        display:inline-block;
+      
+        .el-button{
+          height:35px;
+          padding:0;
+          width:325px;
+          border-radius:0;
+          
+          &:first-child{
+            border-top-left-radius:20px;
+            border-bottom-left-radius:20px;
+          }
+          &:nth-child(2){
+            border-top-right-radius:20px;
+            border-bottom-right-radius:20px;
+            position:relative;
+            left:-15px;
+            border-left:none;
+          }
+          &.dafult{
+            background:#409EFF;
+            color:#fff;
+          }
+        }
+        
+      }
+      .sort{
+        margin-right:20px;
+        font-size:14px;
+        line-height:35px; 
+        cursor:pointer;
+      }
+    }
+  }
+  .el-table{
+    .progress{
+      height:5px;
+      width:300px;
+      background:rgba(233, 233, 233, 1);
+      border-radius:20px;
+      position:relative;
+      span{
+        position:absolute;
+        left:0;
+        top:0;
+        display:inline-block;
+        background:rgb(255,210,21,1);
+        height:5px;
+      }
+    }
+    
+      &:nth-child(1){
+        .groupProgress{
+          span{
+            background:#409eff;
+          }
+        }
+      }
+      &:nth-child(2){
+        .groupProgress{
+          span{
+            background:#67c23a;
+          }
+        }
+      }
+      // &:nth-child(3){
+      //   span{
+      //     background:#e6a23c;
+      //   }
+      // }
+      // &:nth-child(4){
+      //   span{
+      //     background:#f56c6c;
+      //   }
+      // }
+    
+
+  }
+}
+</style>
