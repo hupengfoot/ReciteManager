@@ -109,6 +109,13 @@ export const constantRouterMap = [
         hidden:true,
       },
       {
+        path: 'testmanager',
+        name: 'testmanager',
+        component: () => import('@/views/educationManager/testmanager'),
+        meta: {title: '测试管理', icon: 'table'},
+        hidden:true,
+      },
+      {
         path: 'educationManager',
         name: 'educationManager',
         component: () => import('@/views/educationManager/resultsCenter'),

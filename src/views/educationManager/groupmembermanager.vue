@@ -24,7 +24,7 @@
         <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="addGold(scope.row.stuId)">{{ '奖励金币' }}</el-button>
-            <el-button size="mini" type="danger" @click="deletedTeacher(scope.row)">{{ '删除' }}</el-button>
+            <el-button size="mini" type="danger" @click="deleteLink(scope.row.stuId)">{{ '删除' }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -41,7 +41,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
-        <el-button type="primary" @click="createGroupItemBatch">{{ '确定' }}</el-button>
+        <el-button type="primary" @click="addStu2Group">{{ '确定' }}</el-button>
       </div>
     </el-dialog>
 
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import {getStuInfoInGroup, rewardGold } from '@/api/table'
+import {getStuInfoInGroup, rewardGold, addStu2Group, deleteLink } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'groupmembermanager',
@@ -123,6 +123,53 @@ export default {
             }else{
               this.$notify({
                 title: '添加金币失败',
+                message: res.data.msg,
+                type: 'failed',
+                duration: 2000
+              })
+            }
+         })
+     },
+     addStu2Group(){
+        this.dialogFormVisible = false;
+        addStu2Group({
+            groupItemId: this.groupItemId,
+            stuIdList: this.stuId
+        }).then(res => {
+            if(res.data.code === 0){
+              this.$notify({
+                title: '成功',
+                message: '添加小组成员成功',
+                type: 'success',
+                duration: 2000
+              })
+              location.reload()
+            }else{
+              this.$notify({
+                title: '添加小组成员失败',
+                message: res.data.msg,
+                type: 'failed',
+                duration: 2000
+              })
+            }
+        })
+     },
+     deleteLink(stuId){
+         deleteLink({
+             groupItemId: this.groupItemId,
+             stuId: stuId
+         }).then(res => {
+            if(res.data.code === 0){
+              this.$notify({
+                title: '成功',
+                message: '删除小组成员成功',
+                type: 'success',
+                duration: 2000
+              })
+              location.reload()
+            }else{
+              this.$notify({
+                title: '删除小组成员失败',
                 message: res.data.msg,
                 type: 'failed',
                 duration: 2000

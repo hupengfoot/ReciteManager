@@ -237,3 +237,17 @@ export function rewardGold(params){
     params: params
   })
 }
+export function addStu2Group(params){
+  return request({
+    url: getUrlBase() + '/pkLinkGroupStu/addStu2Group',
+    method: 'PUT',
+    params: params
+  })
+}
+export function deleteLink(params){
+  return request({
+    url: getUrlBase() + '/pkLinkGroupStu/deleteLink',
+    method: 'DELETE',
+    params: params
+  })
+}

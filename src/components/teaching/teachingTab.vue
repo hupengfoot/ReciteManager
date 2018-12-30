@@ -4,7 +4,7 @@
         <ul>
           <li @click="tab('classmateList', 'classmatelist')" :class="{'default':teachingTab==''||teachingTab=='classmateList'}">班级列表</li>
           <li @click="tab('groupmanager', 'groupmanager')" :class="{'default':teachingTab==''||teachingTab=='groupmanager'}">分组管理</li>
-          <li>测试管理</li>
+          <li @click="tab('testmanager', 'testmanager')" :class="{'default':teachingTab==''||teachingTab=='testmanager'}">测试管理</li>
           <li @click="tab('resultsCenter','educationManager')" :class="{'default':teachingTab=='resultsCenter'}">成绩列表</li>
           <li>错题本</li>
         </ul>
