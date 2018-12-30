@@ -2,7 +2,7 @@
     <div class="teachingTab">
         <h3>教学管理</h3>
         <ul>
-          <li @click="tab('classList')" :class="{'default':teachingTab==''||teachingTab=='classList'}">班级列表</li>
+          <li @click="tab('classmateList', 'classmatelist')" :class="{'default':teachingTab==''||teachingTab=='classmateList'}">班级列表</li>
           <li>分组管理</li>
           <li>测试管理</li>
           <li @click="tab('resultsCenter','educationManager')" :class="{'default':teachingTab=='resultsCenter'}">成绩列表</li>
@@ -17,7 +17,10 @@ import { mapGetters } from 'vuex'
 export default {
   name:'stuDialog',
   props:{
-    
+    classId: {  //需要传入classId
+      required: true,
+      type: Number
+    },
   },
   
   computed:{
@@ -35,6 +38,9 @@ export default {
       this.$store.state.teaching.teachingTab = tab;
       this.$router.push({
         name:path,
+        query:{
+          classId:this.classId
+        }
       });
     }
   },

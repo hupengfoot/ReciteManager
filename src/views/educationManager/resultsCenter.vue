@@ -6,7 +6,7 @@
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="getClassGrade"> </el-button>
     </form>
-    <teaching-tab></teaching-tab>
+    <teaching-tab ></teaching-tab>
     <div class="resultsMain">
       <div class="mainTop">
         <div class="mainTopButton">

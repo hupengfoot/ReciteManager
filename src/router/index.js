@@ -82,6 +82,13 @@ export const constantRouterMap = [
         meta: { title: '教学管理', icon: 'table' }
       },
       {
+        path: 'classmatelist',
+        name: 'classmatelist',
+        component: () => import('@/views/educationManager/classmatelist'),
+        meta: {title: '班级管理', icon: 'table'},
+        hidden:true,
+      },
+      {
         path: 'educationManager',
         name: 'educationManager',
         component: () => import('@/views/educationManager/resultsCenter'),
