@@ -14,10 +14,10 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
-       <el-table-column label="在线状态" align="center">
+      <el-table-column label="在线状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.username }}
-        </template>
+            <img src="@/assets/online.jpeg" height="20" width="20" > 
+        </template> 
       </el-table-column>
       <el-table-column label="ID" align="center">
         <template slot-scope="scope">
