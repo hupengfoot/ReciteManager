@@ -33,10 +33,6 @@ export default {
           return true
         }
       })
-      const first = matched[0]
-      if (first && first.name !== 'dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
-      }
       this.levelList = matched
     },
     pathCompile(path) {

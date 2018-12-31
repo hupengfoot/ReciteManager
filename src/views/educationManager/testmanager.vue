@@ -1,31 +1,34 @@
 <template>
   <div class="testmanager">
-    <el-input placeholder="请输入测试名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native=""/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="">{{ '查找' }}</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="">{{ '创建测试' }}</el-button>
+    <el-input placeholder="请输入测试名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getPaperListByClassId"/>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getPaperListByClassId">{{ '查找' }}</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addTest">{{ '创建测试' }}</el-button>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="testmanagerMain">
       <div class="testDetails" v-for="(item,index) in testList" :key="index">
-        <p class="serialNumber">{{item.id}}</p>
+        <p class="serialNumber">{{item.questionNum === 0 ? "待导入试题" : "发布试卷"}}</p>
         <h5 class="grade">{{item.title}}</h5>
-        <p class="peopleNum">词汇量:{{item.questionNum}}个</p>
-        <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">试卷详情</el-button></router-link>
+        <p class="peopleNum">词汇量:{{item.questionNum}}个  时长:{{item.limitTime}}秒</p>
+        <router-link :to="{name:'testdetail',query:{paperId:item.id}}"><el-button class="joinClass">试卷详情</el-button></router-link>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
     </div>
 
-    <el-dialog title="新增组员" :visible.sync="dialogFormVisible">
+    <el-dialog title="创建测试" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="ID">
-          <el-input/>
+        <el-form-item label="名称">
+          <el-input v-model="testname"/>
         </el-form-item>
-        <el-form-item label="姓名">
-          <el-input/>
+        <el-form-item label="单词数">
+          <el-input v-model="questionNum"/>
+        </el-form-item>
+        <el-form-item label="时间(s)">
+          <el-input v-model="limitTime"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
-        <el-button type="primary" @click="">{{ '确定' }}</el-button>
+        <el-button type="primary" @click="createPaper">{{ '确定' }}</el-button>
       </div>
     </el-dialog>
 
@@ -33,7 +36,7 @@
 </template>
 
 <script>
-import {getPaperListByClassId } from '@/api/table'
+import {getPaperListByClassId, createPaper } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'testmanager',
@@ -43,6 +46,10 @@ export default {
       classId: 0,
       testList: [],
       dialogFormVisible: false,
+      pattern: "",
+      testname: "",
+      questionNum: "",
+      limitTime: ""
     }
   },
   created() { 
@@ -57,9 +64,40 @@ export default {
             classId: this.classId,
             page: 1,
             limit: 200,
-            pattern: ""
+            pattern: this.pattern
         }).then(res => {
             this.testList = res.data.paperList.records;
+        })
+    },
+    createPaper(){
+        createPaper({
+            classId: this.classId,
+            limitTime: this.limitTime,
+            title: this.testname,
+            totalScore: 100
+        }).then(res => {
+            if(res.data.code === 0){
+              this.$notify({
+                title: '成功',
+                message: '添加试卷成功',
+                type: 'success',
+                duration: 2000
+              });
+              location.reload();
+            }else{
+              this.$notify({
+                title: '添加试卷失败',
+                message: res.data.msg,
+                type: 'failed',
+                duration: 2000
+              })
+            }
+        })
+    },
+    addTest(){
+        this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate 
         })
     }
   }

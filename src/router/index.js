@@ -42,11 +42,11 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-
-  
-
   {
     path: '/classmanager',
+    name: '班级管理',
+    meta: { title: '班级管理', icon: 'table' },
+    redirect: '/classmanager/index',
     component: Layout,
     children: [
       {
@@ -79,6 +79,9 @@ export const constantRouterMap = [
   },
   {
     path: '/teachingmanager',
+    name: "教学管理",
+    meta: { title: '教学管理', icon: 'example' },
+    redirect: '/teachingmanager/index',
     component: Layout,
     children: [
       {
@@ -113,6 +116,13 @@ export const constantRouterMap = [
         name: 'testmanager',
         component: () => import('@/views/educationManager/testmanager'),
         meta: {title: '测试管理', icon: 'table'},
+        hidden:true,
+      },
+      {
+        path: 'testdetail',
+        name: 'testdetail',
+        component: () => import('@/views/educationManager/testdetail'),
+        meta: {title: '试卷详情', icon: 'table'},
         hidden:true,
       },
       {

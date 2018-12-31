@@ -258,3 +258,10 @@ export function getPaperListByClassId(id, params){
     params: params
   })
 }
+export function createPaper(params){
+  return request({
+    url: getUrlBase() + '/pkPaper/createPaper',
+    method: 'POST',
+    data:params
+  })
+}
