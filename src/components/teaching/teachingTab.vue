@@ -28,6 +28,13 @@ export default {
       return this.$store.state.teaching.teachingTab
     },
   },
+
+  created(){
+    //页面载入时获取当前tab标识
+    let currentTab = this.$route.path.split('/')[2];
+    this.$store.state.teaching.teachingTab = currentTab;
+  },
+
   data(){
     return{
       
