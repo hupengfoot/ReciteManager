@@ -12,36 +12,54 @@
         <el-table-column label="姓名" prop="realName"></el-table-column>
         <el-table-column label="分数">
           <template slot-scope="scope">
-            {{}}
+            {{ scope.row.score }}
           </template>
         </el-table-column>
         <el-table-column label="用时">
           <template slot-scope="scope">
-            {{}}
+            {{ scope.row.time }}
           </template>
         </el-table-column>
     </el-table>
-
+    <pagination v-show="pageInfo.totalNum>0" :total="pageInfo.totalNum" :page.sync="pageInfo.page" :limit.sync="pageInfo.limit" @pagination="getPaperProgressRate" />
   </div>
 </template>
 
 <script>
-import {getPaperListByClassId, createPaper } from '@/api/table'
+import {getPaperProgressRate } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
+import Pagination from '@/components/Pagination'
 export default {
   name: 'testdetail',
-  components: { teachingTab },
+  components: { teachingTab, Pagination },
   data(){
     return{
       classId: 0,
+      paperId: 0,
       stuList: [],
+      pageInfo:{
+          totalNum: 0,
+          page: 1,
+          limit: 20,
+      }
     }
   },
   created() { 
-    this.classId = Number(this.$route.query.classId);
+    this.paperId = Number(this.$route.query.paperId);
+    this.getPaperProgressRate();
   },
   methods:{
-    
+    getPaperProgressRate(){
+        getPaperProgressRate(this.paperId, {
+            paperId: this.paperId,
+            page: this.pageInfo.page,
+            limit: this.pageInfo.limit,
+            pattern: ""
+        }).then(res => {
+            this.stuList = res.data.detailList.records;
+            this.pageInfo.totalNum = res.data.detailList.total;
+        })
+    }
   }
 }
 </script>

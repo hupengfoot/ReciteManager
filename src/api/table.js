@@ -265,3 +265,10 @@ export function createPaper(params){
     data:params
   })
 }
+export function getPaperProgressRate(id, params){
+  return request({
+    url: getUrlBase() + '/pkPaper/getPaperProgressRate/' + id,
+    method: 'GET',
+    params: params
+  })
+}
