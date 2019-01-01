@@ -272,3 +272,10 @@ export function getPaperProgressRate(id, params){
     params: params
   })
 }
+export function getQuestionList(id, params){
+  return request({
+    url: getUrlBase() + '/pkQuestion/getQuestionList/' + id,
+    method: 'GET',
+    params: params
+  })
+}

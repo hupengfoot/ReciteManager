@@ -142,7 +142,6 @@ export const constantRouterMap = [
       
     ]
   },
-
   {
     path: '/diagnosis',
     component: Layout,
@@ -150,7 +149,7 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '诊断报告',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/dashboard/diagnosis'),
         meta: { title: '诊断报告', icon: 'form' }
       }
     ]
