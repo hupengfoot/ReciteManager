@@ -295,3 +295,17 @@ export function getQuestionList(id, params){
     params: params
   })
 }
+export function getClassGradePerDay(id, params){
+  return request({
+    url: getUrlBase() + '/pkStuUnitExam/getClassGradePerDay/' + id,
+    method: 'GET',
+    params: params
+  })
+}
+export function getClassExamCorrectRate(id, params){
+  return request({
+    url:getUrlBase() + '/pkStuExamAnswer/getClassExamCorrectRate/' + id,
+    method: 'GET',
+    params:params
+  })
+}
