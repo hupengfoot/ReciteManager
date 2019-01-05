@@ -286,3 +286,10 @@ export function getClassGradePerDay(id, params){
     params: params
   })
 }
+export function getClassExamCorrectRate(id, params){
+  return request({
+    url:getUrlBase() + '/pkStuExamAnswer/getClassExamCorrectRate/' + id,
+    method: 'GET',
+    params:params
+  })
+}

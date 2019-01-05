@@ -7,20 +7,22 @@
       </ul>
     </div>
     <div>
-      <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false">
+      <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false" ref="messageDrop">
       <div class="avatar-wrapper">
         <img src="@/assets/shaixuan.jpeg" class="user-avatar" height="20" width="20">
         <span class="name">筛选</span>
         <i class="el-icon-caret-bottom"/>
       </div>
-      <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <div class="classList" v-for="(item, index) in classList" :key="index">
-          <el-dropdown-item divided>
-            <span><el-checkbox/></span> <span>{{item.className}}</span>
-          </el-dropdown-item>
-        </div>
+      <el-dropdown-menu slot="dropdown" class="user-dropdown" style="height:300px">
+        <el-scrollbar style="height:100%">
+          <div class="classList" v-for="(item, index) in classList" :key="index">
+            <el-dropdown-item divided>
+              <span><el-checkbox @change="handleCheckAllChange(item)"/></span> <span>{{item.className}}</span>
+            </el-dropdown-item>
+          </div>
+        </el-scrollbar>
         <div>
-          <el-button size="mini" type="danger" @click="">{{ '确定' }}</el-button>
+          <el-button size="mini" type="danger" @click="getCompareData()">{{ '确定' }}</el-button>
         </div>
       </el-dropdown-menu>
     </el-dropdown>
@@ -34,10 +36,12 @@
           </el-row>
         </div>
       </div>
-      <div class="classquesrate" v-show="type=='classquesrate'">
+      <div class="classquesrate" v-show="type=='classquesrate'" style="width: 700px">
         <h3>班级得分率分析</h3>
-        <div class="classquesrateMain">
-          <div id="ClassExamCorrectRate" :style="{width: '600px', height: '300px'}"></div>
+        <div class="classquesrateMain" style="width: 700px">
+          <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;width: 700px">
+            <histogram-chart :chart-data="histogramChartData"/>
+          </el-row>
         </div>
       </div>
     </div>
@@ -46,41 +50,43 @@
 </template>
 
 <script>
-import {getAllClassByTeacherId, getAllClass, getClassGradePerDay } from '@/api/table'
+import {getAllClassByTeacherId, getAllClass, getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
 import LineChart from '@/components/echarts/LineChart'
+import HistogramChart from '@/components/echarts/HistogramChart'
 import moment from 'moment'
 
 const lineChartData = {
-  xAxisData: ['2018-12-30', '2018-12-31', '2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05'],
+  xAxisData: [],
   yAxisData:[
-    {
-      yName: '三年一班',
-      yDataList: [100, 120, 161, 134, 105, 160, 165]
-    },
-    {
-      yName: '三年二班',
-      yDataList: [120, 82, 91, 154, 162, 140, 145]
-    }
+  ]
+}
+
+const HistogramChartData = {
+  xAxisData: ['汉选英', '看义拼单词', '英选汉', '听音选英'],
+  yAxisData:[
   ]
 }
 
 export default {
   name: 'diagnosisInfo',
-  components: { LineChart },
+  components: { 
+    LineChart,
+    HistogramChart
+  },
   data(){
     return{
         type:'classcompare',
         lineChartData: lineChartData,
+        histogramChartData: HistogramChartData,
         classList: [],
-        selectClassList: [{classId:1, className: "三年一班"}, {classId:1, className: "三年二班"}, {classId:9, className: '三年三班'}]
+        selectClassList: []
     }
   },
   mounted(){
     
   },
   created() { 
-    //this.getAllClass();
-    this.getlineChartData();
+    this.getAllClass();
   },
   methods:{
     getAllClassByTeacherId(){
@@ -99,6 +105,37 @@ export default {
         this.classList = res.data.classList;
       });
     },
+    getCompareData(){
+      this.$refs.messageDrop.hide();
+      if(this.type === "classcompare"){
+        this.getlineChartData();
+      }else{
+        this.getHistogramChartData();
+      }
+    },
+    getHistogramChartData(){
+      let xAxisData = ["汉选英", "看义拼单词", "英选汉", "听音选英"];
+      let yAxisData = [];
+      let promiseArray = [];
+      for(let i in this.selectClassList){
+        promiseArray.push(getClassExamCorrectRate(this.selectClassList[i].classId, {}));
+      }
+      Promise.all(promiseArray).then(resultList => {
+        for(let i in resultList){
+          let oneClassItem = {};
+          oneClassItem.yName = this.selectClassList[i].className;
+          oneClassItem.yDataList = [];
+          for(let j in resultList[i].data.examCorrectNum){
+            //TODO 这里要取百分数
+            oneClassItem.yDataList.push(resultList[i].data.examCorrectNum[j].rightNum / resultList[i].data.examCorrectNum[j].rightNum + resultList[i].data.examCorrectNum[j].wrongNum);
+          }
+          yAxisData.push(oneClassItem);
+        }
+        this.histogramChartData.xAxisData = xAxisData;
+        this.histogramChartData.yAxisData = yAxisData;
+      });
+
+    },
     getlineChartData(){
       let xAxisData = [];
       let yAxisData = [];
@@ -114,6 +151,11 @@ export default {
           let oneClassItem = {};
           oneClassItem.yName = this.selectClassList[i].className;
           oneClassItem.yDataList = [];
+          if(resultList[i].data.code === 500){
+            oneClassItem.yDataList = [0,0,0,0,0,0,0];
+            yAxisData.push(oneClassItem);
+            break;
+          }
           for(let j in xAxisData){
             let found = 0;
             for(let k in resultList[i].data.classGrade){
@@ -131,13 +173,21 @@ export default {
         }
         this.lineChartData.xAxisData = xAxisData;
         this.lineChartData.yAxisData = yAxisData;
+        //查询完毕后情况查询班级数组
+        this.selectClassList = [];
       })
     },
+    handleCheckAllChange(item){
+      this.selectClassList.push({classId:item.id, className:item.className});
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.el-scrollbar__wrap {
+   overflow-x: hidden;
+}
 .diagnosisInfo{
   width:100%;
   position:relative;
@@ -155,10 +205,6 @@ export default {
         float:left;
       }
     }
-  }
-  .classquesrateMain{
-    width:600px;
-    margin:0 auto;
   }
   .diagnosisTab{
     // position: fixed;
