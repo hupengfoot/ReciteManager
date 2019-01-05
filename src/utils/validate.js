@@ -33,3 +33,19 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+
+//日期增加
+export function addDate(date,days){
+  var d=new Date(date);
+  d.setDate(d.getDate()+days);
+  var month=d.getMonth()+1;
+  var day = d.getDate();
+  if(month<10){
+    month = "0"+month;
+  }
+  if(day<10){
+    day = "0"+day;
+  }
+  var val = d.getFullYear()+"-"+month+"-"+day;
+  return val;
+}

@@ -139,6 +139,13 @@ export const constantRouterMap = [
         meta: { title: '学生学习信息', icon: 'table' },
         hidden:true,
       },
+      {
+        path: 'wrongTopicRecord',
+        name: 'wrongTopicRecord',
+        component: () => import('@/views/educationManager/wrongTopicRecord'),
+        meta: { title: '错题本', icon: 'table' },
+        hidden:true,
+      },
       
     ]
   },

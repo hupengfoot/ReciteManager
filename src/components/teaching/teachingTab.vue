@@ -2,11 +2,11 @@
     <div class="teachingTab">
         <h3>教学管理</h3>
         <ul>
-          <li @click="tab('classmateList', 'classmatelist')" :class="{'default':teachingTab==''||teachingTab=='classmateList'}">班级列表</li>
+          <li @click="tab('classmatelist', 'classmatelist')" :class="{'default':teachingTab==''||teachingTab=='classmatelist'}">班级列表</li>
           <li @click="tab('groupmanager', 'groupmanager')" :class="{'default':teachingTab==''||teachingTab=='groupmanager'}">分组管理</li>
           <li @click="tab('testmanager', 'testmanager')" :class="{'default':teachingTab==''||teachingTab=='testmanager'}">测试管理</li>
-          <li @click="tab('resultsCenter','educationManager')" :class="{'default':teachingTab=='resultsCenter'}">成绩列表</li>
-          <li>错题本</li>
+          <li @click="tab('educationManager','educationManager')" :class="{'default':teachingTab==''||teachingTab=='educationManager'}">成绩列表</li>
+          <li @click="tab('wrongTopicRecord','wrongTopicRecord')" :class="{'default':teachingTab==''||teachingTab=='wrongTopicRecord'}">错题本</li>
         </ul>
     </div>
 </template>
@@ -46,7 +46,8 @@ export default {
       this.$router.push({
         name:path,
         query:{
-          classId:this.classId
+          classId:this.classId,
+          startDate:this.$route.query.startDate
         }
       });
     }

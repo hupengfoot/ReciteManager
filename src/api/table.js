@@ -192,6 +192,22 @@ export function getStuInfoInGroup(params){
     params:params
   })
 }
+export function wrongSet(id,params){
+  return request({//查询错题列表
+    url:getUrlBase()+'/pkStuExamAnswer/wrongSet/'+id,
+    method:'get',
+    params:params
+  })
+}
+export function getList(params){
+  return request({//查询问题类型
+    url:getUrlBase()+'/pkQuestionType/getList',
+    method:'get',
+    params:params
+  })
+}
+
+
 
 /**成绩列表 -E */
 
