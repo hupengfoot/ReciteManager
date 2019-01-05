@@ -33,7 +33,8 @@ export default {
   data() {
     return {
       chart: null,
-      sidebarElm: null
+      sidebarElm: null,
+      color:['#FF005A', '#3888fa', '#7B7B7B', '#FF0080', '#E800E8', '#921AFF', '#00E3E3', '#00EC00', '#E1E100', '#FF9224']
     }
   },
   watch: {
@@ -79,10 +80,50 @@ export default {
       }
     },
     //TODO 修改setOptions改变传入参数
-    setOptions({ expectedData, actualData, hahaData } = {}) {
+    /*
+      lineChartData:{
+        xAxisData: [],
+        yAxisData : [
+          {
+            yName: "xxx",
+            yDataList : [],
+          },
+          {
+            yName: "yyy",
+            yDataList : []
+          }
+        ]
+      }
+     
+    */
+    setOptions(lineChartData) {
+      let legendData = [];
+      let seriesData = [];
+      for(let i in lineChartData.yAxisData){
+        legendData.push(lineChartData.yAxisData[i].yName);
+        let tempData = {
+          name: lineChartData.yAxisData[i].yName, 
+          itemStyle: {
+            normal: {
+              color: this.color[i],
+              lineStyle: {
+                color: this.color[i],
+                width: 2
+              }
+            }
+          },
+          smooth: true,
+          type: 'line',
+          data: lineChartData.yAxisData[i].yDataList,
+          animationDuration: 2800,
+          animationEasing: 'cubicInOut'
+        };
+        seriesData.push(tempData);
+      }
+      
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: lineChartData.xAxisData,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -108,64 +149,9 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: legendData
         },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        },
-        {
-          name: 'haha',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: hahaData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
+        series: seriesData
       })
     },
     initChart() {

@@ -7,21 +7,21 @@
       </ul>
     </div>
     <div>
-      <el-dropdown class="avatar-container" trigger="click">
+      <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false">
       <div class="avatar-wrapper">
-        <img src="" class="user-avatar">
-        <span class="name">{{$store.getters.name}}</span>
+        <img src="@/assets/shaixuan.jpeg" class="user-avatar" height="20" width="20">
+        <span class="name">筛选</span>
         <i class="el-icon-caret-bottom"/>
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <el-dropdown-item divided>
-          <el-checkbox/>
-          <span style="display:block;" @click="">修改密码</span>
-        </el-dropdown-item>
-        <el-dropdown-item divided>
-          <el-checkbox/>
-          <span style="display:block;" @click="">退出登录</span>
-        </el-dropdown-item>
+        <div class="classList" v-for="(item, index) in classList" :key="index">
+          <el-dropdown-item divided>
+            <span><el-checkbox/></span> <span>{{item.className}}</span>
+          </el-dropdown-item>
+        </div>
+        <div>
+          <el-button size="mini" type="danger" @click="">{{ '确定' }}</el-button>
+        </div>
       </el-dropdown-menu>
     </el-dropdown>
     </div>
@@ -46,27 +46,22 @@
 </template>
 
 <script>
-import { } from '@/api/table'
+import {getAllClassByTeacherId, getAllClass, getClassGradePerDay } from '@/api/table'
 import LineChart from '@/components/echarts/LineChart'
+import moment from 'moment'
 
 const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145],
-    hahaData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
+  xAxisData: ['2018-12-30', '2018-12-31', '2019-01-01', '2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05'],
+  yAxisData:[
+    {
+      yName: '三年一班',
+      yDataList: [100, 120, 161, 134, 105, 160, 165]
+    },
+    {
+      yName: '三年二班',
+      yDataList: [120, 82, 91, 154, 162, 140, 145]
+    }
+  ]
 }
 
 export default {
@@ -75,14 +70,69 @@ export default {
   data(){
     return{
         type:'classcompare',
-        lineChartData: lineChartData.newVisitis
+        lineChartData: lineChartData,
+        classList: [],
+        selectClassList: [{classId:1, className: "三年一班"}, {classId:1, className: "三年二班"}, {classId:9, className: '三年三班'}]
     }
   },
   mounted(){
     
   },
+  created() { 
+    //this.getAllClass();
+    this.getlineChartData();
+  },
   methods:{
-    
+    getAllClassByTeacherId(){
+      getAllClassByTeacherId({
+        isAll:1,
+        pattern:""
+      }).then(res=>{
+        this.classList = res.data.classList;
+      });
+    },
+     getAllClass(){
+      getAllClass({
+        isAll:1,
+        pattern:""
+      }).then(res=>{
+        this.classList = res.data.classList;
+      });
+    },
+    getlineChartData(){
+      let xAxisData = [];
+      let yAxisData = [];
+      for(let i = 6; i >= 0; i--){
+        xAxisData.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
+      }
+      let promiseArray = [];
+      for(let i in this.selectClassList){
+        promiseArray.push(getClassGradePerDay(this.selectClassList[i].classId, {}));
+      }
+      Promise.all(promiseArray).then(resultList => {
+        for(let i in resultList){
+          let oneClassItem = {};
+          oneClassItem.yName = this.selectClassList[i].className;
+          oneClassItem.yDataList = [];
+          for(let j in xAxisData){
+            let found = 0;
+            for(let k in resultList[i].data.classGrade){
+              if(resultList[i].data.classGrade[k].date === xAxisData[j]){
+                oneClassItem.yDataList.push(resultList[i].data.classGrade[k].wordNum);
+                found = 1;
+                break;
+              }
+            }
+            if(found === 0){
+              oneClassItem.yDataList.push(0);
+            }
+          }
+          yAxisData.push(oneClassItem);
+        }
+        this.lineChartData.xAxisData = xAxisData;
+        this.lineChartData.yAxisData = yAxisData;
+      })
+    },
   }
 }
 </script>

@@ -279,3 +279,10 @@ export function getQuestionList(id, params){
     params: params
   })
 }
+export function getClassGradePerDay(id, params){
+  return request({
+    url: getUrlBase() + '/pkStuUnitExam/getClassGradePerDay/' + id,
+    method: 'GET',
+    params: params
+  })
+}
