@@ -17,12 +17,9 @@ service.interceptors.request.use(
     //let myToken = window.localStorage.ReciteManager_Token
     //console.log(getToken());
     config.headers['token'] = getToken()
-    // if(getToken() !== null && getToken() !== undefined){
-    //   config.headers['token'] = getToken()
-    // }else{
-    //   errorShow('token已过期，请重新登录')
-    //   $router.push('/')
-    // }
+    if(getToken() === null && getToken() === undefined){
+      $router.push('/')
+    }
     // config.headers['Accept'] = '*/*'
     // config.headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36'
     return config
