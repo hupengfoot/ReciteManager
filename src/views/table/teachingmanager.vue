@@ -8,7 +8,7 @@
           <p class="serialNumber">编号：{{item.id}}</p>
           <h5 class="grade">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
-          <router-link :to="{name:'classmatelist',query:{classId:item.id}}"><el-button class="joinClass">进入班级</el-button></router-link>
+          <router-link :to="{name:'classmatelist',query:{classId:item.id,startDate:item.startDate}}"><el-button class="joinClass">进入班级</el-button></router-link>
           <div class="createTime">创建时间：{{item.startDate}}</div>
       </div>
     </div>

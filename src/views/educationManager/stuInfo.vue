@@ -17,6 +17,12 @@
           <div id="wordNum" :style="{width: '300px', height: '300px'}"></div>
         </div>
       </div>
+      <div class="growth" v-show="type=='growth'">
+        <h3>{{stuInfo.realName}}成长记录</h3>
+        <div class="growthMain">
+          <div id="getStuWordNumPerDay" :style="{width: '800px', height: '400px'}"></div>
+        </div>
+      </div>
       <div class="score" v-show="type=='score'">
         <h3>{{stuInfo.realName}}题型得分率分析</h3>
         <div class="scoreMain">
@@ -41,16 +47,40 @@
           <pagination v-show="stuInfoTotal>0" :total="stuInfoTotal" :page.sync="stuInfoPage.page" :limit.sync="stuInfoPage.limit" @pagination="getStuUnitCompleteInfo" />
         </div>
       </div>
+      <div class="wordNum" v-show="type=='wordNum'">
+        <h3>{{stuInfo.realName}}词汇量分析</h3>,
+        <div class="wordNumMain">
+          <div class="wordNumCenter">
+            <div class="wordNumLeft">
+              <div id="wordNumProgress" :style="{width: '400px', height: '300px'}"></div>
+              <div class="leftMain">
+                <p>题数：80</p>
+                <p>用时：8分21秒</p>
+                <p class="blue">很棒哦，继续加油！</p> 
+              </div>
+            </div>
+            <div class="wordNumRight">
+              <h5>测评分析</h5>
+              <p>根据你的测试情况，认为你的词汇水平位于<span class="blue">九年级水平</span>
+              <h5>学习建议</h5>
+              <p>选择适合自己的英语单词记忆方法，重点复习并记忆高中词汇，构建自己的词汇本。</p>
+              <p>阅读，阅读，阅读！！！不论是小说、报纸、杂志还是周刊，读的越多接触的词汇也越多，阅读英文材料一定要读原版哦。</p>
+              <p>和兴趣相投的朋友一起玩文字游戏吧，在游戏中也可以学习英语。</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     
   </div>
 </template>
 
 <script>
-import {getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
+import {getStuWordNumPerDay,getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
 import Pagination from '@/components/Pagination'
 import pieChart from "@/components/echarts/dashboard";
 import {isUndefined} from '@/utils/index.js'
+import {addDate} from '@/utils/validate.js'
 export default {
   name: 'stuInfo',
   components: { Pagination,pieChart },
@@ -66,17 +96,26 @@ export default {
         limit:10
       },
       stuInfoTotal:0,
-      ClassExamCorrectRateData:[]
+      ClassExamCorrectRateData:[],
+      
+        earlyUnderstand:[],
+        earlyHalfUnderstand:[],
+        earlyNotUnderstand:[],
+        eveningUnderstand:[],
+        eveningHalfUnderstand:[],
+        eveningNotUnderstand:[],
+      
     }
   },
   mounted(){
+    
     this.getStuInfoByStuId()
     this.getClassUnitNum()
     // this.getStuWordNum()
     this.getStuUnitCompleteInfo()
     this.getStuExamCorrectRate()
-    
-    
+    this.wordNumProgress()
+    this.getStuWordNumPerDay()
   },
   methods:{
     getClassUnitNum(){//总单元数
@@ -103,7 +142,41 @@ export default {
         this.drawLine()
       })
     },
-    getStuUnitCompleteInfo(){
+    getStuWordNumPerDay(){// 获取学生每天上午下午的熟词生词夹生词的数量
+      getStuWordNumPerDay(this.$route.query.stuId).then(res=>{
+        // this.stuWordNumPerDay = res.data.stuWordNum;
+        for(let i=0;i<res.data.stuWordNum.length;i++){
+          if(res.data.stuWordNum[i].date === this.$route.query.startDate
+          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,1)
+          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,2)
+          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,3)
+          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,4)
+          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,5)
+          ){
+            if(res.data.stuWordNum[i].period===1){
+                this.earlyUnderstand.push(res.data.stuWordNum[i].understanded*1);
+                this.earlyHalfUnderstand.push(res.data.stuWordNum[i].understanding*1);
+                this.earlyNotUnderstand.push(res.data.stuWordNum[i].notUnderstand*1);
+
+                this.eveningUnderstand.push(0);
+                this.eveningHalfUnderstand.push(0);
+                this.eveningNotUnderstand.push(0);
+            }else{
+                this.eveningUnderstand.push(res.data.stuWordNum[i].understanded*1);
+                this.eveningHalfUnderstand.push(res.data.stuWordNum[i].understanding*1);
+                this.eveningNotUnderstand.push(res.data.stuWordNum[i].notUnderstand*1);
+
+                this.earlyUnderstand.push(0);
+                this.earlyHalfUnderstand.push(0);
+                this.earlyNotUnderstand.push(0);
+            }
+          }
+        }
+        
+        this.getStuWordNumPerEcharts()
+      })
+    },
+    getStuUnitCompleteInfo(){//学习详情
       getStuUnitCompleteInfo(this.$route.query.stuId,this.stuInfoPage).then(res=>{
         for(let i=0;i<res.data.stuUnitLearningInfo.records.length;i++){
           res.data.stuUnitLearningInfo.records[i].chapter = res.data.stuUnitLearningInfo.records[i].course.split(';')[0]
@@ -111,17 +184,96 @@ export default {
           res.data.stuUnitLearningInfo.records[i].unit = res.data.stuUnitLearningInfo.records[i].course.split(';')[2]
         }
         this.StuUnitCompleteInfoData = res.data.stuUnitLearningInfo
-        console.log(this.StuUnitCompleteInfoData)
+        //console.log(this.StuUnitCompleteInfoData)
         this.stuInfoTotal = res.data.stuUnitLearningInfo.pages
       })
     },
-    getStuExamCorrectRate(){
+    getStuExamCorrectRate(){//题型得分率分析
       getStuExamCorrectRate(this.$route.query.stuId).then(res=>{
         this.ClassExamCorrectRateData.name = ['英文选义','听音选英','中文选词','看义拼词'];
         this.ClassExamCorrectRateData.percentage = [isUndefined(res.data.examCorrectNum.EnglishToChinese),isUndefined(res.data.examCorrectNum.ListenToEnglish),isUndefined(res.data.examCorrectNum.ChineseToChoice),isUndefined(res.data.examCorrectNum.ChineseToEnglish)]
         //console.log(this.ClassExamCorrectRateData)
         this.ClassExamCorrectRate()
       })
+    },
+    getStuWordNumPerEcharts(){//成长记录
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('getStuWordNumPerDay'))
+        let xAxisData = [this.$route.query.startDate,addDate(this.$route.query.startDate,1),addDate(this.$route.query.startDate,2),addDate(this.$route.query.startDate,3),addDate(this.$route.query.startDate,4),addDate(this.$route.query.startDate,5)];
+        // 绘制图表
+        console.log(this.earlyUnderstand,1);
+        console.log(this.earlyHalfUnderstand,2);
+        console.log(this.earlyNotUnderstand,3);
+        console.log(this.eveningUnderstand,4);
+        console.log(this.eveningHalfUnderstand,5);
+        console.log(this.eveningNotUnderstand,6);
+        myChart.setOption({
+            tooltip: {},
+            xAxis: {
+                data: xAxisData,
+                name: '',
+            },
+            yAxis: {
+            },
+            series: [
+                {
+                    name: 'AM 熟词',
+                    type: 'bar',
+                    stack: 'one',
+                    data: this.earlyUnderstand
+                },
+                {
+                    name: 'AM 夹生词',
+                    type: 'bar',
+                    stack: 'one',
+                    data:  this.earlyHalfUnderstand
+                },
+                {
+                    name: 'AM 生词',
+                    type: 'bar',
+                    stack: 'one',
+                    data:  this.earlyNotUnderstand
+                },
+                {
+                    name: 'PM 熟词',
+                    type: 'bar',
+                    stack: 'two',
+                    data: this.eveningUnderstand
+                },
+                {
+                    name: 'PM 夹生词',
+                    type: 'bar',
+                    stack: 'two',
+                    data: this.eveningHalfUnderstand
+                },
+                {
+                    name: 'PM 生词',
+                    type: 'bar',
+                    stack: 'two',
+                    data: this.eveningNotUnderstand
+                }
+            ]
+        })
+    },
+    wordNumProgress(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('wordNumProgress'))
+        // 绘制图表
+        myChart.setOption({
+            tooltip : {
+                formatter: "{a} <br/>{b} : {c}%"
+            },
+            toolbox: {
+            },
+            series: [
+                {
+                    name: '业务指标',
+                    type: 'gauge',
+                    detail: {formatter:'{value}%'},
+                    data: [{value: 80, name: ''}]
+                }
+            ]
+        })
     },
     drawLine(){//饼状图
         // 基于准备好的dom，初始化echarts实例
@@ -256,6 +408,47 @@ export default {
     width:600px;
     margin:0 auto;
   }
+  .growthMain{
+    width:800px;
+    margin:0 auto;
+  }
+  .wordNumMain{
+    text-align:center;
+    .wordNumCenter{
+      display:inline-block;
+      width:800px;
+      margin:0 auto;
+      .wordNumLeft{
+        float:left;
+        .leftMain{
+          position:relative;
+          top:-80px;
+          font-size:18px;
+          .blue{
+            color:#309bff;
+            font-size:24px;
+          }
+          .cyan{
+            color:#7aedff;
+          }
+        }
+      }
+      .wordNumRight{
+        text-align:left;
+        float:left;
+        width:400px;
+        .blue{
+          color:#309bff;
+        }
+        h5{
+          font-size:18px;
+          color:#309bff;
+        }
+      }
+    }
+    
+  }
+  
   .stuTypeTab{
     // position: fixed;
     // bottom:0;

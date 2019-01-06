@@ -139,10 +139,16 @@ export const constantRouterMap = [
         meta: { title: '学生学习信息', icon: 'table' },
         hidden:true,
       },
+      {
+        path: 'wrongTopicRecord',
+        name: 'wrongTopicRecord',
+        component: () => import('@/views/educationManager/wrongTopicRecord'),
+        meta: { title: '错题本', icon: 'table' },
+        hidden:true,
+      },
       
     ]
   },
-
   {
     path: '/diagnosis',
     component: Layout,
@@ -150,7 +156,7 @@ export const constantRouterMap = [
       {
         path: 'index',
         name: '诊断报告',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/dashboard/diagnosis'),
         meta: { title: '诊断报告', icon: 'form' }
       }
     ]

@@ -4,8 +4,8 @@
         <div>
             <label><span>{{first.groupItemName}}</span></label>
             <h5>
-                <span>排名 1</span>
-                <span>平均分 99 分</span>
+                <span>排名 {{first.averageGrader}}</span>
+                <span>平均分 {{firstAverage}} 分</span>
             </h5>
         </div>
         <ul>
@@ -18,10 +18,10 @@
 
     <div class="second">
         <div>
-            <label><span>战神队</span></label>
+            <label><span>{{second.groupItemName}}</span></label>
             <h5>
-                <span>排名 1</span>
-                <span>平均分 99 分</span>
+                <span>排名 {{second.averageGrader}}</span>
+                <span>平均分 {{secondAverage}} 分</span>
             </h5>
         </div>
         <ul>
@@ -44,14 +44,24 @@ export default {
       second:null,
       firstData:[],
       secondData:[],
+      firstAverage:0,
+      secondAverage:0,
     }
   },
   created() {
     this.first = JSON.parse(this.$route.query.first);
     this.second = JSON.parse(this.$route.query.second);
-    // for(let i=0;i<this.second.stuInfoList.length;i++){
-    //     this.second.stuInfoList[i].average = this.second.stuInfoList;
-    // }
+    let firstSub = 0;
+    let secondSub = 0;
+    for(let i=0;i< this.first.stuInfoList.length;i++){
+        firstSub += this.first.stuInfoList[i].wordNum;
+    }
+    console.log(firstSub)
+    this.firstAverage = firstSub/this.first.stuInfoList.length;
+    for(let i=0;i<this.second.stuInfoList.length;i++){
+        secondSub += this.second.stuInfoList[i].wordNum;
+    }
+    this.secondAverage = secondSub/this.second.stuInfoList.length;
   },
   watch:{
     

@@ -6,7 +6,7 @@
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="selectFrom"> </el-button>
     </form>
-    <teaching-tab ></teaching-tab>
+    <teaching-tab :classId="classId" ></teaching-tab>
     <div class="resultsMain">
       <div class="mainTop">
         <div class="mainTopButton">
@@ -78,11 +78,13 @@ export default {
         order:'ASC'
       },
       groupList:[],
+      classId:0,
     }
   },
   mounted(){
     this.getClassGrade();
     this.getClassGroupGrade();
+    this.classId = this.$route.query.classId*1;
   },
   methods:{
     selectFrom(){
@@ -94,7 +96,8 @@ export default {
         name:'stuInfo',
         query:{
           stuId:row.stuId,
-          classId:this.$route.query.classId
+          classId:this.$route.query.classId,
+          startDate:this.$route.query.startDate
         }
       })
     },
