@@ -1,7 +1,7 @@
 <template>
   <div class="classContent">
     <el-input placeholder="请输入班级名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getAllClassByTeacherId"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ 'search' }}</el-button>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ '查找' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addClass">{{ '创建班级' }}</el-button>
     <h3>班级列表<small></small><el-checkbox type="checkbox" v-model="isAllClass" class="fr">显示全部班级</el-checkbox></h3>
     <div class="classList">
@@ -9,7 +9,7 @@
           <p class="serialNumber">编号：{{item.id}}</p>
           <h5 class="grade">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
-          <router-link :to="{path:'/student',query:{classId:item.id}}"><el-button class="joinClass">进入小组</el-button></router-link>
+          <router-link :to="{path:'/student',query:{classId:item.id}}"><el-button class="joinClass">进入班级</el-button></router-link>
           <div class="createTime">创建时间：{{item.startDate}}</div>
       </div>
     </div>

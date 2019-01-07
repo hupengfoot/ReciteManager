@@ -61,7 +61,8 @@ export default {
     for(let i=0;i<this.second.stuInfoList.length;i++){
         secondSub += this.second.stuInfoList[i].wordNum;
     }
-    this.secondAverage = secondSub/this.second.stuInfoList.length;
+    
+    this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length) * 100) / 100).toString();
   },
   watch:{
     

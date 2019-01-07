@@ -53,7 +53,7 @@
 import {getAllClassByTeacherId, getAllClass, getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
 import LineChart from '@/components/echarts/LineChart'
 import HistogramChart from '@/components/echarts/HistogramChart'
-import moment from 'moment'
+// import moment from 'moment'
 
 const lineChartData = {
   xAxisData: [],

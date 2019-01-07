@@ -1,7 +1,7 @@
 <template>
   <div class="classContent">
     <el-input placeholder="请输入班级名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getAllClassByTeacherId"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ 'search' }}</el-button>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ '查找' }}</el-button>
     <h3>班级列表<small></small></h3>
     <div class="classList">
       <div class="classDeatils" v-for="(item,index) in classList" :key="index">
