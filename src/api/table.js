@@ -2,6 +2,16 @@ import request from '@/utils/request'
 function getUrlBase(){
 	return '/api'
 }
+
+/** 重置密码 */
+export function updatePassword(params){
+  return request({//重置密码
+    url:getUrlBase()+'/pkUser/updatePassword',
+    method:'put',
+    data:params
+  })
+}
+
 /*班级 -S */
 export function getAllClass(params) {
   return request({//查询班级列表
