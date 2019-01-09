@@ -22,6 +22,7 @@
 
 <script>
 import { updatePassword } from '@/api/table'
+import {successShow,errorShow} from '@/utils/notice.js'
 export default {
   name:'resetPassword',
   props:{
@@ -31,8 +32,8 @@ export default {
     return{
       dialogFormVisible:true,
       rules: {
-        password: [{ required: true, message: '原密码不能为空', trigger: 'change' }],
-        newPassword: [{ required: true, message: '新密码不能为空', trigger: 'change' }],
+        password: [{ required: true, message: '原密码不能为空', trigger: 'blur' }],
+        newPassword: [{ required: true, message: '新密码不能为空', trigger: 'blur' }],
         repeatPassword: [{required: true, message: '重复密码不能为空', trigger: 'blur' }],
       },
       temp: {
