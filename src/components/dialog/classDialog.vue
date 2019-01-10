@@ -12,7 +12,8 @@
         
 				<el-form-item label="选择课程" prop="courseIdList">
 					<el-cascader :options="allCourse" placeholder="请选择课程" v-model="temp.courseIdList" :props="{label:'courseName',value:'id'}"></el-cascader>
-				</el-form-item>
+          <multiCascader width="240px" height="220px" :options="allCourse" :outputType="{label:'courseName',value:'id'}"></multiCascader>
+        </el-form-item>
         <el-form-item label="选择教师" prop="teacherInfo">
         	<el-select v-model="temp.teacherInfo" placeholder="请选择课程" class="filter-item" >
         		<el-option v-for="item in allTeacher" :key="item.userId" :label="item.realName" :value="item.realName+','+item.userId"/>

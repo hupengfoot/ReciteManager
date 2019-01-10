@@ -1,12 +1,12 @@
 <template>
   <div class="classContent">
     <el-input placeholder="请输入班级名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getAllClassByTeacherId"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ 'search' }}</el-button>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getAllClassByTeacherId">{{ '查找' }}</el-button>
     <h3>班级列表<small></small></h3>
     <div class="classList">
       <div class="classDeatils" v-for="(item,index) in classList" :key="index">
           <p class="serialNumber">编号：{{item.id}}</p>
-          <h5 class="grade">{{item.className}}</h5>
+          <h5 class="grade" :title="item.className">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
           <router-link :to="{name:'classmatelist',query:{classId:item.id,startDate:item.startDate}}"><el-button class="joinClass">进入班级</el-button></router-link>
           <div class="createTime">创建时间：{{item.startDate}}</div>
@@ -130,8 +130,13 @@ export default {
         margin-top:0px;
       }
       .grade{
-        font-size:32px;
+        font-size:20px;
         margin:20px 0 10px;
+        height:30px;
+        width:100%;
+        overflow:hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .peopleNum{
         font-size:24px;
@@ -145,7 +150,7 @@ export default {
         padding:0;
       }
       .createTime{
-        margin-top:10px;
+        margin-top:20px;
       }
     }
   }

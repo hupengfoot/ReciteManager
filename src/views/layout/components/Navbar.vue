@@ -10,13 +10,14 @@
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">修改密码</span>
+          <span style="display:block;" @click="editPassword">修改密码</span>
         </el-dropdown-item>
         <el-dropdown-item divided>
           <span style="display:block;" @click="logout">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
+    <reset-password v-if="isDialog" @close="isDialog=false"></reset-password>
   </el-menu>
 </template>
 
@@ -24,12 +25,19 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import resetPassword from '@/components/dialog/resetPassword'
 import store from '@/store'
 
 export default {
+  data() {
+    return {
+      isDialog:false
+    }
+  },
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    resetPassword,
   },
   computed: {
     ...mapGetters([
@@ -37,6 +45,9 @@ export default {
     ])
   },
   methods: {
+    editPassword(){
+      this.isDialog=true;
+    },
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },

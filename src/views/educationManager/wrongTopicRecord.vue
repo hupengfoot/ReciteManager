@@ -11,8 +11,8 @@
           <el-option value='' label="">全部</el-option>
           <el-option v-for="list in questionType" :key="list.id" :value="list.id" :label="list.typeName"></el-option>
         </el-select>
-        <el-date-picker v-model="search.startDate" @change="wrongSet" value-format="timestamp" placeholder="请选择开始时间"></el-date-picker>
-        <el-date-picker v-model="search.endDate" @change="wrongSet" value-format="timestamp" placeholder="请选择结束时间"></el-date-picker>
+        <el-date-picker v-model="startDate" @change="wrongSet" value-format="timestamp" placeholder="请选择开始时间"></el-date-picker>
+        <el-date-picker v-model="endDate" @change="wrongSet" value-format="timestamp" placeholder="请选择结束时间"></el-date-picker>
       </form>
       <el-radio-group class="wordList" v-model="details"  @change="selectDetails($event)">
         <el-radio-button v-for="(list,index) in wordList" :key="index" :label="list">{{list.content}}</el-radio-button>
@@ -25,8 +25,6 @@
           <p>{{wordDetails.mean}}</p>
         </div>
       </div>
-      
-
     </div>
     <pagination v-show="page.totalNum>0" :total="page.totalNum" :page.sync="page.page" :limit.sync="page.limit" @pagination="wrongSet" />
   </div>
@@ -41,6 +39,8 @@ export default {
   components: { teachingTab,Pagination },
   data(){
     return{
+      startDate:'',
+      endDate:'',
       search:{
         pattern:null,
         startDate:'',
@@ -68,12 +68,12 @@ export default {
   },
   methods:{
    wrongSet(){
-     if(this.search.startDate){
-        let start = this.search.startDate.toString();
+     if(this.startDate){
+        let start = this.startDate.toString();
         this.search.startDate = start.substr(0,10);
      }
-     if(this.search.endDate){
-        this.search.endDate = this.search.endDate.toString().substr(0,10);
+     if(this.endDate){
+        this.search.endDate = this.endDate.toString().substr(0,10);
      }
       wrongSet(this.$route.query.classId,this.search).then(res=>{
         this.wordList = res.data.wordList.records;
@@ -119,6 +119,7 @@ export default {
       min-height:400px;
     }
     .wordDetalis{
+      font-size:18px;
       margin-top:20px;
       width:38%;
       float:right;

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container studentContent">
     <el-input placeholder="请输入学生名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getStuAndGroupInClass"/>
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getStuAndGroupInClass">{{ 'search' }}</el-button>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getStuAndGroupInClass">{{ '查找' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addStudent">{{ '新增学生' }}</el-button>
     <h3>学生列表（{{pageInfo.totalNum}}人）
       <small class="fr">
@@ -30,9 +30,9 @@
           <img src="@/assets/online.jpeg" height="20" width="20" > 
         </template>
       </el-table-column>
-      <el-table-column label="ID" align="center">
+      <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
-          {{ scope.row.stuId }}
+          {{ scope.row.username }}
         </template>
       </el-table-column>
       <el-table-column label="姓名" align="center">
