@@ -318,4 +318,11 @@ export function getClassExamCorrectRate(id, params){
     method: 'GET',
     params:params
   })
+} 
+export function randomGroup(id, params){
+  return request({
+    url:getUrlBase() + '/pkLinkGroupStu/randomGroup/' + id,
+    method: 'POST',
+    data: params
+  }) 
 }

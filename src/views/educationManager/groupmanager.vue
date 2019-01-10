@@ -3,6 +3,7 @@
     <el-input placeholder="请输入分组名称或关键字进行查询" v-model="pattern" style="width: 400px;" class="filter-item" @keyup.enter.native="getGroupItemList"/>
     <el-button class="filter-item" type="primary" icon="el-icon-search" @click="getGroupItemList">{{ '查找' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addGroup">{{ '创建小组' }}</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="randomGroup">{{ '学生随机分组' }}</el-button>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="groupmanagerMain">
       <div class="groupDeatils" v-for="(item,index) in groupList" :key="index">
@@ -29,7 +30,7 @@
 </template>
 
 <script>
-import {getGroupItemList, createGroupItemBatch } from '@/api/table'
+import {getGroupItemList, createGroupItemBatch, randomGroup } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'groupmanager',
@@ -83,7 +84,8 @@ export default {
                   message: '创建学习小组成功',
                   type: 'success',
                   duration: 2000
-                })
+                });
+                location.reload();
               }else{
                 this.$notify({
                   title: '创建学习小组失败',
@@ -93,6 +95,27 @@ export default {
                 })
               }
           })
+      },
+      randomGroup(){
+        randomGroup(this.classId, {
+        }).then(res => {
+          if(res.data.code === 0){
+            this.$notify({
+              title: '成功',
+              message: '随机分组成功',
+              type: 'success',
+              duration: 2000
+            });
+            location.reload();
+          }else{
+            this.$notify({
+              title: '随机分组失败',
+              message: res.data.msg,
+              type: 'failed',
+              duration: 2000
+            })
+          }
+        });
       }
   }
 }
