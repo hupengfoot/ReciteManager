@@ -126,6 +126,13 @@ export const constantRouterMap = [
         hidden:true,
       },
       {
+        path:'wordlist',
+        name:'wordlist',
+        component: () => import('@/views/educationManager/wordlist'),
+        meta: {title: '词库', icon:'table'},
+        hidden:true
+      },
+      {
         path: 'educationManager',
         name: 'educationManager',
         component: () => import('@/views/educationManager/resultsCenter'),

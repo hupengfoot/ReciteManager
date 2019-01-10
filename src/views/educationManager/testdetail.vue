@@ -1,7 +1,7 @@
 <template>
   <div class="testdetail">
     <el-button class="filter-item" type="primary" icon="el-icon-search" @click="createTest">{{ '导入试题' }}</el-button>
-    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="">{{ '词库' }}</el-button>
+    <router-link :to="{name:'wordlist',query:{classId:classId, paperId:paperId}}" :classId="classId" :paperId="paperId"><el-button class="filter-item" type="primary" icon="el-icon-search">词库</el-button></router-link>
     
     <el-table border :data="stuList">
         <el-table-column align="center" label="序号" width="95">
@@ -21,7 +21,7 @@
           </template>
         </el-table-column>
     </el-table>
-
+    
     <el-dialog title="创建问卷" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="单词数">
@@ -89,6 +89,7 @@ export default {
             type: 'success',
             duration: 2000
           });
+          this.dialogFormVisible = false;
         }else{
           this.$notify({
             title: '导入试题失败',
@@ -96,6 +97,7 @@ export default {
             type: 'failed',
             duration: 2000
           })
+          this.dialogFormVisible = false;
         }
       })
     },
