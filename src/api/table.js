@@ -333,3 +333,10 @@ export function deleteGroupItem(id, params){
     params:params
   })
 }
+export function randomPaper(id, params){
+  return request({
+    url: getUrlBase() + '/pkQuestion/randomPaper/' + id,
+    method: 'POST',
+    params:params
+  })
+}

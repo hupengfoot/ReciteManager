@@ -9,7 +9,7 @@
         <p class="serialNumber">{{item.questionNum === 0 ? "待导入试题" : "发布试卷"}}</p>
         <h5 class="grade">{{item.title}}</h5>
         <p class="peopleNum">词汇量:{{item.questionNum}}个  时长:{{item.limitTime}}秒</p>
-        <router-link :to="{name:'testdetail',query:{paperId:item.id}}"><el-button class="joinClass">试卷详情</el-button></router-link>
+        <router-link :to="{name:'testdetail',query:{classId:item.classId, paperId:item.id}}"><el-button class="joinClass">试卷详情</el-button></router-link>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
     </div>
@@ -18,9 +18,6 @@
       <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="名称">
           <el-input v-model="testname"/>
-        </el-form-item>
-        <el-form-item label="单词数">
-          <el-input v-model="questionNum"/>
         </el-form-item>
         <el-form-item label="时间(s)">
           <el-input v-model="limitTime"/>
@@ -67,6 +64,9 @@ export default {
             pattern: this.pattern
         }).then(res => {
             this.testList = res.data.paperList.records;
+            for(var i = 0; i < this.testList.length; i++){
+              this.testList[i].classId = this.classId;
+            }
         })
     },
     createPaper(){

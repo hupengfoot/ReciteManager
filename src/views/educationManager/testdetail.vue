@@ -1,6 +1,6 @@
 <template>
   <div class="testdetail">
-    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="">{{ '导入试题' }}</el-button>
+    <el-button class="filter-item" type="primary" icon="el-icon-search" @click="createTest">{{ '导入试题' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="">{{ '词库' }}</el-button>
     
     <el-table border :data="stuList">
@@ -21,12 +21,25 @@
           </template>
         </el-table-column>
     </el-table>
+
+    <el-dialog title="创建问卷" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="单词数">
+          <el-input v-model="wordNum"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="randomPaper">{{ '确定' }}</el-button>
+      </div>
+    </el-dialog>
+
     <pagination v-show="pageInfo.totalNum>0" :total="pageInfo.totalNum" :page.sync="pageInfo.page" :limit.sync="pageInfo.limit" @pagination="getPaperProgressRate" />
   </div>
 </template>
 
 <script>
-import {getPaperProgressRate } from '@/api/table'
+import {getPaperProgressRate, randomPaper } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 import Pagination from '@/components/Pagination'
 export default {
@@ -37,6 +50,8 @@ export default {
       classId: 0,
       paperId: 0,
       stuList: [],
+      dialogFormVisible: false,
+      wordNum: 0,
       pageInfo:{
           totalNum: 0,
           page: 1,
@@ -45,6 +60,7 @@ export default {
     }
   },
   created() { 
+    this.classId = Number(this.$route.query.classId);
     this.paperId = Number(this.$route.query.paperId);
     this.getPaperProgressRate();
   },
@@ -59,6 +75,35 @@ export default {
             this.stuList = res.data.detailList.records;
             this.pageInfo.totalNum = res.data.detailList.total;
         })
+    },
+    randomPaper(){
+      randomPaper(this.paperId, {
+        paperId: this.paperId,
+        classId: this.classId,
+        wordNum: Number(this.wordNum),
+      }).then(res => {
+        if(res.data.code === 0){
+          this.$notify({
+            title: '成功',
+            message: '导入试题成功',
+            type: 'success',
+            duration: 2000
+          });
+        }else{
+          this.$notify({
+            title: '导入试题失败',
+            message: res.data.msg,
+            type: 'failed',
+            duration: 2000
+          })
+        }
+      })
+    },
+    createTest(){
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate 
+      });
     }
   }
 }
