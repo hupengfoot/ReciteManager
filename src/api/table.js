@@ -326,3 +326,10 @@ export function randomGroup(id, params){
     data: params
   }) 
 }
+export function deleteGroupItem(id, params){
+  return request({
+    url:getUrlBase() + '/pkGroupItem/deleteGroupItem/' + id,
+    method: 'DELETE',
+    params:params
+  })
+}

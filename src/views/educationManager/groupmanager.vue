@@ -11,6 +11,7 @@
         <h5 class="grade">{{item.groupItemName}}</h5>
         <p class="peopleNum">{{item.stuNum}}人</p>
         <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">进入小组</el-button></router-link>
+        <el-button class="joinClass" @click="deleteGroupItem(item.id)">删除</el-button>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
     </div>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import {getGroupItemList, createGroupItemBatch, randomGroup } from '@/api/table'
+import {getGroupItemList, createGroupItemBatch, randomGroup, deleteGroupItem } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'groupmanager',
@@ -116,6 +117,27 @@ export default {
             })
           }
         });
+      },
+      deleteGroupItem(groupItemId){
+        deleteGroupItem(groupItemId, {
+        }).then(res => {
+          if(res.data.code === 0){
+            this.$notify({
+              title: '成功',
+              message: '删除小组成功',
+              type: 'success',
+              duration: 2000
+            });
+            location.reload();
+          }else{
+            this.$notify({
+              title: '删除小组失败',
+              message: res.data.msg,
+              type: 'failed',
+              duration: 2000
+            })
+          }
+        })
       }
   }
 }
