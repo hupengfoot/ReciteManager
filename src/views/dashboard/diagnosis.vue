@@ -40,7 +40,7 @@
         <h3>班级得分率分析</h3>
         <div class="classquesrateMain" style="width: 700px">
           <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;width: 700px">
-            <histogram-chart :chart-data="histogramChartData"/>
+            <histogram-chart :chart-data="histogramChartData" id="classquesrateMain1" style="position: absolute; left: 0px; top: 0px; width: 1332px; "/>
           </el-row>
         </div>
       </div>
