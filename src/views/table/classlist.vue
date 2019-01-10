@@ -7,7 +7,7 @@
     <div class="classList">
       <div class="classDeatils" v-for="(item,index) in classList" :key="index">
           <p class="serialNumber">编号：{{item.id}}</p>
-          <h5 class="grade">{{item.className}}</h5>
+          <h5 class="grade" :title="item.className">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
           <router-link :to="{path:'/student',query:{classId:item.id}}"><el-button class="joinClass">进入班级</el-button></router-link>
           <div class="createTime">创建时间：{{item.startDate}}</div>
@@ -183,8 +183,13 @@ export default {
         margin-top:0px;
       }
       .grade{
-        font-size:32px;
+        font-size:20px;
         margin:20px 0 10px;
+        width:100%;
+        height:30px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       .peopleNum{
         font-size:24px;
@@ -198,7 +203,7 @@ export default {
         padding:0;
       }
       .createTime{
-        margin-top:10px;
+        margin-top:20px;
       }
     }
   }

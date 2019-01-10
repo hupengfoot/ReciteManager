@@ -3,13 +3,13 @@
     <el-form ref="temp" :rules="rules" :model="temp" label-position="left" label-width="80px" style="width: 400px; margin-left:50px;">
       <el-form-item label="旧密码" prop="password">
         
-        <el-input v-model="temp.password"  />
+        <el-input type="password" v-model="temp.password"  />
       </el-form-item>
       <el-form-item label="新密码" prop="newPassword">
-        <el-input v-model="temp.newPassword"/>
+        <el-input type="password" v-model="temp.newPassword"/>
       </el-form-item>
       <el-form-item label="重复密码" prop="repeatPassword">
-        <el-input v-model="temp.repeatPassword"/>
+        <el-input type="password" v-model="temp.repeatPassword"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -52,12 +52,16 @@ export default {
     resetPassword(){
       this.$refs['temp'].validate((valid) => {
         if (valid) {
-            getGroupItemList({
-                password:this.temp.password,
-                newPassword:this.temp.newPassword
-            }).then(res=>{
+            if(this.temp.newPassword.length<5){
+              errorShow("密码不能少于5位")
+              return false;
+            }
+            updatePassword(this.temp.password,this.temp.newPassword).then(res=>{
                 successShow('重置成功，请重新登录');
                 this.dialogFormVisible=false;
+                this.$store.dispatch('LogOut').then(() => {
+                  this.$router.push('/login')
+                })
             })
         }else{
           errorShow('表单提交失败')

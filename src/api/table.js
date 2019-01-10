@@ -4,11 +4,11 @@ function getUrlBase(){
 }
 
 /** 重置密码 */
-export function updatePassword(params){
+export function updatePassword(password,newPassword){
   return request({//重置密码
-    url:getUrlBase()+'/pkUser/updatePassword',
+    url:getUrlBase()+'/pkUser/updatePassword?password='+password+'&newPassword='+newPassword,
     method:'put',
-    data:params
+    // data:params
   })
 }
 
