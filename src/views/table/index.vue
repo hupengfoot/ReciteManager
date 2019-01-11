@@ -76,7 +76,7 @@
           <el-input v-model="temp.realName"/>
         </el-form-item>
         <el-form-item label="性别">
-          <el-select v-model="temp.gender" class="filter-item" placeholder="Please select">
+          <el-select v-model="temp.genderName" class="filter-item" placeholder="Please select">
             <el-option v-for="item in sexTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item>
@@ -90,7 +90,7 @@
           <el-input v-model="temp.email"/>
         </el-form-item>
          <el-form-item label="角色">
-          <el-select v-model="temp.roleId" class="filter-item" placeholder="Please select">
+          <el-select v-model="temp.roleName" class="filter-item" placeholder="Please select">
             <el-option v-for="item in roleTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
           </el-select>
         </el-form-item>
@@ -128,13 +128,13 @@ import waves from '@/directive/waves' // Waves directive
 
 //教师编辑模态框下拉选项
 const sexTypeOptions = [
-  { key: 'male', display_name: '男' },
-  { key: 'female', display_name: '女' },
+  { key: '1', display_name: '男' },
+  { key: '2', display_name: '女' },
 ]
 
 const roleTypeOptions = [
-  {key: 'teacher', display_name: '教师'},
-  {key: 'manager', display_name: '管理员'},
+  {key: '1', display_name: '教师'},
+  {key: '2', display_name: '管理员'},
 ]
 
 const sexMock = [
@@ -195,10 +195,12 @@ export default {
         username: '',
         realName: '',
         gender: undefined,
+        genderName: '',
         birthday: '',
         mobile: '',
         email: '',
         roleId: '',
+        roleName: '',
       },
       //性别转换[1, 2] -> [男，女]
       sexChange: {
@@ -290,7 +292,17 @@ export default {
       })
     },
     updateTeacher(row){
-      this.resetTemp(),
+      this.resetTemp();
+      if(Number(row.gender) === 2){
+        row.genderName = "女";
+      }else{
+        row.genderName = "男";
+      }
+      if(Number(row.roleId) === 2){
+        row.roleName = "管理员"
+      }else{
+        row.roleName = "教师"
+      }
       this.temp = Object.assign({}, row)
       this.dialogStatus = 'update';
       this.dialogFormVisible = true;
@@ -327,18 +339,8 @@ export default {
       if(this.dialogStatus === 'create'){
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
-            if(this.temp.gender === 'male'){
-              this.temp.gender = 1
-            }
-            if(this.temp.gender === 'female'){
-              this.temp.gender = 2
-            }
-            if(this.temp.roleId === "teacher"){
-              this.temp.roleId = 1;
-            }
-            if(this.temp.roleId === "manager"){
-              this.temp.roleId = 2;
-            }
+            this.temp.gender = Number(this.temp.genderName)
+            this.temp.roleId = Number(this.temp.roleName)
             this.temp.password = "000000"
             var tempDate = new Date(this.temp.birthday)
             this.temp.birthday = tempDate.getFullYear()+ '-' + (tempDate.getMonth() + 1) + '-' + tempDate.getDate() + " 00:00:00"
@@ -352,6 +354,7 @@ export default {
                   type: 'success',
                   duration: 2000
                 })
+                location.reload()
               }else{
                 this.$notify({
                   title: '创建失败',
@@ -366,6 +369,20 @@ export default {
       }
 
       if(this.dialogStatus === 'update'){
+        if(this.temp.genderName === "女"){
+          this.temp.genderName = 2;
+        }
+        if(this.temp.genderName === "男"){
+          this.temp.genderName = 1;
+        }
+        if(this.temp.roleName === "管理员"){
+          this.temp.roleName = 2;
+        }
+        if(this.temp.roleName === "教师"){
+          this.temp.roleName = 1;
+        }
+        this.temp.gender = Number(this.temp.genderName);
+        this.temp.roleId = Number(this.temp.roleName);
         this.temp.birthday = this.temp.birthday + " 00:00:00"
         updateUserForAdmin(this.temp).then((response) => {
           this.list.unshift(this.temp)
@@ -377,6 +394,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            location.reload()
           }else{
             this.$notify({
               title: '更新失败',
