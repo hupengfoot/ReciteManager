@@ -21,6 +21,7 @@
         <h3>{{stuInfo.realName}}成长记录</h3>
         <div class="growthMain">
           <div id="getStuWordNumPerDay" :style="{width: '800px', height: '400px'}"></div>
+          <div id="getStuGradeRankPer" :style="{width:'800px',height:'300px'}"></div>
         </div>
       </div>
       <div class="score" v-show="type=='score'">
@@ -76,7 +77,7 @@
 </template>
 
 <script>
-import {getStuWordNumPerDay,getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
+import {getStuGradeRankPerDay,getStuWordNumPerDay,getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
 import Pagination from '@/components/Pagination'
 import pieChart from "@/components/echarts/dashboard";
 import {isUndefined} from '@/utils/index.js'
@@ -98,13 +99,14 @@ export default {
       stuInfoTotal:0,
       ClassExamCorrectRateData:[],
       
-        earlyUnderstand:[],
-        earlyHalfUnderstand:[],
-        earlyNotUnderstand:[],
-        eveningUnderstand:[],
-        eveningHalfUnderstand:[],
-        eveningNotUnderstand:[],
+      earlyUnderstand:[],
+      earlyHalfUnderstand:[],
+      earlyNotUnderstand:[],
+      eveningUnderstand:[],
+      eveningHalfUnderstand:[],
+      eveningNotUnderstand:[],
       
+      classRank:[],
     }
   },
   mounted(){
@@ -116,6 +118,7 @@ export default {
     this.getStuExamCorrectRate()
     this.wordNumProgress()
     this.getStuWordNumPerDay()
+    this.getStuGradeRankPerDay()
   },
   methods:{
     getClassUnitNum(){//总单元数
@@ -172,8 +175,13 @@ export default {
             }
           }
         }
-        
         this.getStuWordNumPerEcharts()
+      })
+    },
+    getStuGradeRankPerDay(){//查询班级排名
+      getStuGradeRankPerDay({classStuId:this.$route.query.stuId,classId:this.$route.query.classId}).then(res=>{
+        this.classRank.push(res.data.stuRankList.day1AM,res.data.stuRankList.day1PM,res.data.stuRankList.day2AM,res.data.stuRankList.day2PM,res.data.stuRankList.day3AM,res.data.stuRankList.day3PM,res.data.stuRankList.day4AM,res.data.stuRankList.day4PM,res.data.stuRankList.day5AM,res.data.stuRankList.day5PM,res.data.stuRankList.day6AM,res.data.stuRankList.day6PM);
+        this.getStuGradeRankPerEcharts()
       })
     },
     getStuUnitCompleteInfo(){//学习详情
@@ -196,19 +204,35 @@ export default {
         this.ClassExamCorrectRate()
       })
     },
+    getStuGradeRankPerEcharts(){//成长记录-班级排名
+      let wordNum = this.$echarts.init(document.getElementById('getStuGradeRankPer'))
+        // 绘制图表
+        wordNum.setOption({
+            // tooltip: {},
+            xAxis: {
+                type: 'category',
+                axisLine: {onZero: false}
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, 1],
+                inverse:true
+            },
+            series: [{
+                data: this.classRank,
+                type: 'line'
+            }]
+        });
+    },
     getStuWordNumPerEcharts(){//成长记录
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('getStuWordNumPerDay'))
         let xAxisData = [this.$route.query.startDate,addDate(this.$route.query.startDate,1),addDate(this.$route.query.startDate,2),addDate(this.$route.query.startDate,3),addDate(this.$route.query.startDate,4),addDate(this.$route.query.startDate,5)];
         // 绘制图表
-        console.log(this.earlyUnderstand,1);
-        console.log(this.earlyHalfUnderstand,2);
-        console.log(this.earlyNotUnderstand,3);
-        console.log(this.eveningUnderstand,4);
-        console.log(this.eveningHalfUnderstand,5);
-        console.log(this.eveningNotUnderstand,6);
         myChart.setOption({
-            tooltip: {},
+            tooltip: {
+              trigger: 'axis'
+            },
             xAxis: {
                 data: xAxisData,
                 name: '',
@@ -392,8 +416,16 @@ export default {
   padding:0 20px;
   h3{
     text-align:center;
-    line-height:50px;
+    height:80px;
+    line-height:65px;
     font-size:24px;
+    margin-bottom:50px;
+  }
+  .dashboard{
+    h3{
+      background: url("../../assets/greenTitle.png") no-repeat center;
+      background-size:557px 100%;
+    }
   }
   .stuMain{
     .dashboardMain{
@@ -404,50 +436,70 @@ export default {
       }
     }
   }
-  .scoreMain{
-    width:600px;
-    margin:0 auto;
+  .score{
+    h3{
+      background: url("../../assets/orangeTitle.png") no-repeat center;
+      background-size:557px 100%;
+    }
+    .scoreMain{
+      width:600px;
+      margin:0 auto;
+    }
   }
-  .growthMain{
-    width:800px;
-    margin:0 auto;
-  }
-  .wordNumMain{
-    text-align:center;
-    .wordNumCenter{
-      display:inline-block;
+  
+  .growth{
+    h3{
+      background: url("../../assets/blueTitle.png") no-repeat center;
+      background-size:557px 100%;
+    }
+    .growthMain{
       width:800px;
       margin:0 auto;
-      .wordNumLeft{
-        float:left;
-        .leftMain{
-          position:relative;
-          top:-80px;
-          font-size:18px;
+    }
+  }
+  .wordNum{
+    h3{
+      background: url("../../assets/gradientTitle.png") no-repeat center;
+      background-size:557px 100%;
+    }
+    .wordNumMain{
+      text-align:center;
+      .wordNumCenter{
+        display:inline-block;
+        width:800px;
+        margin:0 auto;
+        .wordNumLeft{
+          float:left;
+          .leftMain{
+            position:relative;
+            top:-80px;
+            font-size:18px;
+            .blue{
+              color:#309bff;
+              font-size:24px;
+            }
+            .cyan{
+              color:#7aedff;
+            }
+          }
+        }
+        .wordNumRight{
+          text-align:left;
+          float:left;
+          width:400px;
           .blue{
             color:#309bff;
-            font-size:24px;
           }
-          .cyan{
-            color:#7aedff;
+          h5{
+            font-size:18px;
+            color:#309bff;
           }
         }
       }
-      .wordNumRight{
-        text-align:left;
-        float:left;
-        width:400px;
-        .blue{
-          color:#309bff;
-        }
-        h5{
-          font-size:18px;
-          color:#309bff;
-        }
-      }
+      
     }
-    
   }
+  
   
   .stuTypeTab{
     // position: fixed;

@@ -8,10 +8,16 @@ export function updateTree(data) {
   var map = {};
   data.forEach(function (item) {
       map[item.id] = item;
+    //   item.value = item.id;
+    //   item.label = item.courseName;
+      
   });
 //        console.log(map);
   var val = [];
   data.forEach(function (item) {
+    //   item.value = item.id;
+    //   item.label = item.courseName;
+    //   item.multiple =  true; //可忽略项，当为true时该项为多选
       // 以当前遍历项，的pid,去map对象中找到索引的id
       var parent = map[item.parentId];
       // 好绕啊，如果找到索引，那么说明此项不在顶级当中,那么需要把此项添加到，他对应的父级中

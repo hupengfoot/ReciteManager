@@ -1,5 +1,6 @@
 <template>  
   <el-dialog :title="isUpdate?'编辑班级':'新增班级'" :visible.sync="dialogFormVisible">
+       
       <el-form ref="temp" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px; margin-left:50px;">
 				<!-- <el-form-item label="选择学段" prop="phase">
 					<el-select v-model="temp.phase" class="filter-item" placeholder="Please select">
@@ -11,8 +12,10 @@
 				</el-form-item>
         
 				<el-form-item label="选择课程" prop="courseIdList">
-					<el-cascader :options="allCourse" placeholder="请选择课程" v-model="temp.courseIdList" :props="{label:'courseName',value:'id'}"></el-cascader>
-          <multiCascader width="240px" height="220px" :options="allCourse" :outputType="{label:'courseName',value:'id'}"></multiCascader>
+          <el-input @focus="treeShow = true" v-model="courseIdList"  placeholder="请选择课程"></el-input>
+          
+					<!-- <el-cascader :options="allCourse" placeholder="请选择课程" v-model="temp.courseIdList" :props="{label:'courseName',value:'id'}"></el-cascader>
+          <cascaderMulti v-model="end_code" :data="allCourse" placeholder="请选择课程"></cascaderMulti> -->
         </el-form-item>
         <el-form-item label="选择教师" prop="teacherInfo">
         	<el-select v-model="temp.teacherInfo" placeholder="请选择课程" class="filter-item" >
@@ -33,6 +36,20 @@
         <el-button type="primary" @click="editClass" v-if="isUpdate">{{ '修改' }}</el-button>
         <el-button type="primary" @click="createClass" v-else>{{ '创建' }}</el-button>
       </div>
+      <el-dialog :visible.sync="treeShow" append-to-body>
+        <el-tree
+            :data="allCourse"
+            show-checkbox
+            node-key="id"
+            accordion
+            :props="defaultProps"
+            @check="handleNodeClick"
+             :default-checked-keys="temp.courseIdList"
+            >
+            
+          </el-tree>
+          <el-button @click="treeShow = false" type="primary" style="margin-right:20px;margin-top:20px;">确定</el-button>
+      </el-dialog>
     </el-dialog>
 </template>
 
@@ -48,6 +65,7 @@ export default {
   },
   data(){
     return{
+      treeShow:false,
       dialogFormVisible:true,
       rules: {
         className: [{ required: true, message: '请输入班级', trigger: 'change' }],
@@ -68,22 +86,36 @@ export default {
         isComletionTest:false,
         teacherName:'',//老师姓名
       },
+      courseIdList:[],
       allCourse:[],
       allTeacher:[],
+      defaultProps: {
+        children: 'children',
+        label: 'courseName',
+        value:'id'
+      }
     }
   },
   mounted(){
     this.getSubjectList();
     this.getUserList();
-    if(this.isUpdate){
-      this.getSingleClass()
-    }
+    
   },
   methods:{
+    handleNodeClick(dd,data) {
+      this.courseIdList = []
+        for(let i=0;i<data.checkedNodes.length;i++){
+          this.courseIdList.push(data.checkedNodes[i].courseName);
+        }
+        this.temp.courseIdList = data.checkedKeys;
+    },
     getSubjectList(){//查询所有课程
       getSubjectList({isAll:'1',pattern:''}).then(res => {
         // this.allCourse = res.data.subjectList;
          this.allCourse = updateTree(res.data.courseList)
+         if(this.isUpdate){
+            this.getSingleClass()
+          }
       })
     },
     getUserList(){//查询所有老师
@@ -122,6 +154,24 @@ export default {
     getSingleClass(){//查询班级信息
       getSingleClass(this.$route.query.classId).then(res => {
           this.temp = res.data.class;
+          // this.courseIdList = res.data.class.courseIdList;
+          for(let j=0;j<res.data.class.courseIdList.length;j++){
+              for(let i=0;i<this.allCourse.length;i++){
+                if(res.data.class.courseIdList[j]===this.allCourse[i].id){
+                  this.courseIdList.push(this.allCourse[i].courseName);
+                  if(this.allCourse[i].children){
+                    for(let n=0;n<this.allCourse[i].children.length;n++){
+                        if(res.data.class.courseIdList[j]===this.allCourse[i].id){
+                          this.courseIdList.push(this.allCourse[i].children[n].courseName);
+                        }
+                    }
+                  }
+                }
+              }
+          }
+          
+          this.temp.courseIdList = res.data.class.courseIdList;
+          console.log( this.temp.courseIdList);
           this.temp.teacherInfo = res.data.class.teacherName+','+res.data.class.userTeacherId
           this.temp.isAdmissionTest = res.data.class.admissionTest===1?true:false;
           this.temp.isCompletionTest =res.data.class.completionTest===1?true:false;
@@ -131,7 +181,8 @@ export default {
   watch:{
     dialogFormVisible(new_,old){
       this.$emit('close')
-    }
+    },
+    
   }
 }
 </script>

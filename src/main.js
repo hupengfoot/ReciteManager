@@ -16,9 +16,8 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import '@/utils/filter.js'
 
-import multiCascader from "multi-cascader";
-
-Vue.use(multiCascader);
+import cascaderMulti from "cascader-multi";
+Vue.use(cascaderMulti);
 
 import echarts from 'echarts'
  

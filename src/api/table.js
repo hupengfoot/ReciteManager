@@ -216,7 +216,13 @@ export function getList(params){
     params:params
   })
 }
-
+export function getStuGradeRankPerDay(params){
+  return request({//查询班级排名
+    url:getUrlBase()+'/pkStuUnitExam/getStuGradeRankPerDay',
+    method:'get',
+    params:params
+  })
+}
 
 
 /**成绩列表 -E */
