@@ -1,6 +1,7 @@
 <template>
   <div class="groupmembermanager">
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addStudent">{{ '新增组员' }}</el-button>
+    <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchAddGold">{{ '批量奖励金币' }}</el-button>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="groupmembermanagerMain">
       <el-table border :data="stuList">
@@ -9,11 +10,21 @@
             {{ scope.$index }}
           </template>
         </el-table-column>
+        <el-table-column label="勾选">
+          <template slot-scope="scope">
+            <el-checkbox label="" name="type" @change="handleCheckAllChange(scope.$index)"/>
+          </template>
+        </el-table-column>
         <el-table-column label="ID" prop="stuId"></el-table-column>
         <el-table-column label="姓名" prop="realName"></el-table-column>
         <el-table-column label="性别">
           <template slot-scope="scope">
             {{scope.row.gender | gender}}
+          </template>
+        </el-table-column>
+         <el-table-column label="金币">
+          <template slot-scope="scope">
+            {{scope.row.goldCoin}}
           </template>
         </el-table-column>
         <el-table-column label="进度" width="400">
@@ -57,6 +68,18 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="批量奖励金币" :visible.sync="batchGoldFormVisible">
+      <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="金币">
+          <el-input v-model="goldNum"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="batchGoldFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="batchRewardGold">{{ '确定' }}</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -71,8 +94,11 @@ export default {
       classId: 0,
       groupItemId: 0,
       stuList: [],
+      selectArr: [],
+      selectStuID: [],
       dialogFormVisible: false,
       goldFormVisible: false,
+      batchGoldFormVisible: false,
       goldNum: 0,
       stuId: "",
       realName: "",
@@ -92,6 +118,11 @@ export default {
              classId: this.classId
          }).then(res=>{
             this.stuList = res.data.stuList;
+            //设置勾选数组
+            for(var i in this.stuList){
+              this.selectArr.push(0);
+              this.selectStuID.push(this.stuList[i].stuId);
+            }
          })
      },
      addStudent(){
@@ -100,12 +131,31 @@ export default {
           this.$refs['dataForm'].clearValidate        
         })
      },
+     batchAddGold(){
+         this.batchGoldFormVisible = true;
+         this.$nextTick(() => {
+             this.$refs['goldForm'].clearValidate 
+         })
+     },
      addGold(stuId){
          this.stuId = stuId;
          this.goldFormVisible = true;
          this.$nextTick(() => {
              this.$refs['goldForm'].clearValidate 
          })
+     },
+     batchRewardGold(){
+       this.batchGoldFormVisible = false;
+        let promiseArray = [];
+        for(let i in this.selectArr){
+          if(this.selectArr[i] === 1){
+            promiseArray.push(rewardGold({stuId: this.selectStuID[i], gold: this.goldNum}));
+          }
+        }
+        Promise.all(promiseArray).then(resultList => {
+          location.reload()
+          //TODO
+        });
      },
      rewardGold(){
          this.goldFormVisible = false;
@@ -120,6 +170,7 @@ export default {
                 type: 'success',
                 duration: 2000
               })
+              location.reload()
             }else{
               this.$notify({
                 title: '添加金币失败',
@@ -176,6 +227,9 @@ export default {
               })
             }
          })
+     },
+     handleCheckAllChange(seq){
+       this.selectArr[seq] = (this.selectArr[seq] + 1) % 2;
      }
   }
 }
