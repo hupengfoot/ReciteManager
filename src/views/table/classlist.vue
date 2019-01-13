@@ -10,7 +10,7 @@
           <h5 class="grade" :title="item.className">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
           <router-link :to="{path:'/student',query:{classId:item.id}}"><el-button class="joinClass">进入班级</el-button></router-link>
-          <div class="createTime">创建时间：{{item.startDate}}</div>
+          <div class="createTime">开课时间：{{item.startDate}}</div>
       </div>
     </div>
     <class-dialog v-if="isDialog" @close="isDialog=false" @create="createClass"></class-dialog>

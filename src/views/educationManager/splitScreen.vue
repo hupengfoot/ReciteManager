@@ -4,30 +4,30 @@
         <div>
             <label><span>{{first.groupItemName}}</span></label>
             <h5>
-                <span>排名 {{first.averageGrader}}</span>
-                <span>平均分 {{firstAverage}} 分</span>
+                <span>排名 {{first.averageGrader}} </span>
+                <span> 平均 {{firstAverage}} 单词量</span>
             </h5>
         </div>
         <ul>
             <li v-for="(list,index) in first.stuInfoList" :key="index">
                 <p>{{list.realName}} {{list.wordNum}}</p>
-                <p class="progress groupProgress"><span :style="{width:list.wordNum*3+'px'}"></span></p>
+                <p class="progress groupProgress"><span :style="{width:(list.wordNum/maxGroupWordNum)*300+'px'}"></span></p>
             </li>
         </ul>
     </div>
 
-    <div class="second">
+    <div class="second" v-if="$route.query.second">
         <div>
             <label><span>{{second.groupItemName}}</span></label>
             <h5>
-                <span>排名 {{second.averageGrader}}</span>
-                <span>平均分 {{secondAverage}} 分</span>
+                <span>排名 {{second.averageGrader}} </span>
+                <span> 平均 {{secondAverage}} 单词量</span>
             </h5>
         </div>
         <ul>
             <li v-for="(list,index) in second.stuInfoList" :key="index">
                 <p>{{list.realName}} {{list.wordNum}}</p>
-                <p class="progress groupProgress"><span :style="{width:list.wordNum*3+'px'}"></span></p>
+                <p class="progress groupProgress"><span :style="{width:(list.wordNum/secondMaxGroupWordNum)*300+'px'}"></span></p>
             </li>
         </ul>
     </div>
@@ -46,23 +46,34 @@ export default {
       secondData:[],
       firstAverage:0,
       secondAverage:0,
+      maxGroupWordNum:0,
+      secondMaxGroupWordNum:0,
     }
   },
   created() {
     this.first = JSON.parse(this.$route.query.first);
-    this.second = JSON.parse(this.$route.query.second);
+    
     let firstSub = 0;
     let secondSub = 0;
     for(let i=0;i< this.first.stuInfoList.length;i++){
         firstSub += this.first.stuInfoList[i].wordNum;
     }
-    console.log(firstSub)
     this.firstAverage = firstSub/this.first.stuInfoList.length;
-    for(let i=0;i<this.second.stuInfoList.length;i++){
-        secondSub += this.second.stuInfoList[i].wordNum;
+    
+    for(let n=0;n<this.first.stuInfoList.length;n++){
+        this.maxGroupWordNum = this.maxGroupWordNum>this.first.stuInfoList.wordNum?this.maxGroupWordNum:this.first.stuInfoList[n].wordNum;
+    }
+    if(this.$route.query.second){
+        this.second = JSON.parse(this.$route.query.second);
+        for(let i=0;i<this.second.stuInfoList.length;i++){
+            secondSub += this.second.stuInfoList[i].wordNum;
+        }
+        for(let n=0;n<this.second.stuInfoList.length;n++){
+            this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>this.second.stuInfoList.wordNum?this.secondMaxGroupWordNum:this.second.stuInfoList[n].wordNum;
+        }
+        this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length) * 100) / 100).toString();
     }
     
-    this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length) * 100) / 100).toString();
   },
   watch:{
     

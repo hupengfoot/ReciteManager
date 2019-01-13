@@ -30,7 +30,7 @@
           <el-table-column label="词汇量" prop="wordNum"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
-              <p class="progress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+              <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
             </template>
           </el-table-column>
         </el-table>
@@ -48,7 +48,7 @@
           <el-table-column label="词汇量" prop="wordNum"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
-              <p class="progress groupProgress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+              <p class="progress groupProgress"><span :style="{width:(scope.row.wordNum/maxGroupWordNum)*300+'px'}"></span></p>
             </template>
           </el-table-column>
         </el-table>
@@ -69,6 +69,8 @@ export default {
       type:1,
       eduList:[],
       totalNum:0,
+      maxWordNum:0,
+      maxGroupWordNum:0,
       search:{
         page:1,
         limit:10,
@@ -104,11 +106,13 @@ export default {
     getClassGrade(){//查询班级成绩
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;
+        for(let i=0;i<res.data.stuList.records.length;i++){
+          this.maxWordNum = this.maxWordNum>res.data.stuList.records[i].wordNum?this.maxWordNum:res.data.stuList.records[i].wordNum;
+        }
         this.totalNum = res.data.stuList.total;
       })
     },
     orderButton(order){//排序
-    console.log(order)
       this.search.order = order;
       this.getClassGrade();
     },
@@ -117,7 +121,11 @@ export default {
         for(let i=0;i<res.data.groupItemList.length;i++){
           res.data.groupItemList[i].wordNum = 0;
           for(let j=0;j<res.data.groupItemList[i].stuInfoList.length;j++){
+             
               res.data.groupItemList[i].wordNum = res.data.groupItemList[i].stuInfoList[j].wordNum+res.data.groupItemList[i].wordNum
+          }
+          for(let n=0;n<res.data.groupItemList.length;n++){
+             this.maxGroupWordNum = this.maxGroupWordNum>res.data.groupItemList[n].wordNum?this.maxGroupWordNum:res.data.groupItemList[n].wordNum;
           }
         }
         this.groupList = res.data.groupItemList;
