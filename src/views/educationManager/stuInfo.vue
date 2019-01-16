@@ -21,6 +21,7 @@
         <h3>{{stuInfo.realName}}成长记录</h3>
         <div class="growthMain">
           <div id="getStuWordNumPerDay" :style="{width: '800px', height: '400px'}"></div>
+          <div class="mask"></div>
           <div id="getStuGradeRankPer" :style="{width:'800px',height:'300px'}"></div>
         </div>
       </div>
@@ -208,10 +209,14 @@ export default {
       let wordNum = this.$echarts.init(document.getElementById('getStuGradeRankPer'))
         // 绘制图表
         wordNum.setOption({
-            // tooltip: {},
+            tooltip: {
+              // trigger: 'axis',
+              formatter:'第{c}'
+            },
             xAxis: {
                 type: 'category',
-                axisLine: {onZero: false}
+                axisLine: {onZero: false},
+                // data:this.classRank
             },
             yAxis: {
                 type: 'value',
@@ -312,7 +317,7 @@ export default {
             },
             series: [
                 {
-                    name:'',
+                    name:'单元数',
                     type:'pie',
                     radius: ['50%', '70%'],
                     avoidLabelOverlap: false,
@@ -453,8 +458,17 @@ export default {
       background-size:557px 100%;
     }
     .growthMain{
+      position:relative;
       width:800px;
       margin:0 auto;
+      .mask{
+        position: absolute;
+        height: 20px;
+        width: 100%;
+        background: #fff;
+        top: 445px;
+        z-index: 1;
+      }
     }
   }
   .wordNum{
