@@ -56,6 +56,7 @@
             <div class="wordNumLeft">
               <div id="wordNumProgress" :style="{width: '400px', height: '300px'}"></div>
               <div class="leftMain">
+                <p>词汇量：{{StuAdmissionAnalysisData.score}}</p>
                 <p>题数：{{StuAdmissionAnalysisData.testNum}}</p>
                 <p>用时：{{StuAdmissionAnalysisData.time}}</p>
                 <p class="blue">很棒哦，继续加油！</p> 
@@ -65,7 +66,7 @@
               <h5>测评分析</h5>
               <p>根据你的测试情况，认为你的词汇水平位于<span class="blue">{{StuAdmissionAnalysisData.testLevel}}水平</span>
               <h5>学习建议</h5>
-              <p v-for="i in StuAdmissionAnalysisData.comments">{{i}}</p>
+              <p v-for="(i,index) in StuAdmissionAnalysisData.comments">{{index+1}}、{{i}}</p>
             </div>
           </div>
         </div>
@@ -493,8 +494,12 @@ export default {
           float:left;
           .leftMain{
             position:relative;
-            top:-80px;
+            top:-96px;
             font-size:18px;
+            p{
+              height:15px;
+              line-height:15px;
+            }
             .blue{
               color:#309bff;
               font-size:24px;
@@ -508,6 +513,9 @@ export default {
           text-align:left;
           float:left;
           width:400px;
+          p{
+            line-height:22px;
+          }
           .blue{
             color:#309bff;
           }
