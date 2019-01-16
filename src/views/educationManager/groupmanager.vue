@@ -11,7 +11,7 @@
         <h5 class="grade">{{item.groupItemName}}</h5>
         <p class="peopleNum">{{item.stuNum}}人</p>
         <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">进入小组</el-button></router-link>
-        <el-button class="joinClass" @click="deleteGroupItem(item.id)">删除</el-button>
+        <el-button class="joinClass" @click="deleteCheck(item.id)">删除</el-button>
         <div class="createTime">创建时间：{{ new Date(item.createTime).toLocaleDateString() }}</div>
       </div>
     </div>
@@ -27,6 +27,14 @@
         <el-button type="primary" @click="createGroupItemBatch">{{ '创建' }}</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="是否确定删除小组" :visible.sync="deleteFormVisible">
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deleteFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="deleteGroupItem">{{ '删除' }}</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -40,6 +48,7 @@ export default {
     return{
       classId: 0,
       groupList: [],
+      deleteGroupId : 0,
       pageInfo: {
         page: 1,
         limit: 200,
@@ -47,6 +56,7 @@ export default {
       },
       pattern: "",
       dialogFormVisible: false,
+      deleteFormVisible: false,
       newgroupnum: "",
     }
   },
@@ -69,6 +79,13 @@ export default {
       },
       addGroup(){
         this.dialogFormVisible = true;
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate        
+        })
+      },
+      deleteCheck(groupId){
+        this.deleteFormVisible = true;
+        this.deleteGroupId = groupId;
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate        
         })
@@ -118,8 +135,8 @@ export default {
           }
         });
       },
-      deleteGroupItem(groupItemId){
-        deleteGroupItem(groupItemId, {
+      deleteGroupItem(){
+        deleteGroupItem(this.deleteGroupId, {
         }).then(res => {
           if(res.data.code === 0){
             this.$notify({
