@@ -56,18 +56,16 @@
             <div class="wordNumLeft">
               <div id="wordNumProgress" :style="{width: '400px', height: '300px'}"></div>
               <div class="leftMain">
-                <p>题数：80</p>
-                <p>用时：8分21秒</p>
+                <p>题数：{{StuAdmissionAnalysisData.testNum}}</p>
+                <p>用时：{{StuAdmissionAnalysisData.time}}</p>
                 <p class="blue">很棒哦，继续加油！</p> 
               </div>
             </div>
             <div class="wordNumRight">
               <h5>测评分析</h5>
-              <p>根据你的测试情况，认为你的词汇水平位于<span class="blue">九年级水平</span>
+              <p>根据你的测试情况，认为你的词汇水平位于<span class="blue">{{StuAdmissionAnalysisData.testLevel}}水平</span>
               <h5>学习建议</h5>
-              <p>选择适合自己的英语单词记忆方法，重点复习并记忆高中词汇，构建自己的词汇本。</p>
-              <p>阅读，阅读，阅读！！！不论是小说、报纸、杂志还是周刊，读的越多接触的词汇也越多，阅读英文材料一定要读原版哦。</p>
-              <p>和兴趣相投的朋友一起玩文字游戏吧，在游戏中也可以学习英语。</p>
+              <p v-for="i in StuAdmissionAnalysisData.comments">{{i}}</p>
             </div>
           </div>
         </div>
@@ -78,7 +76,7 @@
 </template>
 
 <script>
-import {getStuGradeRankPerDay,getStuWordNumPerDay,getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
+import {getStuAdmissionAnalysis,getStuGradeRankPerDay,getStuWordNumPerDay,getClassUnitNum,getStuInfoByStuId,getStuUnitPassNum,getStuWordNum,getStuUnitCompleteInfo,getStuExamCorrectRate } from '@/api/table'
 import Pagination from '@/components/Pagination'
 import pieChart from "@/components/echarts/dashboard";
 import {isUndefined} from '@/utils/index.js'
@@ -99,14 +97,15 @@ export default {
       },
       stuInfoTotal:0,
       ClassExamCorrectRateData:[],
-      
       earlyUnderstand:[],
       earlyHalfUnderstand:[],
       earlyNotUnderstand:[],
       eveningUnderstand:[],
       eveningHalfUnderstand:[],
       eveningNotUnderstand:[],
-      
+      StuAdmissionAnalysisData:{
+        time:''
+      },
       classRank:[],
     }
   },
@@ -117,9 +116,9 @@ export default {
     // this.getStuWordNum()
     this.getStuUnitCompleteInfo()
     this.getStuExamCorrectRate()
-    this.wordNumProgress()
     this.getStuWordNumPerDay()
     this.getStuGradeRankPerDay()
+    this.getStuAdmissionAnalysis()
   },
   methods:{
     getClassUnitNum(){//总单元数
@@ -284,7 +283,15 @@ export default {
             ]
         })
     },
-    wordNumProgress(){
+    getStuAdmissionAnalysis(){
+      getStuAdmissionAnalysis(this.$route.query.stuId).then(res=>{
+        this.StuAdmissionAnalysisData = res.data.admissionTest
+        this.StuAdmissionAnalysisData.time = parseInt(this.StuAdmissionAnalysisData.testTime*1/100/60)+"分"+parseInt(this.StuAdmissionAnalysisData.testTime*1/100%60)+"秒";
+        this.wordNumProgress(res.data.admissionTest)
+      })
+    },
+    wordNumProgress(data){//词汇量分析图表
+    console.log(data,1111)
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('wordNumProgress'))
         // 绘制图表
@@ -299,7 +306,7 @@ export default {
                     name: '业务指标',
                     type: 'gauge',
                     detail: {formatter:'{value}%'},
-                    data: [{value: 80, name: ''}]
+                    data: [{value: data.accuracy*1, name: ''}]
                 }
             ]
         })

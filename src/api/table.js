@@ -223,6 +223,14 @@ export function getStuGradeRankPerDay(params){
     params:params
   })
 }
+export function getStuAdmissionAnalysis(id,params){
+  return request({//查询词汇量分析
+    url:getUrlBase()+'/pkAdmissionTest/getStuAdmissionAnalysis/'+id,
+    method:'get',
+    params:params
+  })
+}
+
 
 
 /**成绩列表 -E */
