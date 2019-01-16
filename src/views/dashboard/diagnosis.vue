@@ -13,7 +13,7 @@
         <span class="name">筛选</span>
         <i class="el-icon-caret-bottom"/>
       </div>
-      <el-dropdown-menu slot="dropdown" class="user-dropdown" style="height:300px">
+      <el-dropdown-menu slot="dropdown" class="user-dropdown">
         <el-scrollbar style="height:100%">
           <div class="classList" v-for="(item, index) in classList" :key="index">
             <el-dropdown-item divided>
@@ -199,6 +199,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.user-dropdown{
+  height:350px;
+  padding-bottom:50px;
+  >.el-dropdown-menu__item{
+    text-align:center;
+  }
+}
+
 .el-scrollbar__wrap {
    overflow-x: hidden;
 }
@@ -227,6 +235,7 @@ export default {
     height:80px;
     line-height:80px;
     text-align:center;
+    
     ul{
       padding:0;
       overflow:hidden;
@@ -248,6 +257,7 @@ export default {
           color:#309bff;
           border:1px solid #309bff; 
         }
+
       }
     }
   }
