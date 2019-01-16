@@ -17,13 +17,13 @@
         <el-scrollbar style="height:100%">
           <div class="classList" v-for="(item, index) in classList" :key="index">
             <el-dropdown-item divided>
-              <span><el-checkbox @change="handleCheckAllChange(item)"/></span> <span>{{item.className}}</span>
+              <span><el-checkbox @change="handleCheckAllChange(index)"/></span> <span>{{item.className}}</span>
             </el-dropdown-item>
           </div>
         </el-scrollbar>
-        <div>
+        <el-dropdown-item divided>
           <el-button size="mini" type="danger" @click="getCompareData()">{{ '确定' }}</el-button>
-        </div>
+        </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
     </div>
@@ -32,7 +32,7 @@
         <h3>班级词汇比较</h3>
         <div class="classcompareMain">
           <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-            <line-chart :chart-data="lineChartData"/>
+            <line-chart :chart-data="lineChartData" id="classcompareMain1" style="position: absolute; left: 0px; top: 0px; width: 1332px; "/>
           </el-row>
         </div>
       </div>
@@ -53,7 +53,7 @@
 import {getAllClassByTeacherId, getAllClass, getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
 import LineChart from '@/components/echarts/LineChart'
 import HistogramChart from '@/components/echarts/HistogramChart'
-// import moment from 'moment'
+import moment from 'moment'
 
 const lineChartData = {
   xAxisData: [],
@@ -79,6 +79,7 @@ export default {
         lineChartData: lineChartData,
         histogramChartData: HistogramChartData,
         classList: [],
+        classSelectStatusList: [],
         selectClassList: []
     }
   },
@@ -103,6 +104,9 @@ export default {
         pattern:""
       }).then(res=>{
         this.classList = res.data.classList;
+        for(var i in this.classList){
+          this.classSelectStatusList.push(0);
+        }
       });
     },
     getCompareData(){
@@ -117,8 +121,11 @@ export default {
       let xAxisData = ["汉选英", "看义拼单词", "英选汉", "听音选英"];
       let yAxisData = [];
       let promiseArray = [];
-      for(let i in this.selectClassList){
-        promiseArray.push(getClassExamCorrectRate(this.selectClassList[i].classId, {}));
+      for(var i in this.classSelectStatusList){
+        if(this.classSelectStatusList[i] === 1){
+          this.selectClassList.push(this.classList[i]);
+          promiseArray.push(getClassExamCorrectRate(this.classList[i].id, {}));
+        }
       }
       Promise.all(promiseArray).then(resultList => {
         for(let i in resultList){
@@ -127,12 +134,16 @@ export default {
           oneClassItem.yDataList = [];
           for(let j in resultList[i].data.examCorrectNum){
             //TODO 这里要取百分数
-            oneClassItem.yDataList.push(resultList[i].data.examCorrectNum[j].rightNum / resultList[i].data.examCorrectNum[j].rightNum + resultList[i].data.examCorrectNum[j].wrongNum);
+            let score = resultList[i].data.examCorrectNum[j].rightNum / (resultList[i].data.examCorrectNum[j].rightNum + resultList[i].data.examCorrectNum[j].wrongNum);
+            oneClassItem.yDataList.push((Math.round(score * 10000)/100).toFixed(2));
           }
           yAxisData.push(oneClassItem);
         }
         this.histogramChartData.xAxisData = xAxisData;
         this.histogramChartData.yAxisData = yAxisData;
+
+         //查询完毕后情况查询班级数组
+        this.selectClassList = [];
       });
 
     },
@@ -143,8 +154,11 @@ export default {
         xAxisData.push(moment().subtract(i, 'days').format('YYYY-MM-DD'));
       }
       let promiseArray = [];
-      for(let i in this.selectClassList){
-        promiseArray.push(getClassGradePerDay(this.selectClassList[i].classId, {}));
+      for(var i in this.classSelectStatusList){
+        if(this.classSelectStatusList[i] === 1){
+          this.selectClassList.push(this.classList[i]);
+          promiseArray.push(getClassGradePerDay(this.classList[i].id, {}));
+        }
       }
       Promise.all(promiseArray).then(resultList => {
         for(let i in resultList){
@@ -177,8 +191,8 @@ export default {
         this.selectClassList = [];
       })
     },
-    handleCheckAllChange(item){
-      this.selectClassList.push({classId:item.id, className:item.className});
+    handleCheckAllChange(index){
+      this.classSelectStatusList[index] = (this.classSelectStatusList[index] + 1) % 2
     }
   }
 }
