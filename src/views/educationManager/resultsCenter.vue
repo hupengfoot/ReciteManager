@@ -10,7 +10,7 @@
     <div class="resultsMain">
       <div class="mainTop">
         <div class="mainTopButton">
-          <el-button @click="type=1" :class="{'dafult':type==1}">班级成绩</el-button>
+          <el-button @click="type=1" :class="{'dafult':type==1}">班级{{type}}成绩</el-button>
           <el-button @click="type=2" :class="{'dafult':type==2}">小组成绩</el-button>
         </div>
         <span class="fr sort" @click="orderButton('DESC')" v-if="search.order=='ASC'&&type==1">升序</span>
@@ -39,10 +39,10 @@
       <div v-if="type==2">
         <el-table border :data="groupList">
           <el-table-column label="ID" prop="id"></el-table-column>
-          <el-table-column label="姓名" prop="groupItemName"></el-table-column>
-          <el-table-column label="性别">
+          <el-table-column label="小组名" prop="groupItemName"></el-table-column>
+          <el-table-column label="创建时间">
             <template slot-scope="scope">
-              {{scope.row.gender | gender}}
+              {{scope.row.createTime}}
             </template>
           </el-table-column>
           <el-table-column label="词汇量" prop="wordNum"></el-table-column>
@@ -121,7 +121,6 @@ export default {
         for(let i=0;i<res.data.groupItemList.length;i++){
           res.data.groupItemList[i].wordNum = 0;
           for(let j=0;j<res.data.groupItemList[i].stuInfoList.length;j++){
-             
               res.data.groupItemList[i].wordNum = res.data.groupItemList[i].stuInfoList[j].wordNum+res.data.groupItemList[i].wordNum
           }
           for(let n=0;n<res.data.groupItemList.length;n++){

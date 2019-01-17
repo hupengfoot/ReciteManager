@@ -194,7 +194,7 @@ export default {
         }
         this.StuUnitCompleteInfoData = res.data.stuUnitLearningInfo
         //console.log(this.StuUnitCompleteInfoData)
-        this.stuInfoTotal = res.data.stuUnitLearningInfo.pages
+        this.stuInfoTotal = res.data.stuUnitLearningInfo.total
       })
     },
     getStuExamCorrectRate(){//题型得分率分析

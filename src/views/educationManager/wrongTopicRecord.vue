@@ -15,7 +15,7 @@
         <el-date-picker v-model="endDate" @change="wrongSet" value-format="timestamp" placeholder="请选择结束时间"></el-date-picker>
       </form>
       <el-radio-group class="wordList" v-model="details"  @change="selectDetails($event)">
-        <el-radio-button v-for="(list,index) in wordList" :key="index" :label="list">{{list.content}}</el-radio-button>
+        <el-radio-button style="font-size:24px;" v-for="(list,index) in wordList" :key="index" :label="list">{{list.content}}</el-radio-button>
       </el-radio-group>
       <div class="wordDetalis">
         <div class="detalisMain" v-if="wordDetails.content">
@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <pagination v-show="page.totalNum>0" :total="page.totalNum" :page.sync="page.page" :limit.sync="page.limit" @pagination="wrongSet" />
+    <pagination v-show="search.totalNum>0" :total="search.totalNum" :page.sync="search.page" :limit.sync="search.limit" @pagination="wrongSet" />
   </div>
 </template>
 
@@ -45,12 +45,13 @@ export default {
         pattern:null,
         startDate:'',
         endDate:'',
-        questionType:''
-      },
-      page:{
+        questionType:'',
         page:1,
         limit:10,
         totalNum:0,
+      },
+      page:{
+        
       },
       details:'',
       classId:0,
@@ -77,7 +78,7 @@ export default {
      }
       wrongSet(this.$route.query.classId,this.search).then(res=>{
         this.wordList = res.data.wordList.records;
-        this.page.totalNum = res.data.wordList.total;
+        this.search.totalNum = res.data.wordList.total;
         this.audioUrl = process.env.BASE_API;
       })
    },
@@ -89,7 +90,7 @@ export default {
    selectDetails(event){
      this.wordDetails = event;
    },
-   playAudio(){
+   playAudio(){//播放语音
      var a=document.getElementById("audio");
       a.play();
    }
@@ -117,6 +118,7 @@ export default {
       border:1px solid #e0e0e1;
       padding:20px;
       min-height:400px;
+      
     }
     .wordDetalis{
       font-size:18px;
@@ -128,6 +130,7 @@ export default {
       .detalisMain{
         margin-top:100px;
         margin-left:40px;
+        font-size:24px;
         img{
           height:20px;
           width:25px;
