@@ -9,7 +9,7 @@ export function isUndefined(isnum){//校验是否为空以及转化百分比
   if(isnum.rightNum + isnum.wrongNum === 0){
     return 0;
   }else{//console.log(isnum.rightNum)
-    return isnum.rightNum*100/(isnum.rightNum*1+isnum.wrongNum*1)
+    return  (Math.round(isnum.rightNum*100/(isnum.rightNum*1+isnum.wrongNum*1) * 100) / 100).toString();
   }
   //return isnum.rightNum?isnum.rightNum:0+isnum.wrongNum?isnum.wrongNum:0!==0?isnum.rightNum?isnum.rightNum*100:0/(isnum.rightNum?isnum.rightNum:0+isnum.wrongNum?isnum.wrongNum:0):0
 }

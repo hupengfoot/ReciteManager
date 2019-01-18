@@ -153,7 +153,7 @@ export function getClassGroupGrade(id,params){
 
 export function getClassUnitNum(id,params){
   return request({//总单元数
-    url:getUrlBase()+'/pkCourse/getClassUnitNum/'+id,
+    url:getUrlBase()+'/pkStuUnitLearning/getStuUnitNum/'+id,
     method:'get',
     params:params
   })

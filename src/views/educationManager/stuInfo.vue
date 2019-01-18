@@ -52,7 +52,7 @@
       <div class="wordNum" v-show="type=='wordNum'">
         <h3>{{stuInfo.realName}}词汇量分析</h3>,
         <div class="wordNumMain">
-          <div class="wordNumCenter">
+          <div class="wordNumCenter" v-if="StuAdmissionAnalysisData.score">
             <div class="wordNumLeft">
               <div id="wordNumProgress" :style="{width: '400px', height: '300px'}"></div>
               <div class="leftMain">
@@ -69,6 +69,7 @@
               <p v-for="(i,index) in StuAdmissionAnalysisData.comments">{{index+1}}、{{i}}</p>
             </div>
           </div>
+          <div>尚未测试</div>
         </div>
       </div>
     </div>
@@ -123,15 +124,15 @@ export default {
   },
   methods:{
     getClassUnitNum(){//总单元数
-      getClassUnitNum(this.$route.query.classId).then(res=>{
+      getClassUnitNum(this.$route.query.stuId).then(res=>{
         // this.unitPassNum.push({value:res.data.unitNum,name:'总单元数'});
-        this.getStuUnitPassNum(res.data.unitNum)
+        this.getStuUnitPassNum(res.data.stuUnitPassNum)
       })
     },
     getStuUnitPassNum(countNum){//通过的单元数
       getStuUnitPassNum(this.$route.query.stuId).then(res=>{
          this.unitPassNum.push({value:res.data.stuUnitPassNum,name:'已掌握'});
-         this.unitPassNum.push({value:countNum-res.data.stuUnitPassNum,name:'未掌握'});
+         this.unitPassNum.push({value:countNum,name:'未掌握'});
          this.getStuWordNum()
       })
     },
@@ -286,9 +287,12 @@ export default {
     },
     getStuAdmissionAnalysis(){
       getStuAdmissionAnalysis(this.$route.query.stuId).then(res=>{
-        this.StuAdmissionAnalysisData = res.data.admissionTest
-        this.StuAdmissionAnalysisData.time = parseInt(this.StuAdmissionAnalysisData.testTime*1/100/60)+"分"+parseInt(this.StuAdmissionAnalysisData.testTime*1/100%60)+"秒";
-        this.wordNumProgress(res.data.admissionTest)
+        if(res.data.admissionTest){
+          this.StuAdmissionAnalysisData = res.data.admissionTest
+          this.StuAdmissionAnalysisData.time = parseInt(this.StuAdmissionAnalysisData.testTime*1/100/60)+"分"+parseInt(this.StuAdmissionAnalysisData.testTime*1/100%60)+"秒";
+          this.wordNumProgress(res.data.admissionTest)
+        }
+        
       })
     },
     wordNumProgress(data){//词汇量分析图表
@@ -380,6 +384,7 @@ export default {
         });
     },
     ClassExamCorrectRate(){
+      // console.log(this.ClassExamCorrectRateData.percentage)
       let wordNum = this.$echarts.init(document.getElementById('ClassExamCorrectRate'))
         // 绘制图表
         wordNum.setOption({
@@ -414,6 +419,8 @@ export default {
                     barWidth: '60%',
                     formatter: '{b}\n{c}%',
                     data:this.ClassExamCorrectRateData.percentage
+                    
+                    
                 }
             ]
         });

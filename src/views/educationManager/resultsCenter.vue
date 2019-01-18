@@ -10,7 +10,7 @@
     <div class="resultsMain">
       <div class="mainTop">
         <div class="mainTopButton">
-          <el-button @click="type=1" :class="{'dafult':type==1}">班级{{type}}成绩</el-button>
+          <el-button @click="type=1" :class="{'dafult':type==1}">班级成绩</el-button>
           <el-button @click="type=2" :class="{'dafult':type==2}">小组成绩</el-button>
         </div>
         <span class="fr sort" @click="orderButton('DESC')" v-if="search.order=='ASC'&&type==1">升序</span>

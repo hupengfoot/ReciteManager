@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <pagination v-show="search.totalNum>0" :total="search.totalNum" :page.sync="search.page" :limit.sync="search.limit" @pagination="wrongSet" />
+    <pagination v-show="totalNum>0" :total="totalNum" :page.sync="search.page" :limit.sync="search.limit" @pagination="wrongSet" />
   </div>
 </template>
 
@@ -41,14 +41,15 @@ export default {
     return{
       startDate:'',
       endDate:'',
+      totalNum:0,
       search:{
         pattern:null,
-        startDate:'',
-        endDate:'',
+        startTime:'',
+        endTime:'',
         questionType:'',
         page:1,
         limit:10,
-        totalNum:0,
+        
       },
       page:{
         
@@ -71,14 +72,14 @@ export default {
    wrongSet(){
      if(this.startDate){
         let start = this.startDate.toString();
-        this.search.startDate = start.substr(0,10);
+        this.search.startTime = start.substr(0,10);
      }
      if(this.endDate){
-        this.search.endDate = this.endDate.toString().substr(0,10);
+        this.search.endTime = this.endDate.toString().substr(0,10)*1+86400;
      }
       wrongSet(this.$route.query.classId,this.search).then(res=>{
         this.wordList = res.data.wordList.records;
-        this.search.totalNum = res.data.wordList.total;
+        this.totalNum = res.data.wordList.total;
         this.audioUrl = process.env.BASE_API;
       })
    },
@@ -117,7 +118,8 @@ export default {
       float:left;
       border:1px solid #e0e0e1;
       padding:20px;
-      min-height:400px;
+      height:400px;
+      overflow:auto;
       
     }
     .wordDetalis{
@@ -126,7 +128,8 @@ export default {
       width:38%;
       float:right;
       border:1px solid #e0e0e1;
-      min-height:400px;
+      height:400px;
+      overflow:auto;
       .detalisMain{
         margin-top:100px;
         margin-left:40px;
