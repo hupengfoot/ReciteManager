@@ -1,10 +1,18 @@
 <template>
   <div class="resultsCenter">
     <form class="searchForm">
-      <el-date-picker v-model="search.startDate" value-format="yyyy-MM-dd" placeholder="请选择开始时间"></el-date-picker>
-      <el-date-picker v-model="search.endDate"  value-format="yyyy-MM-dd" placeholder="请选择结束时间"></el-date-picker>
+      <el-date-picker v-model="startTime" value-format="timestamp" placeholder="请选择开始时间"></el-date-picker>
+      <el-select v-model="startHalfDay">
+        <el-option value="1" label="AM"></el-option>
+        <el-option value="2" label="PM"></el-option>
+      </el-select>
+      <el-date-picker v-model="endTime"  value-format="timestamp" placeholder="请选择结束时间"></el-date-picker>
+      <el-select v-model="endHalfDay">
+        <el-option value="1" label="AM"></el-option>
+        <el-option value="2" label="PM"></el-option>
+      </el-select>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
-      <el-button type="primary" icon="el-icon-search" @click="selectFrom"> </el-button>
+      <el-button type="primary" icon="el-icon-search" @click="selectFrom">查找</el-button>
     </form>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="resultsMain">
@@ -71,11 +79,15 @@ export default {
       totalNum:0,
       maxWordNum:0,
       maxGroupWordNum:0,
+      startTime:'',
+      endTime:'',
+      startHalfDay:'AM',
+      endHalfDay:'PM',
       search:{
         page:1,
         limit:10,
-        startDate:'',
-        endDate:'',
+        startTime:'',
+        endTime:'',
         pattern:'',
         order:'ASC'
       },
@@ -104,6 +116,20 @@ export default {
       })
     },
     getClassGrade(){//查询班级成绩
+      if(this.startTime){
+        let half;
+        this.startHalfDay=='AM'?half=0:half=43200;
+        this.search.startTime = this.startTime.toString().substr(0,10)-half;
+      }else{
+        this.search.startTime = ''
+      }
+      if(this.endTime){
+        let half;
+        this.endHalfDay=='PM'?half=0:half=43200;
+        this.search.endTime = this.endTime.toString().substr(0,10)*1+86400-half;
+      }else{
+        this.search.endTime = ''
+      }
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;
         for(let i=0;i<res.data.stuList.records.length;i++){
@@ -151,6 +177,9 @@ export default {
   .searchForm{
     height:50px;
     line-height:50px;
+    .el-select{
+      width:80px;
+    }
     .el-input{
       width:220px;
       margin-left:20px;
@@ -163,7 +192,7 @@ export default {
       text-align:center;
       .mainTopButton{
         display:inline-block;
-      
+        
         .el-button{
           height:35px;
           padding:0;

@@ -8,7 +8,7 @@
     <div class="wordMain">
       <form class="searchForm">
         <el-select v-model="search.questionType" @change="wrongSet">
-          <el-option value='' label="">全部</el-option>
+          <el-option value='' label="全部"></el-option>
           <el-option v-for="list in questionType" :key="list.id" :value="list.id" :label="list.typeName"></el-option>
         </el-select>
         <el-date-picker v-model="startDate" @change="wrongSet" value-format="timestamp" placeholder="请选择开始时间"></el-date-picker>
@@ -71,11 +71,14 @@ export default {
   methods:{
    wrongSet(){
      if(this.startDate){
-        let start = this.startDate.toString();
-        this.search.startTime = start.substr(0,10);
+        this.search.startTime = this.startDate.toString().substr(0,10);
+     }else{
+       this.search.startTime = ''
      }
      if(this.endDate){
         this.search.endTime = this.endDate.toString().substr(0,10)*1+86400;
+     }else{
+       this.search.endTime = ''
      }
       wrongSet(this.$route.query.classId,this.search).then(res=>{
         this.wordList = res.data.wordList.records;
