@@ -29,7 +29,7 @@
         </el-table-column>
         <el-table-column label="进度" width="400">
           <template slot-scope="scope">
-            <p class="progress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+            <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
           </template>
         </el-table-column>
         <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
@@ -102,6 +102,7 @@ export default {
       goldNum: 0,
       stuId: "",
       realName: "",
+      maxWordNum:0,
     }
   },
   created() { 
@@ -122,6 +123,7 @@ export default {
             for(var i in this.stuList){
               this.selectArr.push(0);
               this.selectStuID.push(this.stuList[i].stuId);
+              this.maxWordNum = (this.maxWordNum < this.stuList[i].wordNum ? this.stuList[i].wordNum : this.maxWordNum);
             }
          })
      },
