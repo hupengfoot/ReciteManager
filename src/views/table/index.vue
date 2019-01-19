@@ -96,8 +96,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ 'cancel' }}</el-button>
-        <el-button type="primary" @click="createUserInterface">{{ 'confirm' }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="createUserInterface">{{ '确认' }}</el-button>
       </div>
     </el-dialog>
 
