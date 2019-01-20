@@ -2,6 +2,7 @@
   <div class="groupmembermanager">
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="addStudent">{{ '新增组员' }}</el-button>
     <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="batchAddGold">{{ '批量奖励金币' }}</el-button>
+    <el-checkbox label="全选" name="type" @change="handleSelectAllChange()"/>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="groupmembermanagerMain">
       <el-table border :data="stuList">
@@ -29,7 +30,7 @@
         </el-table-column>
         <el-table-column label="进度" width="400">
           <template slot-scope="scope">
-            <p class="progress"><span :style="{width:scope.row.wordNum*3+'px'}"></span></p>
+            <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
           </template>
         </el-table-column>
         <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
@@ -94,6 +95,7 @@ export default {
       classId: 0,
       groupItemId: 0,
       stuList: [],
+      selectAll : 0,
       selectArr: [],
       selectStuID: [],
       dialogFormVisible: false,
@@ -102,6 +104,8 @@ export default {
       goldNum: 0,
       stuId: "",
       realName: "",
+      maxWordNum:0,
+      boxcheck: false,
     }
   },
   created() { 
@@ -122,6 +126,8 @@ export default {
             for(var i in this.stuList){
               this.selectArr.push(0);
               this.selectStuID.push(this.stuList[i].stuId);
+              this.maxWordNum = (this.maxWordNum < this.stuList[i].wordNum ? this.stuList[i].wordNum : this.maxWordNum);
+              this.stuList[i].checkModel = false
             }
          })
      },
@@ -230,6 +236,19 @@ export default {
      },
      handleCheckAllChange(seq){
        this.selectArr[seq] = (this.selectArr[seq] + 1) % 2;
+     },
+     handleSelectAllChange(){
+       this.selectAll = (this.selectAll + 1) % 2
+       for(var i in this.selectArr){
+         this.selectArr[i] = this.selectAll
+       }
+       for(var i in this.stuList){
+         if(this.selectAll === 0){
+           this.stuList[i].checkModel = false
+         }else{
+           this.stuList[i].checkModel = true
+         }
+       }
      }
   }
 }

@@ -181,7 +181,7 @@ export default {
       margin:20px 0 10px;
     }
     .peopleNum{
-      font-size:24px;
+      font-size:18px;
       line-height:30px;
       height:30px;
     }
