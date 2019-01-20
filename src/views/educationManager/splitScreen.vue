@@ -71,7 +71,7 @@ export default {
         for(let n=0;n<this.second.stuInfoList.length;n++){
             this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>this.second.stuInfoList.wordNum?this.secondMaxGroupWordNum:this.second.stuInfoList[n].wordNum;
         }
-        this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length) * 100) / 100).toString();
+        this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length))).toString();
     }
     
   },

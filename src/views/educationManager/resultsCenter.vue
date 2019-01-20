@@ -143,7 +143,27 @@ export default {
       this.getClassGrade();
     },
     getClassGroupGrade(){//查询小组成绩
-      getClassGroupGrade(this.$route.query.classId,this.search).then(res=>{
+      let startTime;
+      let endTime;
+      if(this.startTime){
+        let half;
+        this.startHalfDay=='AM'?half=0:half=43200;
+        startTime = this.startTime.toString().substr(0,10)-half;
+      }else{
+        startTime = ''
+      }
+      if(this.endTime){
+        let half;
+        this.endHalfDay=='PM'?half=0:half=43200;
+        endTime = this.endTime.toString().substr(0,10)*1+86400-half;
+      }else{
+        endTime = ''
+      }
+      getClassGroupGrade(this.$route.query.classId,{
+        startTime:startTime,
+        endTime:endTime,
+        order:'DESC'
+        }).then(res=>{
         for(let i=0;i<res.data.groupItemList.length;i++){
           res.data.groupItemList[i].wordNum = 0;
           for(let j=0;j<res.data.groupItemList[i].stuInfoList.length;j++){
