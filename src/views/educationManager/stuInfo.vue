@@ -52,7 +52,7 @@
       <div class="wordNum" v-show="type=='wordNum'">
         <h3>{{stuInfo.realName}}词汇量分析</h3>,
         <div class="wordNumMain">
-          <div class="wordNumCenter" v-if="StuAdmissionAnalysisData.score">
+          <div class="wordNumCenter" v-show="StuAdmissionAnalysisData.score">
             <div class="wordNumLeft">
               <div id="wordNumProgress" :style="{width: '400px', height: '300px'}"></div>
               <div class="leftMain">
@@ -296,7 +296,6 @@ export default {
       })
     },
     wordNumProgress(data){//词汇量分析图表
-    console.log(data,1111)
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('wordNumProgress'))
         // 绘制图表
