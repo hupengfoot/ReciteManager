@@ -3,13 +3,13 @@
     <form class="searchForm">
       <el-date-picker v-model="startTime" value-format="timestamp" placeholder="请选择开始时间"></el-date-picker>
       <el-select v-model="startHalfDay">
-        <el-option value="1" label="AM"></el-option>
-        <el-option value="2" label="PM"></el-option>
+        <el-option value="AM" label="AM"></el-option>
+        <el-option value="PM" label="PM"></el-option>
       </el-select>
       <el-date-picker v-model="endTime"  value-format="timestamp" placeholder="请选择结束时间"></el-date-picker>
       <el-select v-model="endHalfDay">
-        <el-option value="1" label="AM"></el-option>
-        <el-option value="2" label="PM"></el-option>
+        <el-option value="AM" label="AM"></el-option>
+        <el-option value="PM" label="PM"></el-option>
       </el-select>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="selectFrom">查找</el-button>
@@ -116,10 +116,11 @@ export default {
       })
     },
     getClassGrade(){//查询班级成绩
+    
       if(this.startTime){
         let half;
         this.startHalfDay=='AM'?half=0:half=43200;
-        this.search.startTime = this.startTime.toString().substr(0,10)-half;
+        this.search.startTime = this.startTime.toString().substr(0,10)*1+half*1;
       }else{
         this.search.startTime = ''
       }
@@ -130,6 +131,7 @@ export default {
       }else{
         this.search.endTime = ''
       }
+      console.log( this.search.startTime, this.search.endTime,1);
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;
         for(let i=0;i<res.data.stuList.records.length;i++){
@@ -146,16 +148,16 @@ export default {
       let startTime;
       let endTime;
       if(this.startTime){
-        let half;
-        this.startHalfDay=='AM'?half=0:half=43200;
-        startTime = this.startTime.toString().substr(0,10)-half;
+        let groupHhalf;
+        this.startHalfDay=='AM'?groupHhalf=0:groupHhalf=43200;
+        startTime = this.startTime.toString().substr(0,10)*1+groupHhalf*1;
       }else{
         startTime = ''
       }
       if(this.endTime){
-        let half;
-        this.endHalfDay=='PM'?half=0:half=43200;
-        endTime = this.endTime.toString().substr(0,10)*1+86400-half;
+        let groupHhalf;
+        this.endHalfDay=='PM'?groupHhalf=0:groupHhalf=43200;
+        endTime = this.endTime.toString().substr(0,10)*1+86400-groupHhalf;
       }else{
         endTime = ''
       }
@@ -179,9 +181,9 @@ export default {
     splitScreen(){
       for(let i=0;i<this.groupList.length/2;i++){
         if(this.groupList.length>2*i+1){
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&second='+JSON.stringify(this.groupList[2*i+1]),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+(i*2-1)+'&second='+JSON.stringify(this.groupList[2*i+1])+'&secondRank='+(2*i),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }else{
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i]),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+(i*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
       }
       

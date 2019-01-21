@@ -4,7 +4,7 @@
         <div>
             <label><span>{{first.groupItemName}}</span></label>
             <h5>
-                <span>排名 {{first.averageGrader}} </span>
+                <span>排名 {{$route.query.firstRank}} </span>
                 <span> 平均 {{firstAverage}} 单词量</span>
             </h5>
         </div>
@@ -20,7 +20,7 @@
         <div>
             <label><span>{{second.groupItemName}}</span></label>
             <h5>
-                <span>排名 {{second.averageGrader}} </span>
+                <span>排名 {{$route.query.secondRank}} </span>
                 <span> 平均 {{secondAverage}} 单词量</span>
             </h5>
         </div>
