@@ -93,7 +93,7 @@ export default {
 
   .el-table{
     .progress{
-      height:5px;
+      height:10px;
       width:300px;
       background:rgba(233, 233, 233, 1);
       border-radius:20px;
@@ -103,8 +103,8 @@ export default {
         left:0;
         top:0;
         display:inline-block;
-        background:rgb(255,210,21,1);
-        height:5px;
+        background:#409eff;
+        height:10px;
       }
     }
     

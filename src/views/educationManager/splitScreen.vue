@@ -58,10 +58,9 @@ export default {
     for(let i=0;i< this.first.stuInfoList.length;i++){
         firstSub += this.first.stuInfoList[i].wordNum;
     }
-    this.firstAverage = firstSub/this.first.stuInfoList.length;
-    
+    this.firstAverage = (Math.round((firstSub/this.first.stuInfoList.length))).toString();
     for(let n=0;n<this.first.stuInfoList.length;n++){
-        this.maxGroupWordNum = this.maxGroupWordNum>this.first.stuInfoList.wordNum?this.maxGroupWordNum:this.first.stuInfoList[n].wordNum;
+        this.maxGroupWordNum = this.maxGroupWordNum>this.first.stuInfoList[n].wordNum?this.maxGroupWordNum:this.first.stuInfoList[n].wordNum;
     }
     if(this.$route.query.second){
         this.second = JSON.parse(this.$route.query.second);
@@ -69,7 +68,7 @@ export default {
             secondSub += this.second.stuInfoList[i].wordNum;
         }
         for(let n=0;n<this.second.stuInfoList.length;n++){
-            this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>this.second.stuInfoList.wordNum?this.secondMaxGroupWordNum:this.second.stuInfoList[n].wordNum;
+            this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>this.second.stuInfoList[n].wordNum?this.secondMaxGroupWordNum:this.second.stuInfoList[n].wordNum;
         }
         this.secondAverage = (Math.round((secondSub/this.second.stuInfoList.length))).toString();
     }
@@ -128,7 +127,7 @@ export default {
         background:rgba(236,241,247);
     }
     .progress{
-      height:5px;
+      height:10px;
       width:300px;
       background:rgba(233, 233, 233, 1);
       border-radius:20px;
@@ -138,8 +137,8 @@ export default {
         left:0;
         top:0;
         display:inline-block;
-        background:rgb(255,210,21,1);
-        height:5px;
+        background:#409eff;
+        height:10px;
       }
     }
     ul{
