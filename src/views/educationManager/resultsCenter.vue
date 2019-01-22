@@ -181,9 +181,9 @@ export default {
     splitScreen(){
       for(let i=0;i<this.groupList.length/2;i++){
         if(this.groupList.length>2*i+1){
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+(i*2-1)+'&second='+JSON.stringify(this.groupList[2*i+1])+'&secondRank='+(2*i),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+((1+i)*2-1)+'&second='+JSON.stringify(this.groupList[2*i+1])+'&secondRank='+(2*(i+1)),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }else{
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+(i*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
       }
       
