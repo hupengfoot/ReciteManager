@@ -230,7 +230,7 @@ export function getStuAdmissionAnalysis(id,params){
     params:params
   })
 }
-
+ 
 
 
 /**成绩列表 -E */

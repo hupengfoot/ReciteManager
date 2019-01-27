@@ -33,9 +33,10 @@
             <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
           </template>
         </el-table-column>
-        <el-table-column label="Actions" align="center" width="250" class-name="small-padding fixed-width">
+        <el-table-column label="Actions" align="center" width="320" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="addGold(scope.row.stuId)">{{ '奖励金币' }}</el-button>
+            <el-button type="primary" size="mini" @click="reductionGold(scope.row.stuId)">{{ '扣除金币' }}</el-button>
             <el-button size="mini" type="danger" @click="deleteLink(scope.row.stuId)">{{ '删除' }}</el-button>
           </template>
         </el-table-column>
@@ -60,7 +61,7 @@
     <el-dialog title="奖励金币" :visible.sync="goldFormVisible">
       <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="金币">
-          <el-input v-model="goldNum"/>
+          <el-input v-model="goldNum" @keyup.native="testNumber($event)" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -69,10 +70,26 @@
       </div>
     </el-dialog>
 
+    <el-dialog title="扣除金币" :visible.sync="reductionGoldFormVisible">
+      <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="金币">
+          <el-input v-model="goldNum" @keyup.native="testNumber($event)" placeholder="请输入扣除数量" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="remark" placeholder="请输入备注"  type="textarea" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="reductionGoldFormVisible = false">{{ '取消' }}</el-button>
+        <el-button type="primary" @click="rewardGold">{{ '确定' }}</el-button>
+      </div>
+    </el-dialog>
+
     <el-dialog title="批量奖励金币" :visible.sync="batchGoldFormVisible">
       <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="金币">
-          <el-input v-model="goldNum"/>
+          <el-input v-model="goldNum"  @keyup.native="testNumber($event)" />
+          
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -101,11 +118,13 @@ export default {
       dialogFormVisible: false,
       goldFormVisible: false,
       batchGoldFormVisible: false,
-      goldNum: 0,
+      reductionGoldFormVisible:false,
+      goldNum: '',
       stuId: "",
       realName: "",
       maxWordNum:0,
       boxcheck: false,
+      remark:'',
     }
   },
   created() { 
@@ -146,6 +165,13 @@ export default {
      addGold(stuId){
          this.stuId = stuId;
          this.goldFormVisible = true;
+         this.$nextTick(() => {
+             this.$refs['goldForm'].clearValidate 
+         })
+     },
+     reductionGold(stuId){
+         this.stuId = stuId;
+         this.reductionGoldFormVisible = true;
          this.$nextTick(() => {
              this.$refs['goldForm'].clearValidate 
          })
@@ -249,6 +275,9 @@ export default {
            this.stuList[i].checkModel = true
          }
        }
+     },
+     testNumber(e){
+        e.target.value=e.target.value.replace(/[^\d]/g,'');
      }
   }
 }

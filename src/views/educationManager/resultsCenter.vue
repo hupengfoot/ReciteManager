@@ -131,7 +131,6 @@ export default {
       }else{
         this.search.endTime = ''
       }
-      console.log( this.search.startTime, this.search.endTime,1);
       getClassGrade(this.$route.query.classId,this.search).then(res=>{
         this.eduList = res.data.stuList.records;
         for(let i=0;i<res.data.stuList.records.length;i++){
@@ -181,9 +180,9 @@ export default {
     splitScreen(){
       for(let i=0;i<this.groupList.length/2;i++){
         if(this.groupList.length>2*i+1){
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+((1+i)*2-1)+'&second='+JSON.stringify(this.groupList[2*i+1])+'&secondRank='+(2*(i+1)),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&groupName='+this.groupList[2*i].groupItemName+'&firstRank='+((1+i)*2-1)+'&groupSecondName='+this.groupList[2*i+1].groupItemName+'&second='+this.groupList[2*i+1].id+'&secondRank='+(2*(i+1)),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }else{
-          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+JSON.stringify(this.groupList[2*i])+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+          window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&groupName='+this.groupList[2*i].groupItemName+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
       }
       

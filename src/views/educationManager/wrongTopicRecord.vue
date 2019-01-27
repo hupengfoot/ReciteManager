@@ -20,8 +20,8 @@
       <div class="wordDetalis">
         <div class="detalisMain" v-if="wordDetails.content">
           <p>{{wordDetails.content}} </p>
-          <p><img @click="playAudio" src="@/assets/voice.png"></p>
-          <audio id="audio" :src="audioUrl+wordDetails.audio">你的浏览器不支持</audio>
+          <p><img @click="playAudio(wordDetails.audio)" src="@/assets/voice.png"></p>
+          <audio id="audio" :src="audioUrl">你的浏览器不支持</audio>
           <p>{{wordDetails.mean}}</p>
         </div>
       </div>
@@ -83,18 +83,26 @@ export default {
       wrongSet(this.$route.query.classId,this.search).then(res=>{
         this.wordList = res.data.wordList.records;
         this.totalNum = res.data.wordList.total;
-        this.audioUrl = process.env.BASE_API;
+        // this.audioUrl = process.env.BASE_API;
       })
    },
    getList(){
       getList().then(res=>{
         this.questionType = res.data.questionTypeList;
+        
       })
    },
    selectDetails(event){
      this.wordDetails = event;
+     if(event.audio.indexOf("http")){
+        this.audioUrl = process.env.BASE_API+event.audio;
+      }else{
+        this.audioUrl = event.audio;
+      }
    },
-   playAudio(){//播放语音
+   playAudio(e){//播放语音
+      
+    //  this.wordDetails.audio
      var a=document.getElementById("audio");
       a.play();
    }
