@@ -50,29 +50,53 @@ export default {
       secondAverage:0,
       maxGroupWordNum:0,
       secondMaxGroupWordNum:0,
+      timer: null
     }
   },
+  
+  mounted(){
+      clearInterval(this.setTimer())
+  },
   created() {
-    this.first = JSON.parse(this.$route.query.first);
-    let firstSub = 0;
-    let secondSub = 0;
-    getStuInfoInGroup({
-        classId:this.$route.query.classId,
-        groupItemId:this.first
-    }).then(res=>{
-        this.firstData = res.data;
-        for(let i=0;i< res.data.stuList.length;i++){
-            firstSub += res.data.stuList[i].wordNum;
-        }
-        this.firstAverage = (Math.round((firstSub/res.data.stuList.length))).toString();
-        
-        for(let n=0;n<res.data.stuList.length;n++){
-            this.maxGroupWordNum = this.maxGroupWordNum>res.data.stuList[n].wordNum?this.maxGroupWordNum:res.data.stuList[n].wordNum;
-        }
-    })
-    
-    
+    this.firstSelect()
     if(this.$route.query.second){
+        this.secondSelect();
+    }
+    
+  },
+  distroyed: function () {
+　　clearInterval(this.setTimer())
+  },
+  watch:{
+    
+  },
+  methods: {
+      setTimer: function () {
+    　　　　this.timer = setInterval(() => {
+    　　　　　　this.firstSelect()　　
+    　　　　}, 10000)
+    　},
+      firstSelect(){
+        this.first = JSON.parse(this.$route.query.first);
+        let firstSub = 0;
+        
+        getStuInfoInGroup({
+            classId:this.$route.query.classId,
+            groupItemId:this.first
+        }).then(res=>{
+            this.firstData = res.data;
+            for(let i=0;i< res.data.stuList.length;i++){
+                firstSub += res.data.stuList[i].wordNum;
+            }
+            this.firstAverage = (Math.round((firstSub/res.data.stuList.length))).toString();
+            
+            for(let n=0;n<res.data.stuList.length;n++){
+                this.maxGroupWordNum = this.maxGroupWordNum>res.data.stuList[n].wordNum?this.maxGroupWordNum:res.data.stuList[n].wordNum;
+            }
+        })
+      },
+      secondSelect(){
+          let secondSub = 0;
         this.second = JSON.parse(this.$route.query.second);
         getStuInfoInGroup({
             classId:this.$route.query.classId,
@@ -86,16 +110,8 @@ export default {
                 this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>res.data.stuList[n].wordNum?this.secondMaxGroupWordNum:res.data.stuList[n].wordNum;
             }
             this.secondAverage = (Math.round((secondSub/res.data.stuList.length))).toString();
-            })
-        
-    }
-    
-  },
-  watch:{
-    
-  },
-  methods: {
-
+        })
+      }
   }
 }
 </script>

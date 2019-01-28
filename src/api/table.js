@@ -270,13 +270,21 @@ export function createGroupItemBatch(id, params){
     params: params
   })
 }
-export function rewardGold(params){
+export function rewardGold(params){//添加、减少金币
   return request({
     url: getUrlBase() + '/pkStudent/rewardGold',
     method: 'PUT',
     params: params
   })
 }
+export function goldList(params){//查询金币记录
+  return request({
+    url: getUrlBase() + '/pkStudent/goldList',
+    method: 'get',
+    params: params
+  })
+}
+
 export function addStu2Group(params){
   return request({
     url: getUrlBase() + '/pkLinkGroupStu/addStu2Group',

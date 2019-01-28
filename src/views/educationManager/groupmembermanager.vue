@@ -33,9 +33,10 @@
             <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
           </template>
         </el-table-column>
-        <el-table-column label="Actions" align="center" width="320" class-name="small-padding fixed-width">
+        <el-table-column label="Actions" align="center" width="240" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button type="primary" size="mini" @click="addGold(scope.row.stuId)">{{ '奖励金币' }}</el-button>
+            <el-button type="danger" size="mini" @click="detailsGold(scope.row.stuId)">{{ '记录' }}</el-button>
             <el-button type="primary" size="mini" @click="reductionGold(scope.row.stuId)">{{ '扣除金币' }}</el-button>
             <el-button size="mini" type="danger" @click="deleteLink(scope.row.stuId)">{{ '删除' }}</el-button>
           </template>
@@ -61,12 +62,15 @@
     <el-dialog title="奖励金币" :visible.sync="goldFormVisible">
       <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="金币">
-          <el-input v-model="goldNum" @keyup.native="testNumber($event)" />
+          <el-input v-model="goldNum" @keyup.native="testNumber($event)" placeholder="请输入添加数量" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="remark" placeholder="请输入备注"  type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="goldFormVisible = false">{{ '取消' }}</el-button>
-        <el-button type="primary" @click="rewardGold">{{ '确定' }}</el-button>
+        <el-button type="primary" @click="rewardGold(1)">{{ '确定' }}</el-button>
       </div>
     </el-dialog>
 
@@ -81,7 +85,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="reductionGoldFormVisible = false">{{ '取消' }}</el-button>
-        <el-button type="primary" @click="rewardGold">{{ '确定' }}</el-button>
+        <el-button type="primary" @click="rewardGold(2)">{{ '确定' }}</el-button>
       </div>
     </el-dialog>
 
@@ -89,21 +93,43 @@
       <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
         <el-form-item label="金币">
           <el-input v-model="goldNum"  @keyup.native="testNumber($event)" />
-          
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="remark" placeholder="请输入备注"  type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="batchGoldFormVisible = false">{{ '取消' }}</el-button>
-        <el-button type="primary" @click="batchRewardGold">{{ '确定' }}</el-button>
+        <el-button type="primary" @click="batchRewardGold()">{{ '确定' }}</el-button>
       </div>
     </el-dialog>
-
+    <el-dialog title="金币记录" :visible.sync="detailsGoldVisible">
+      <el-table :data="listGoldData" border max-height="500">
+        <el-table-column align="center" label="序" width="95">
+        <template slot-scope="scope">
+          {{ scope.$index+1 }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="金额" prop="gold">
+      </el-table-column>
+      <el-table-column align="center" label="备注" prop="remark">
+      </el-table-column>
+      <el-table-column align="center" label="时间" prop="createTime">
+      </el-table-column>
+      </el-table>
+      <!-- <pagination v-show="goldPageInfo.pageTotal>0" :total="goldPageInfo.pageTotal" :page.sync="goldPageInfo.page" :limit.sync="goldPageInfo.limit" @pagination="goldList" /> -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="detailsGoldVisible = false">{{ '关闭' }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getStuInfoInGroup, rewardGold, addStu2Group, deleteLink } from '@/api/table'
+import {getStuInfoInGroup, rewardGold, addStu2Group, deleteLink,goldList } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
+import Pagination from '@/components/Pagination'
+import {successShow,errorShow} from '@/utils/notice.js'
 export default {
   name: 'groupmembermanager',
   components: { teachingTab },
@@ -119,12 +145,19 @@ export default {
       goldFormVisible: false,
       batchGoldFormVisible: false,
       reductionGoldFormVisible:false,
+      detailsGoldVisible:false,
       goldNum: '',
       stuId: "",
       realName: "",
       maxWordNum:0,
       boxcheck: false,
       remark:'',
+      listGoldData:[],
+      goldPageInfo:{
+        page:1,
+        limit:100,
+        pageTotal:0
+      }
     }
   },
   created() { 
@@ -169,6 +202,21 @@ export default {
              this.$refs['goldForm'].clearValidate 
          })
      },
+     detailsGold(id){
+       this.stuId = id;
+       this.detailsGoldVisible = true;
+       this.goldList(id);
+     },
+     goldList(id){
+        goldList({
+             page: this.goldPageInfo.page,
+             limit: this.goldPageInfo.limit,
+             stuId:id
+        }).then(res=>{
+          this.listGoldData = res.data.goldList
+          // this.this.goldPageInfo.pageTotal = res.data.goldList
+        })
+     },
      reductionGold(stuId){
          this.stuId = stuId;
          this.reductionGoldFormVisible = true;
@@ -185,27 +233,49 @@ export default {
           }
         }
         Promise.all(promiseArray).then(resultList => {
-          location.reload()
+          this.getStuInfoInGroup();
           //TODO
         });
      },
-     rewardGold(){
+     rewardGold(type){
+         if(!this.goldNum){
+           errorShow('金币不能为空');
+           return;
+         }
+         if(this.goldNum == 0){
+           errorShow('金币不能为0');
+           return;
+         }
          this.goldFormVisible = false;
+         let num;
+         let message;
+         if(type===1){
+           num = this.goldNum
+           message = '添加'
+         }else{
+           num = this.goldNum*-1
+           message = '扣除'
+         }
          rewardGold({
              stuId: this.stuId,
-             gold: this.goldNum
+             gold: num,
+             remark:this.remark
          }).then(res=>{
             if(res.data.code === 0){
               this.$notify({
                 title: '成功',
-                message: '添加金币成功',
+                message: message +'金币成功',
                 type: 'success',
                 duration: 2000
               })
-              location.reload()
+              this.getStuInfoInGroup();
+              this.goldFormVisible = false;
+              this.reductionGoldFormVisible = false;
+              this.goldNum = "";
+              this.remark ="";
             }else{
               this.$notify({
-                title: '添加金币失败',
+                title:  message +'金币失败',
                 message: res.data.msg,
                 type: 'failed',
                 duration: 2000
@@ -226,7 +296,7 @@ export default {
                 type: 'success',
                 duration: 2000
               })
-              location.reload()
+              this.getStuInfoInGroup();
             }else{
               this.$notify({
                 title: '添加小组成员失败',
@@ -249,7 +319,7 @@ export default {
                 type: 'success',
                 duration: 2000
               })
-              location.reload()
+              this.getStuInfoInGroup();
             }else{
               this.$notify({
                 title: '删除小组成员失败',
@@ -335,6 +405,14 @@ export default {
     }
   }
   .el-table{
+    td{
+      .el-button{
+        margin:3px;
+      }
+      .el-button+.el-button{
+        margin-left:0;
+      }
+    }
     .progress{
       height:10px;
       width:300px;
