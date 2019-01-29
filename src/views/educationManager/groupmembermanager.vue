@@ -117,7 +117,7 @@
       <el-table-column align="center" label="时间" prop="createTime">
       </el-table-column>
       </el-table>
-      <!-- <pagination v-show="goldPageInfo.pageTotal>0" :total="goldPageInfo.pageTotal" :page.sync="goldPageInfo.page" :limit.sync="goldPageInfo.limit" @pagination="goldList" /> -->
+      <pagination v-show="goldPageInfo.pageTotal>0" :total="goldPageInfo.pageTotal" :page.sync="goldPageInfo.page" :limit.sync="goldPageInfo.limit" @pagination="goldList" />
       <div slot="footer" class="dialog-footer">
         <el-button @click="detailsGoldVisible = false">{{ '关闭' }}</el-button>
       </div>
@@ -132,7 +132,7 @@ import Pagination from '@/components/Pagination'
 import {successShow,errorShow} from '@/utils/notice.js'
 export default {
   name: 'groupmembermanager',
-  components: { teachingTab },
+  components: { teachingTab,Pagination },
   data(){
     return{
       classId: 0,
@@ -155,7 +155,7 @@ export default {
       listGoldData:[],
       goldPageInfo:{
         page:1,
-        limit:100,
+        limit:10,
         pageTotal:0
       }
     }
@@ -205,17 +205,17 @@ export default {
      detailsGold(id){
        this.stuId = id;
        this.detailsGoldVisible = true;
-       this.goldList(id);
+       this.goldList();
      },
-     goldList(id){
-        goldList({
-             page: this.goldPageInfo.page,
-             limit: this.goldPageInfo.limit,
-             stuId:id
-        }).then(res=>{
-          this.listGoldData = res.data.goldList
-          // this.this.goldPageInfo.pageTotal = res.data.goldList
+     goldList(){
+        // this.goldPageInfo.push({'stuId':this.stuid})
+        Object.assign(this.goldPageInfo, {'stuId':this.stuId});
+        console.log(this.goldPageInfo)
+        goldList(this.goldPageInfo).then(res=>{
+          this.listGoldData = res.data.goldList.records
+          this.goldPageInfo.pageTotal = res.data.goldList.total
         })
+        
      },
      reductionGold(stuId){
          this.stuId = stuId;
