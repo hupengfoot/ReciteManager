@@ -168,6 +168,21 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/monitoring',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: '监控中心',
+        component: () => import('@/views/monitoring/index'),
+        meta: { title: '监控中心', icon: 'form' }
+      }
+    ]
+  },
+
+  
+
 
   { path: '*', redirect: '/404', hidden: true }
 ]

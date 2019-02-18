@@ -210,7 +210,6 @@ export default {
      goldList(){
         // this.goldPageInfo.push({'stuId':this.stuid})
         Object.assign(this.goldPageInfo, {'stuId':this.stuId});
-        console.log(this.goldPageInfo)
         goldList(this.goldPageInfo).then(res=>{
           this.listGoldData = res.data.goldList.records
           this.goldPageInfo.pageTotal = res.data.goldList.total
