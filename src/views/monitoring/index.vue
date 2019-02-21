@@ -1,9 +1,9 @@
 <template>
   <div class="monitoring">
-    <el-select v-model="classId">
-      <el-option  v-for="(item,index) in classList" :key="index" :label="item.className" :value="item.id"></el-option>
+    <el-select v-model="classInfo" value-key="id">
+      <el-option  v-for="(item,index) in classList" :label="item.className" :value="item" :key="item.id"></el-option>
     </el-select>
-    <h3>班级列表</h3>
+    <h3>班级词汇比较</h3>
     <div class="classList">
         <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false" ref="messageDrop">
           <div class="avatar-wrapper">
@@ -24,16 +24,23 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-        <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+        <el-row style="height:350px;background:#fff;padding:16px 16px 0;margin-bottom:32px;">
           <line-chart :chart-data="lineChartData" id="classcompareMain1" style="position: absolute; left: 0px; top: 0px; width: 1332px; "/>
         </el-row>
-        <!-- <div class="dashboard" v-show="type=='dashboard'">
-          <h3>{{stuInfo.realName}}单词学习仪表盘</h3>
+        <div class="dashboard">
+          <h3>{{classInfo.className}}单词学习仪表盘</h3>
           <div class="dashboardMain">
-            <div id="unitPassNum" :style="{width: '300px', height: '300px'}"></div> 
-            <div id="wordNum" :style="{width: '300px', height: '300px'}"></div>
+            <div id="unitPassNum" :style="{float:'left',width: '300px', height: '300px'}"></div> 
+            <div id="wordNum" :style="{float:'left',width: '300px', height: '300px'}"></div>
           </div>
-        </div> -->
+          
+        </div>
+        <div class="dashboard">
+          <h3>{{classInfo.className}}题型得分率分析</h3>
+          <div class="dashboardMain">
+            <div id="scoringAverage" :style="{float:'left',width: '550px', height: '500px'}"></div> 
+          </div>
+        </div>
     </div>
     
 
@@ -41,12 +48,8 @@
 </template>
 
 <script>
-import { getList,getAllClass,createClass,getAllClassByTeacherId,getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import waves from '@/directive/waves' // Waves directive
+import {unitStudyInfo,unitWordNum,scoringAverage, getList,getAllClass,createClass,getAllClassByTeacherId,getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
 import {successShow,errorShow} from '@/utils/notice.js'
-import classDialog from '@/components/dialog/classDialog'
-import store from '@/store'
 
 import LineChart from '@/components/echarts/LineChart'
 import HistogramChart from '@/components/echarts/HistogramChart'
@@ -59,29 +62,58 @@ const lineChartData = {
 
 export default {
   name: 'monitoring',
-  components: { Pagination,classDialog,LineChart,HistogramChart },
+  components: { LineChart,HistogramChart },
 
   data() {
     return {
       classList:[],
-      classId:'',
-      type:'classcompare',
+      classInfo:{
+        id:'',
+        className:''
+      },
       lineChartData: lineChartData,
-      classList: [],
       classSelectStatusList: [],
-      selectClassList: []
+      selectClassList: [],
+      unitPassNum:[],
+      understandNum:[],
+      scoringAverageNum:[]
     }
   },
   created() {
     this.getAllClass();
+    // this.unitStudyInfo();
   },
   watch:{
-    
+    classInfo: {
+      handler: function (newVal, oldVal) {
+        this.unitStudyInfo()
+      },
+      deep: true
+    }
   },
   methods: {
-    
-
-
+    unitStudyInfo(){//总单元数
+      this.unitPassNum=[];
+      unitStudyInfo({classId:this.classInfo.id}).then(res=>{
+        this.unitPassNum.push({value:res.data.classUnitNum.stuUnitPassNum,name:'已掌握'});
+        this.unitPassNum.push({value:res.data.classUnitNum.stuUnitNoPassNum,name:'未掌握'});
+        this.unitWordNum();
+      })
+    },
+    unitWordNum(){//通过的单元数
+      this.understandNum=[];
+      unitWordNum({classId:this.classInfo.id}).then(res=>{
+         this.understandNum.push({value:res.data.classWordNum.understand,name:'熟词'},{value:res.data.classWordNum.halfUnderstand,name:'夹生词'},{value:res.data.classWordNum.notUnderstand,name:'生词'})
+         this.scoringAverage();
+      })
+    },
+    scoringAverage(){//题型得分率分析
+      this.scoringAverageNum=[];
+      scoringAverage({classId:this.classInfo.id}).then(res=>{
+         this.scoringAverageNum.push(res.data.scoringAverage.questionType0,res.data.scoringAverage.questionType1,res.data.scoringAverage.questionType2,res.data.scoringAverage.questionType3,res.data.scoringAverage.questionType4)
+         this.drawLine();
+      })
+    },
     //诊断报告代码
      getAllClass(){
       getAllClass({
@@ -89,6 +121,7 @@ export default {
         pattern:""
       }).then(res=>{
         this.classList = res.data.classList;
+        this.classInfo = res.data.classList[0];
         for(var i in this.classList){
           this.classSelectStatusList.push(0);
         }
@@ -140,15 +173,122 @@ export default {
     },
     getCompareData(){
       this.$refs.messageDrop.hide();
-      if(this.type === "classcompare"){
         this.getlineChartData();
-      }else{
-        this.getHistogramChartData();
-      }
     },
     handleCheckAllChange(index){
       this.classSelectStatusList[index] = (this.classSelectStatusList[index] + 1) % 2
-    }
+    },
+    drawLine(){//饼状图
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('unitPassNum'))
+        // 绘制图表
+        myChart.setOption({
+            tooltip: {
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+            },
+            series: [
+                {
+                    name:'单元数',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    data:this.unitPassNum
+                }
+            ]
+        });
+        let wordNum = this.$echarts.init(document.getElementById('wordNum'))
+        // 绘制图表
+        wordNum.setOption({
+            tooltip: {
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'right',
+            },
+            series: [
+                {
+                    name:'',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    data:this.understandNum
+                }
+            ]
+        });
+        // 基于准备好的dom，初始化echarts实例
+        let scoringAverage  = this.$echarts.init(document.getElementById('scoringAverage'))
+        // 绘制图表
+        scoringAverage.setOption({
+            title: {
+                
+            },
+            
+            radar: [
+                {},
+                {
+                    indicator: [
+                        { text: '综合', max: 100 },
+                        { text: '听音辨英', max: 100 },
+                        { text: '看英选义', max: 100 },
+                        { text: '看义拼词', max: 100 },
+                        { text: '中文选英', max: 100 }
+                    ],
+                    
+                    radius: 200
+                }
+            ],
+            series: [
+                {
+                    name: '成绩单',
+                    type: 'radar',
+                    radarIndex: 1,
+                    data: [
+                        {
+                            value: this.scoringAverageNum,
+                            name: '成绩单',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter:function(params) {
+                                        return params.value+'%';
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+    },
   }
   
 }
@@ -200,17 +340,28 @@ export default {
   .monitoring{
     padding:20px 20px 0;
     font-size:14px;
-    
-  .dashboard{
     h3{
       text-align:center;
-      height:80px;
-      line-height:65px;
+      
+      
       font-size:24px;
-      margin-bottom:50px;
-      background: url("../../assets/greenTitle.png") no-repeat center;
-      background-size:557px 100%;
+      
     }
-  }
+    .dashboard{
+      overflow:hidden;
+      .dashboardMain{
+        width:600px;
+        margin:0 auto;
+      }
+      h3{
+        height:80px;
+        line-height:65px;
+        margin-bottom:50px;
+        background: url("../../assets/greenTitle.png") no-repeat center;
+        background-size:557px 100%;
+      }
+        
+    }
+  
   }
 </style>

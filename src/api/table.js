@@ -362,3 +362,28 @@ export function randomPaper(id, params){
     params:params
   })
 }
+//监控中心
+
+export function unitStudyInfo(params){//获取班级单元统计
+  return request({
+    url: getUrlBase() + '/monitor/class/unit/studyInfo',
+    method: 'GET',
+    params:params
+  })
+}
+export function unitWordNum(params){//获取班级单元统计(生词熟词夹生词)
+  return request({
+    url: getUrlBase() + '/monitor/class/wordNum',
+    method: 'GET',
+    params:params
+  })
+}
+export function scoringAverage(params){//获取班级单词题型得分率  
+  return request({
+    url: getUrlBase() + '/monitor/class/word/question/scoringAverage',
+    method: 'GET',
+    params:params
+  })
+}
+
+
