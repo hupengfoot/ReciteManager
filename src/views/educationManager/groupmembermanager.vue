@@ -28,6 +28,11 @@
             {{scope.row.goldCoin}}
           </template>
         </el-table-column>
+         <el-table-column label="词汇量">
+          <template slot-scope="scope">
+            {{scope.row.wordNum}}
+          </template>
+        </el-table-column>
         <el-table-column label="进度" width="400">
           <template slot-scope="scope">
             <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
