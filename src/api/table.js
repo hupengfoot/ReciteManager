@@ -362,6 +362,13 @@ export function randomPaper(id, params){
     params:params
   })
 }
+export function updateGroupItem(params){
+  return request({
+    url: getUrlBase() + '/pkGroupItem/updateGroupItem',
+    method: 'POST',
+    data:params
+  })
+}
 //监控中心
 
 export function unitStudyInfo(params){//获取班级单元统计
