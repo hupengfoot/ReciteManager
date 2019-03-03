@@ -30,6 +30,35 @@ export const constantRouterMap = [
     component: () => import('@/views/educationManager/splitScreen'),
     meta: { title: '分屏展示学生信息', icon: 'table' },
     hidden:true,
+  }, 
+  {//监控中心屏1
+    path: '/finishStat',
+    name: 'finishStat',
+    component: () => import('@/views/monitoring/finishStat'),
+    meta: { title: '全员排名', icon: 'form' },
+    hidden:true
+  },
+  
+  {//监控中心屏2
+    path: '/groupRank',
+    name: 'groupRank',
+    component: () => import('@/views/monitoring/groupRank'),
+    meta: { title: '所有组的单词排名', icon: 'form' },
+    hidden:true
+  },
+  {//监控中心屏3
+    path: '/stuAdvanceRank',
+    name: 'stuAdvanceRank',
+    component: () => import('@/views/monitoring/stuAdvanceRank'),
+    meta: { title: '学员进步排名', icon: 'form' },
+    hidden:true
+  },
+  {//监控中心屏4
+    path: '/stuErrorStat',
+    name: 'stuErrorStat',
+    component: () => import('@/views/monitoring/stuErrorStat'),
+    meta: { title: '班级错题本', icon: 'form' },
+    hidden:true
   },
   {
     path: '/',
@@ -162,7 +191,7 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        name: '诊断报告',
+        name: 'index',
         component: () => import('@/views/dashboard/diagnosis'),
         meta: { title: '诊断报告', icon: 'form' }
       }
@@ -174,10 +203,11 @@ export const constantRouterMap = [
     children: [
       {
         path: 'index',
-        name: '监控中心',
+        name: 'index',
         component: () => import('@/views/monitoring/index'),
         meta: { title: '监控中心', icon: 'form' }
-      }
+      },
+      
     ]
   },
 

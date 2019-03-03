@@ -385,5 +385,38 @@ export function scoringAverage(params){//获取班级单词题型得分率
     params:params
   })
 }
-
-
+export function finishStat(params){//获取班级完成历史记录（监控中心屏1）
+  return request({
+    url: getUrlBase() + '/monitor/class/word/finishStat',
+    method: 'GET',
+    params:params
+  })
+}
+export function stuRank(params){//获取班级中所有单词排名（监控中心屏1）
+  return request({
+    url: getUrlBase() + '/monitor/class/word/stuRank',
+    method: 'GET',
+    params:params
+  })
+}
+export function groupRank(params){//获取班级中所有组的单词排名（监控中心屏2）
+  return request({
+    url: getUrlBase() + '/monitor/class/word/groupRank',
+    method: 'GET',
+    params:params
+  })
+}
+export function stuAdvanceRank(params){//获取班级中学生进步排名（监控中心屏3）
+  return request({
+    url: getUrlBase() + '/monitor/class/word/stuAdvanceRank',
+    method: 'GET',
+    params:params
+  })
+}
+export function stuErrorStat(params){//获取班级中学生错误排名（监控中心屏4）
+  return request({
+    url: getUrlBase() + '/monitor/class/word/stuErrorStat',
+    method: 'GET',
+    params:params
+  })
+}

@@ -3,6 +3,7 @@
     <el-select v-model="classInfo" value-key="id">
       <el-option  v-for="(item,index) in classList" :label="item.className" :value="item" :key="item.id"></el-option>
     </el-select>
+    <span class="fr sort" @click="splitScreen">分屏展示</span>
     <h3>班级词汇比较</h3>
     <div class="classList">
         <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false" ref="messageDrop">
@@ -33,7 +34,6 @@
             <div id="unitPassNum" :style="{float:'left',width: '300px', height: '300px'}"></div> 
             <div id="wordNum" :style="{float:'left',width: '300px', height: '300px'}"></div>
           </div>
-          
         </div>
         <div class="dashboard">
           <h3>{{classInfo.className}}题型得分率分析</h3>
@@ -42,8 +42,6 @@
           </div>
         </div>
     </div>
-    
-
   </div>
 </template>
 
@@ -92,6 +90,16 @@ export default {
     }
   },
   methods: {
+    splitScreen(){//分屏展示
+        window.open('/finishStat?classId='+this.classInfo.id,'newwindows'+1,"height=800, width=950, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/groupRank?classId='+this.classInfo.id,'newwindows'+2,"height=800, width=950, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/stuAdvanceRank?classId='+this.classInfo.id,'newwindows'+3,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/stuErrorStat?classId='+this.classInfo.id,'newwindows'+4,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        
+      // window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&groupName='+this.groupList[2*i].groupItemName+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        
+      
+    },
     unitStudyInfo(){//总单元数
       this.unitPassNum=[];
       unitStudyInfo({classId:this.classInfo.id}).then(res=>{
@@ -110,7 +118,7 @@ export default {
     scoringAverage(){//题型得分率分析
       this.scoringAverageNum=[];
       scoringAverage({classId:this.classInfo.id}).then(res=>{
-         this.scoringAverageNum.push(res.data.scoringAverage.questionType0,res.data.scoringAverage.questionType1,res.data.scoringAverage.questionType2,res.data.scoringAverage.questionType3,res.data.scoringAverage.questionType4)
+         this.scoringAverageNum.push(res.data.scoringAverage.questionType0.toFixed(2),res.data.scoringAverage.questionType1.toFixed(2),res.data.scoringAverage.questionType3.toFixed(2),res.data.scoringAverage.questionType4.toFixed(2),res.data.scoringAverage.questionType2.toFixed(2))
          this.drawLine();
       })
     },
@@ -300,6 +308,12 @@ export default {
     >.el-dropdown-menu__item{
       text-align:center;
     }
+  }
+  .sort{
+    margin-right:20px;
+    font-size:14px;
+    line-height:35px; 
+    cursor:pointer;
   }
   .el-scrollbar__wrap {
     overflow-x: hidden;
