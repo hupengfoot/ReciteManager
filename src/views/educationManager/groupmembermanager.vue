@@ -13,7 +13,7 @@
         </el-table-column>
         <el-table-column label="勾选">
           <template slot-scope="scope">
-            <el-checkbox label="" name="type" @change="handleCheckAllChange(scope.$index)"/>
+            <el-checkbox :value="selectArr[scope.$index]" v-model="selectArr[scope.$index]" label="" name="type" @change="handleCheckAllChange(scope.$index)"/>
           </template>
         </el-table-column>
         <el-table-column label="ID" prop="stuId"></el-table-column>
@@ -26,6 +26,11 @@
          <el-table-column label="金币">
           <template slot-scope="scope">
             {{scope.row.goldCoin}}
+          </template>
+        </el-table-column>
+         <el-table-column label="词汇量">
+          <template slot-scope="scope">
+            {{scope.row.wordNum}}
           </template>
         </el-table-column>
         <el-table-column label="进度" width="400">
@@ -130,6 +135,7 @@ import {getStuInfoInGroup, rewardGold, addStu2Group, deleteLink,goldList } from 
 import teachingTab from '@/components/teaching/teachingTab'
 import Pagination from '@/components/Pagination'
 import {successShow,errorShow} from '@/utils/notice.js'
+import Vue from 'vue'
 export default {
   name: 'groupmembermanager',
   components: { teachingTab,Pagination },
@@ -138,7 +144,7 @@ export default {
       classId: 0,
       groupItemId: 0,
       stuList: [],
-      selectAll : 0,
+      selectAll : false,
       selectArr: [],
       selectStuID: [],
       dialogFormVisible: false,
@@ -176,7 +182,7 @@ export default {
             this.stuList = res.data.stuList;
             //设置勾选数组
             for(var i in this.stuList){
-              this.selectArr.push(0);
+              this.selectArr.push(false);
               this.selectStuID.push(this.stuList[i].stuId);
               this.maxWordNum = (this.maxWordNum < this.stuList[i].wordNum ? this.stuList[i].wordNum : this.maxWordNum);
               this.stuList[i].checkModel = false
@@ -227,7 +233,7 @@ export default {
        this.batchGoldFormVisible = false;
         let promiseArray = [];
         for(let i in this.selectArr){
-          if(this.selectArr[i] === 1){
+          if(this.selectArr[i] === true){
             promiseArray.push(rewardGold({stuId: this.selectStuID[i], gold: this.goldNum}));
           }
         }
@@ -330,15 +336,16 @@ export default {
          })
      },
      handleCheckAllChange(seq){
-       this.selectArr[seq] = (this.selectArr[seq] + 1) % 2;
+       Vue.set(this.selectArr, seq, this.selectArr[seq]);
      },
      handleSelectAllChange(){
-       this.selectAll = (this.selectAll + 1) % 2
+       this.selectAll = this.selectAll ? false : true;
        for(var i in this.selectArr){
          this.selectArr[i] = this.selectAll
+         Vue.set(this.selectArr, i, this.selectArr[i]);
        }
        for(var i in this.stuList){
-         if(this.selectAll === 0){
+         if(this.selectAll === false){
            this.stuList[i].checkModel = false
          }else{
            this.stuList[i].checkModel = true

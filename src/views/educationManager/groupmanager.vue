@@ -8,7 +8,7 @@
     <div class="groupmanagerMain">
       <div class="groupDeatils" v-for="(item,index) in groupList" :key="index">
         <p class="serialNumber">编号：{{item.id}}</p>
-        <h5 class="grade">{{item.groupItemName}}</h5>
+        <h5 class="grade"><input style="text-align:center;background-color:rgba(48,155,255,1);border:none;" type='text' @keypress='updateGroup($event, item.id)' :value="item.groupItemName" size="10"></h5>
         <p class="peopleNum">{{item.stuNum}}人</p>
         <router-link :to="{name:'groupmembermanager',query:{classId:item.classId, groupItemId:item.id}}"><el-button class="joinClass">进入小组</el-button></router-link>
         <el-button class="joinClass" @click="deleteCheck(item.id)">删除</el-button>
@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import {getGroupItemList, createGroupItemBatch, randomGroup, deleteGroupItem } from '@/api/table'
+import {getGroupItemList, createGroupItemBatch, randomGroup, deleteGroupItem, updateGroupItem } from '@/api/table'
 import teachingTab from '@/components/teaching/teachingTab'
 export default {
   name: 'groupmanager',
@@ -66,6 +66,25 @@ export default {
     this.getGroupItemList();
   },
   methods:{
+      editGroup(event, iGroupID){
+        event.target.innerHTML = "<input type='text' @keypress='updateGroup($event)'>";
+        event.target.click = null;
+      },
+      updateGroup(event, id){
+        var code = event.keyCode;
+        if(code === 13){
+          var params = {
+            classId : this.classId,
+            groupItemName : event.target.value,
+            id, id
+          }
+          updateGroupItem(params).then(res=>{
+             if(res.data.code === 0){
+               location.reload();
+             }
+          });
+        }
+      },
       getGroupItemList(){
         getGroupItemList(this.classId,{
             page:this.pageInfo.page,
