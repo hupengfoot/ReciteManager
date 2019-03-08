@@ -11,35 +11,30 @@
         </div>
         <div class="fl">
           <p style="text-align:center;font-size:18px;">班级历史平均词汇量</p>
-          <div id="finishStat" :style="{width: '400px', height: '300px'}"></div>
+          <div id="finishStat" :style="{width: '100%', height: '300px'}"></div>
         </div>
     </div>
     <div class="bottomChart">
         <el-table boder :data="stuRankData">
             <el-table-column
               property="rank"
-              width="80"
               label="排名">
             </el-table-column>
             <el-table-column
               property="real_name"
-              label="姓名"
-              width="120">
+              label="姓名">
             </el-table-column>
             <el-table-column
               property="gender"
-              label="性别"
-              width="120">
+              label="性别">
             </el-table-column>
             <el-table-column
               property="allFinishNum"
-              label="总词汇量"
-              width="120">
+              label="总词汇量">
             </el-table-column>
             <el-table-column
               property="curAllNum"
-              label="当前课次词汇量"
-              width="150">
+              label="当前课次词汇量">
             </el-table-column>
             <el-table-column
               property="curFinishNum"
@@ -80,8 +75,8 @@ export default {
   methods: {
     finishStat(){
       finishStat({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
-          this.finishData=res.data.result.records;
-          this.ClassExamCorrectRate();
+          this.finishData=res.data.result;
+          this.ClassExamCorrectRate(res.data.result);
       })
     },
     stuRank(){
@@ -91,8 +86,18 @@ export default {
           this.finishStat()
       })
     },
-    ClassExamCorrectRate(){
+    ClassExamCorrectRate(a){
       // console.log(this.ClassExamCorrectRateData.percentage)
+      let am=[]
+      let pm=[]
+      let date=[]
+      let avg=[];
+      for(let i=0;i<a.length;i++){
+        am.push(a[i].am);
+        pm.push(a[i].pm);
+        avg.push(a[i].avg);
+        date.push(a[i].date);
+      }
       let wordNum = this.$echarts.init(document.getElementById('finishStat'))
         // 绘制图表
         wordNum.setOption({ 
@@ -110,7 +115,7 @@ export default {
             xAxis : [
                 {
                     type : 'category',
-                    data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                    data : date,
                 }
             ],
             yAxis : [
@@ -122,20 +127,20 @@ export default {
                 {
                     name:'AM',
                     type:'bar',
-                    data:[2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+                    data:am,
 
 
                 },
                 {
                     name:'PM',
                     type:'bar',
-                    data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+                    data:pm,
 
                 },
                 {
                     name:'日平均',
                     type:'bar',
-                    data:[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+                    data:avg,
 
                 }
             ]
@@ -146,19 +151,28 @@ export default {
 </script>
 <style lang="less" scope>
 .finishStat{
+  width:100%;
   >p{
     padding-left:20px;
     margin:10px auto;
   }
+  .bottomChart{
+    width:90%;
+    margin:0 auto;
+  }
   .topChart{
     padding:0 20px;
     overflow:hidden;
+    width:90%;
+    margin:0 auto;
+    .fl{
+      width:50%;
+    }
     .rankBackground{ 
       margin-right:50px;
       height:300px;
-      width:400px;
-      background:url(../../assets/timg.jpg);
-      background-size:100%;
+      background:url(../../assets/timg.jpg) no-repeat;
+      background-size:100% 380px;
       span{
         font-size:38px;
         display:inline-block;
@@ -180,10 +194,8 @@ export default {
   padding-top:20px;
   /deep/ .el-table{
     margin:20px auto 0; 
-    padding:0 20px;
     .progress{
       height:10px;
-      width:300px;
       background:rgba(233, 233, 233, 1);
       border-radius:20px;
       position:relative;

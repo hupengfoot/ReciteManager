@@ -34,17 +34,17 @@
               property="curFinishNum"
               label="平均词汇量">
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
               property="curFinishNum"
               label="当前词汇量进度">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
-              property="curFinishNum"
+              property="students"
               label="组员">
             </el-table-column>
             
         </el-table>
-        <pagination v-show="stuInfoPage.total>0" :total="stuInfoPage.total" :page.sync="stuInfoPage.page" :limit.sync="stuInfoPage.limit" @pagination="stuAdvanceRank" />
+        <pagination v-show="stuInfoPage.total>0" :total="stuInfoPage.total" :page.sync="stuInfoPage.page" :limit.sync="stuInfoPage.limit" @pagination="groupRank" />
     </div>
   </div>
 </template>
@@ -73,6 +73,10 @@ export default {
   methods: {
     groupRank(){
       groupRank({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
+
+          for(let i=0;i<res.data.result.records.length;i++){
+             res.data.result.records[i].students = res.data.result.records[i].students.join(",");
+          }
           this.stuAdvanceRankData=res.data.result.records;
           this.stuInfoPage.total=res.data.result.total
       })
@@ -93,7 +97,7 @@ export default {
       margin-right:50px;
       height:300px;
       width:400px;
-      background:url(../../assets/timg.jpg);
+      background:url(../../assets/timg.png);
       background-size:100%;
       span{
         font-size:28px;
