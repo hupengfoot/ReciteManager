@@ -427,3 +427,10 @@ export function stuErrorStat(params){//获取班级中学生错误排名（监�
     params:params
   })
 }
+export function getHistoryGroup(params){
+  return request({//查询历史分组记录
+    url:getUrlBase()+'/pkGroupItem/class/list',
+    method:'GET',
+    params:params
+  })
+}

@@ -134,6 +134,13 @@ export const constantRouterMap = [
         hidden:true,
       },
       {
+        path: 'historygroupmanager',
+        name: 'historygroupmanager',
+        component: () => import('@/views/educationManager/historygroupmanager'),
+        meta: {title: '历史分组管理', icon: 'table'},
+        hidden:true,
+      },
+      {
         path: 'groupmembermanager',
         name: 'groupmembermanager',
         component: () => import('@/views/educationManager/groupmembermanager'),

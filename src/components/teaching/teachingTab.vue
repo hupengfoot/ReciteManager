@@ -7,6 +7,7 @@
           <li @click="tab('testmanager', 'testmanager')" :class="{'default':teachingTab==''||teachingTab=='testmanager'}">测试管理</li>
           <li @click="tab('educationManager','educationManager')" :class="{'default':teachingTab==''||teachingTab=='educationManager'}">成绩列表</li>
           <li @click="tab('wrongTopicRecord','wrongTopicRecord')" :class="{'default':teachingTab==''||teachingTab=='wrongTopicRecord'}">错题本</li>
+          <li @click="tab('historygroupmanager', 'historygroupmanager')" :class="{'default':teachingTab==''||teachingTab=='historygroupmanager'}">历史分组管理</li>
         </ul>
     </div>
 </template>
