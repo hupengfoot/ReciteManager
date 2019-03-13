@@ -3,10 +3,10 @@
     <p>屏1：全员排名</p>
     <div class="topChart">
         <div class="fl">
-          <div class="rankBackground">
-            <span v-text="stuRankData[1].real_name"></span>
-            <span v-text="stuRankData[0].real_name"></span>
-            <span v-text="stuRankData[2].real_name"></span>
+          <div class="rankBackground" v-if="stuRankData.length>0">
+            <span v-if="stuRankData.length>1" v-text="stuRankData[1].real_name"></span>
+            <span v-if="stuRankData.length>0" v-text="stuRankData[0].real_name"></span>
+            <span v-if="stuRankData.length>2" v-text="stuRankData[2].real_name"></span>
           </div>
         </div>
         <div class="fl">

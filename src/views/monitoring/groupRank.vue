@@ -3,10 +3,10 @@
     <p>屏2：小组排名</p>
     <div class="topChart">
         <div class="fl">
-          <div class="rankBackground">
-            <span v-text="stuAdvanceRankData[1].group_item_name"></span>
-            <span v-text="stuAdvanceRankData[0].group_item_name"></span>
-            <span v-text="stuAdvanceRankData[2].group_item_name"></span>
+          <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
+            <span v-if="stuAdvanceRankData.length>1" v-text="stuAdvanceRankData[1].group_item_name"></span>
+            <span v-if="stuAdvanceRankData.length>0" v-text="stuAdvanceRankData[0].group_item_name"></span>
+            <span v-if="stuAdvanceRankData.length>2" v-text="stuAdvanceRankData[2].group_item_name"></span>
           </div>
         </div>
     </div>
@@ -41,6 +41,9 @@
             <el-table-column
               property="students"
               label="组员">
+              <template slot-scope="scope">
+                <span v-for="(list,index) in scope.row.students" :key="index"><i v-if="index!==0">,</i>{{list.realName}}({{list.curNum}})</span>
+              </template>
             </el-table-column>
             
         </el-table>
@@ -75,7 +78,7 @@ export default {
       groupRank({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
 
           for(let i=0;i<res.data.result.records.length;i++){
-             res.data.result.records[i].students = res.data.result.records[i].students.join(",");
+            //  res.data.result.records[i].students = res.data.result.records[i].students.join(",");
           }
           this.stuAdvanceRankData=res.data.result.records;
           this.stuInfoPage.total=res.data.result.total
@@ -120,7 +123,7 @@ export default {
   padding-top:20px;
   /deep/ .el-table{
     margin:20px auto 0; 
-    padding:0 20px;
+    
     .progress{
       height:10px;
       width:300px;

@@ -3,7 +3,7 @@
     <p>屏3：学员进步排名</p>
     <div class="topChart">
         <div class="fl">
-          <div class="rankBackground">
+          <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
             <span v-text="stuAdvanceRankData[1].real_name"></span>
             <span v-text="stuAdvanceRankData[0].real_name"></span>
             <span v-text="stuAdvanceRankData[2].real_name"></span>
