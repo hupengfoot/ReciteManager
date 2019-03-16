@@ -109,12 +109,15 @@ export default {
         text-align:center;
         float:left;
         color:#666;
-        padding-top:95px;
+        padding-top:125px;
+        text-align:right;
         &:nth-child(2){
-          padding-top:35px;
+          padding-top:85px;
+          text-align:center;
         }
         &:nth-child(3){
-          padding-top:115px;
+          padding-top:135px;
+          text-align:left;
         }
       }
     }

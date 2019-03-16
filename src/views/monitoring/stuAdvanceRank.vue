@@ -81,21 +81,24 @@ export default {
       margin-right:50px;
       height:300px;
       width:400px;
-      background:url(../../assets/timg.jpg);
+      background:url(../../assets/timg.png);
       background-size:100%;
       span{
-        font-size:38px;
+        font-size:32px;
         display:inline-block;
         width:33%;
         text-align:center;
         float:left;
         color:#666;
-        padding-top:95px;
+        padding-top:120px;
+        text-align:right;
         &:nth-child(2){
-          padding-top:35px;
+          padding-top:80px;
+          text-align:center;
         }
         &:nth-child(3){
-          padding-top:115px;
+          padding-top:135px;
+          text-align:left;
         }
       }
     }

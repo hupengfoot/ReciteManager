@@ -11,7 +11,7 @@
         </div>
         <div class="fl">
           <p style="text-align:center;font-size:18px;">班级历史平均词汇量</p>
-          <div id="finishStat" :style="{width: '100%', height: '300px'}"></div>
+          <div id="finishStat" :style="{margin:'0 auto',width: '100%', height: '300px'}"></div>
         </div>
     </div>
     <div class="bottomChart">
@@ -171,21 +171,24 @@ export default {
     .rankBackground{ 
       margin-right:50px;
       height:300px;
-      background:url(../../assets/timg.jpg) no-repeat;
+      background:url(../../assets/timg.png) no-repeat;
       background-size:100% 380px;
       span{
-        font-size:38px;
+        font-size:28px;
         display:inline-block;
         width:33%;
         text-align:center;
         float:left;
         color:#666;
-        padding-top:95px;
+        padding-top:155px;
+        text-align:right;
         &:nth-child(2){
-          padding-top:35px;
+          padding-top:105px;
+          text-align:center;
         }
         &:nth-child(3){
-          padding-top:115px;
+          padding-top:175px;
+          text-align:left;
         }
       }
     }
