@@ -33,7 +33,7 @@
               label="总词汇量">
             </el-table-column>
             <el-table-column
-              property="curAllNum"
+              property="curFinishNum"
               label="当前课次词汇量">
             </el-table-column>
             <el-table-column

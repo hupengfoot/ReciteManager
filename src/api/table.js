@@ -42,6 +42,13 @@ export function createClass(params) {
     data:params
   })
 }
+export function deleteClass(id) {
+  return request({//删除班级
+    url: getUrlBase()+'/pkClass/deleteClass/'+id,
+    method: 'delete'
+  })
+}
+
 export function getUserList(params){
   return request({//查询下拉菜单老师列表
     url: getUrlBase() + '/pkUser/teacherList',
