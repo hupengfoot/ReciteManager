@@ -6,7 +6,7 @@
     <span class="fr sort" @click="splitScreen">分屏展示</span>
     
     <div class="classList">
-        <h3>班级词汇比较</h3>
+        <h3 class="classTitle">班级词汇比较</h3>
         <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false" ref="messageDrop">
           <div class="avatar-wrapper">
             <img src="@/assets/shaixuan.jpeg" class="user-avatar" height="20" width="20">
@@ -36,7 +36,7 @@
             <div id="wordNum" :style="{float:'left',width: '300px', height: '300px'}"></div>
           </div>
         </div>
-        <div class="dashboard">
+        <div class="dashboard dashboardSecond">
           <h3>{{classInfo.className}}题型得分率分析</h3>
           <div class="dashboardMain">
             <div id="scoringAverage" :style="{float:'left',width: '550px', height: '500px'}"></div> 
@@ -92,10 +92,10 @@ export default {
   },
   methods: {
     splitScreen(){//分屏展示
-        window.open('/finishStat?classId='+this.classInfo.id,'newwindows'+1,"height=800, width=950, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
-        window.open('/groupRank?classId='+this.classInfo.id,'newwindows'+2,"height=800, width=950, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
-        window.open('/stuAdvanceRank?classId='+this.classInfo.id,'newwindows'+3,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
-        window.open('/stuErrorStat?classId='+this.classInfo.id,'newwindows'+4,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/finishStat?classId='+this.classInfo.id,'newwindows'+1,"height=800, width=1280, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/groupRank?classId='+this.classInfo.id,'newwindows'+2,"height=800, width=1280, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/stuAdvanceRank?classId='+this.classInfo.id,'newwindows'+3,"height=800, width=1280, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
+        window.open('/stuErrorStat?classId='+this.classInfo.id,'newwindows'+4,"height=800, width=1280, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         
       // window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&groupName='+this.groupList[2*i].groupItemName+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         
@@ -372,11 +372,23 @@ export default {
         height:80px;
         line-height:65px;
         margin-bottom:50px;
-        background: url("../../assets/greenTitle.png") no-repeat center;
+        background: url("../../assets/gradientTitle.png") no-repeat center;
         background-size:557px 100%;
       }
-        
+      
+    }
+    .dashboardSecond{
+      h3{
+        background: url("../../assets/greenTitle.png") no-repeat center;
+      }
     }
   
+  }
+  .classTitle{
+    height:80px;
+    line-height:65px;
+    margin-bottom:50px;
+    background-size:557px 100%;
+    background: url("../../assets/blueTitle.png") no-repeat center;
   }
 </style>

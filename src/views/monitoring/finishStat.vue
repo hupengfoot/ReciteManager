@@ -185,9 +185,11 @@ export default {
     }
     .rankBackground{ 
       margin-right:50px;
-      height:300px;
       background:url(../../assets/timg.png) no-repeat;
-      background-size:100% 380px;
+      background-size:100% 100%;
+      width: 389px;
+      height: 191px;
+      margin-top: 130px;
       span{
         font-size:28px;
         display:inline-block;
@@ -196,14 +198,26 @@ export default {
         float:left;
         color:#666;
         padding-top:155px;
-        text-align:right;
+        // text-align:right;
+        background:url(../../assets/second.png) no-repeat;
+        background-position: 18px 0px;
+        padding-top: 80px;
+        margin-top: -80px;
         &:nth-child(2){
-          padding-top:105px;
+          margin-top: -107px;
+          padding-top: 77px;
+          
           text-align:center;
+          background:url(../../assets/first.png) no-repeat;
+          background-position: 17px 0px;
         }
         &:nth-child(3){
-          padding-top:175px;
+          // padding-top:175px;
+          margin-top: -51px;
+          text-indent: 10px;
           text-align:left;
+          background:url(../../assets/third.png) no-repeat;
+          background-position: 5px 0px;
         }
       }
     }
