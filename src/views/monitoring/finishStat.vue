@@ -1,6 +1,6 @@
 <template>
   <div class="finishStat">
-    <p>屏1：全员排名</p>
+    <p class="title"><span>屏1：全员排名</span></p>
     <div class="topChart">
         <div class="fl">
           <div class="rankBackground" v-if="stuRankData.length>0">
@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="bottomChart">
-        <el-table boder :data="stuRankData">
+        <el-table stripe :data="stuRankData">
             <el-table-column
               property="rank"
               label="排名">
@@ -152,9 +152,24 @@ export default {
 <style lang="less" scope>
 .finishStat{
   width:100%;
-  >p{
-    padding-left:20px;
+  .title{
     margin:10px auto;
+    span{
+      background:#309BFF;
+      padding:5px 20px;
+      color:#fff;
+      border-radius:18px;
+    }
+  }
+  .el-table__header{
+    .has-gutter{
+      th{
+        background-color:#eee;
+      }
+    }
+  }
+  .el-table__body tr.el-table__row--striped td{
+    background:#E1F4FF;
   }
   .bottomChart{
     width:90%;

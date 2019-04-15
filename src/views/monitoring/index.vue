@@ -4,8 +4,9 @@
       <el-option  v-for="(item,index) in classList" :label="item.className" :value="item" :key="item.id"></el-option>
     </el-select>
     <span class="fr sort" @click="splitScreen">分屏展示</span>
-    <h3>班级词汇比较</h3>
+    
     <div class="classList">
+        <h3>班级词汇比较</h3>
         <el-dropdown class="avatar-container" trigger="click" :hide-on-click="false" ref="messageDrop">
           <div class="avatar-wrapper">
             <img src="@/assets/shaixuan.jpeg" class="user-avatar" height="20" width="20">

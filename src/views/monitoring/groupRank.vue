@@ -1,6 +1,6 @@
 <template>
   <div class="groupRank">
-    <p>屏2：小组排名</p>
+    <p class="title"><span>屏2：小组排名</span></p>
     <div class="topChart">
         <div class="fl">
           <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="bottomChart">
-        <el-table boder :data="stuAdvanceRankData">
+        <el-table stripe :data="stuAdvanceRankData">
             <el-table-column
               property="rank"
               width="80"
@@ -19,20 +19,23 @@
             </el-table-column>
             <el-table-column
               property="group_item_name"
-              label="小组名"
-              width="120">
+              width="180"
+              label="小组名">
             </el-table-column>
             <el-table-column
               property="createTime"
+              width="180"
               label="创建时间">
             </el-table-column>
             <el-table-column
               property="allFinishNum"
-              label="总词汇量">
+              label="总词汇量"
+              width="100">
             </el-table-column>
             <el-table-column
               property="curFinishNum"
-              label="平均词汇量">
+              label="平均词汇量"
+              width="100">
             </el-table-column>
             <!-- <el-table-column
               property="curFinishNum"
@@ -89,9 +92,15 @@ export default {
 </script>
 <style lang="less" scope>
 .groupRank{
-  >p{
-    padding-left:20px;
+  padding:0 20px;
+  .title{
     margin:10px auto;
+    span{
+      background:#309BFF;
+      padding:5px 20px;
+      color:#fff;
+      border-radius:18px;
+    }
   }
   .topChart{
     padding:0 20px;
@@ -126,7 +135,16 @@ export default {
   padding-top:20px;
   /deep/ .el-table{
     margin:20px auto 0; 
-    
+    .el-table__header{
+      .has-gutter{
+        th{
+          background-color:#eee;
+        }
+      }
+    }
+    .el-table__body tr.el-table__row--striped td{
+      background:#E1F4FF;
+    }
     .progress{
       height:10px;
       width:300px;

@@ -1,6 +1,6 @@
 <template>
   <div class="stuAdvanceRank">
-    <p>屏3：学员进步排名</p>
+    <p class="title"><span>屏3：学员进步排名</span></p>
     <div class="topChart">
         <div class="fl">
           <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="bottomChart">
-        <el-table boder :data="stuAdvanceRankData">
+        <el-table stripe :data="stuAdvanceRankData">
             <el-table-column
               property="rank"
               width="80"
@@ -70,9 +70,15 @@ export default {
 </script>
 <style lang="less" scope>
 .stuAdvanceRank{
-  >p{
-    padding-left:20px;
+  padding:0 20px;
+  .title{
     margin:10px auto;
+    span{
+      background:#309BFF;
+      padding:5px 20px;
+      color:#fff;
+      border-radius:18px;
+    }
   }
   .topChart{
     padding:0 20px;
@@ -108,6 +114,16 @@ export default {
   /deep/ .el-table{
     margin:20px auto 0; 
     padding:0 20px;
+    .el-table__header{
+      .has-gutter{
+        th{
+          background-color:#eee;
+        }
+      }
+    }
+    .el-table__body tr.el-table__row--striped td{
+      background:#E1F4FF;
+    }
     .progress{
       height:10px;
       width:300px;
