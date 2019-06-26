@@ -150,30 +150,40 @@ export default {
     getStuWordNumPerDay(){// 获取学生每天上午下午的熟词生词夹生词的数量
       getStuWordNumPerDay(this.$route.query.stuId).then(res=>{
         // this.stuWordNumPerDay = res.data.stuWordNum;
+        for(let i = 0; i < 6; i ++){
+          this.earlyUnderstand.push(0);
+          this.earlyHalfUnderstand.push(0);
+          this.earlyNotUnderstand.push(0);
+          this.eveningUnderstand.push(0);
+          this.eveningHalfUnderstand.push(0);
+          this.eveningNotUnderstand.push(0);
+        }
         for(let i=0;i<res.data.stuWordNum.length;i++){
-          if(res.data.stuWordNum[i].date === this.$route.query.startDate
-          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,1)
-          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,2)
-          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,3)
-          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,4)
-          ||res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,5)
-          ){
+          let index = 0;
+          if(res.data.stuWordNum[i].date === this.$route.query.startDate){
+            index = 0;
+          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,1)){
+            index = 1;
+          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,2)){
+            index = 2;
+          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,3)){
+            index = 3;
+          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,4)){
+            index = 4;
+          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,5)){
+            index = 5;
+          }else{
+            index = -1;
+          }
+          if(index >= 0){
             if(res.data.stuWordNum[i].period===1){
-                this.earlyUnderstand.push(res.data.stuWordNum[i].understanded*1);
-                this.earlyHalfUnderstand.push(res.data.stuWordNum[i].understanding*1);
-                this.earlyNotUnderstand.push(res.data.stuWordNum[i].notUnderstand*1);
-
-                this.eveningUnderstand.push(0);
-                this.eveningHalfUnderstand.push(0);
-                this.eveningNotUnderstand.push(0);
+                this.earlyUnderstand[index] = res.data.stuWordNum[i].understanded;
+                this.earlyHalfUnderstand[index] = res.data.stuWordNum[i].understanding;
+                this.earlyNotUnderstand[index] = res.data.stuWordNum[i].notUnderstand;
             }else{
-                this.eveningUnderstand.push(res.data.stuWordNum[i].understanded*1);
-                this.eveningHalfUnderstand.push(res.data.stuWordNum[i].understanding*1);
-                this.eveningNotUnderstand.push(res.data.stuWordNum[i].notUnderstand*1);
-
-                this.earlyUnderstand.push(0);
-                this.earlyHalfUnderstand.push(0);
-                this.earlyNotUnderstand.push(0);
+                this.eveningUnderstand[index] = res.data.stuWordNum[i].understanded;
+                this.eveningHalfUnderstand[index] = res.data.stuWordNum[i].understanding;
+                this.eveningNotUnderstand[index] = res.data.stuWordNum[i].notUnderstand;
             }
           }
         }
