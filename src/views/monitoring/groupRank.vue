@@ -14,11 +14,11 @@
                 <h5>{{stuAdvanceRankData[0].group_item_name}}</h5>
                 <div>
                   <p>总词汇量</p>
-                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[0].curFinishNum}}</p>
                 </div>
                 <div>
                   <p>平均词汇量</p>
-                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[0].curAvgNum}}</p>
                 </div>
               </div>
             </li>
@@ -27,11 +27,11 @@
                 <h5>{{stuAdvanceRankData[1].group_item_name}}</h5>
                 <div>
                   <p>总词汇量</p>
-                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[1].curFinishNum}}</p>
                 </div>
                 <div>
                   <p>平均词汇量</p>
-                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[1].curAvgNum}}</p>
                 </div>
               </div>
             </li>
@@ -40,7 +40,7 @@
                 <h5>{{stuAdvanceRankData[2].group_item_name}}</h5>
                 <div>
                   <p>总词汇量</p>
-                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
                 </div>
                 <div>
                   <p>平均词汇量</p>
