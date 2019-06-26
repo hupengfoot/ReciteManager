@@ -9,11 +9,11 @@
                 <h5>{{stuAdvanceRankData[0].real_name}}</h5>
                 <div>
                   <p>最后一次检测分数</p>
-                  <p>{{stuAdvanceRankData[2].lastNum}}</p>
+                  <p>{{stuAdvanceRankData[0].curNum}}</p>
                 </div>
                 <div>
                   <p>上一次进步排名</p>
-                  <p>{{stuAdvanceRankData[2].advance}}</p>
+                  <p>{{stuAdvanceRankData[0].advance}}</p>
                 </div>
               </div>
             </li>
@@ -22,11 +22,11 @@
                 <h5>{{stuAdvanceRankData[1].real_name}}</h5>
                 <div>
                   <p>最后一次检测分数</p>
-                  <p>{{stuAdvanceRankData[2].lastNum}}</p>
+                  <p>{{stuAdvanceRankData[1].curNum}}</p>
                 </div>
                 <div>
                   <p>上一次进步排名</p>
-                  <p>{{stuAdvanceRankData[2].advance}}</p>
+                  <p>{{stuAdvanceRankData[1].advance}}</p>
                 </div>
               </div>
             </li>
@@ -35,7 +35,7 @@
                 <h5>{{stuAdvanceRankData[2].real_name}}</h5>
                 <div>
                   <p>最后一次检测分数</p>
-                  <p>{{stuAdvanceRankData[2].lastNum}}</p>
+                  <p>{{stuAdvanceRankData[2].curNum}}</p>
                 </div>
                 <div>
                   <p>上一次进步排名</p>
@@ -49,7 +49,7 @@
     <div class="bottomChart">
         <el-table stripe :data="stuAdvanceRankData">
             <el-table-column
-              property="rank"
+              property="index"
               width="80"
               label="排名">
             </el-table-column>
@@ -59,11 +59,11 @@
               width="120">
             </el-table-column>
             <el-table-column
-              property="lastNum"
+              property="curNum"
               label="最后一次检测分数">
             </el-table-column>
             <el-table-column
-              property="advance"
+              property="rank"
               label="比上一次进步排名">
             </el-table-column>
             
@@ -98,6 +98,9 @@ export default {
     stuAdvanceRank(){
       stuAdvanceRank({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
           this.stuAdvanceRankData=res.data.result.records;
+          for(let i in this.stuAdvanceRankData){
+            this.stuAdvanceRankData[i].index = Number((res.data.result.current - 1) * res.data.result.size) + Number(i) + 1;
+          }
           this.stuInfoPage.total=res.data.result.total
       })
     },
