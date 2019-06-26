@@ -1,17 +1,58 @@
 <template>
   <div class="groupRank">
-    <p>屏2：小组排名</p>
+    <p class="title"><span>屏2：小组排名</span></p>
     <div class="topChart">
-        <div class="fl">
-          <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
+        <div>
+          <!-- <div class="rankBackground" v-if="stuAdvanceRankData.length>0">
             <span v-if="stuAdvanceRankData.length>1" v-text="stuAdvanceRankData[1].group_item_name"></span>
             <span v-if="stuAdvanceRankData.length>0" v-text="stuAdvanceRankData[0].group_item_name"></span>
             <span v-if="stuAdvanceRankData.length>2" v-text="stuAdvanceRankData[2].group_item_name"></span>
-          </div>
+          </div> -->
+          <ul v-if="stuAdvanceRankData.length>0">
+            <li>
+              <div class="list" v-if="stuAdvanceRankData.length>1">
+                <h5>{{stuAdvanceRankData[0].group_item_name}}</h5>
+                <div>
+                  <p>总词汇量</p>
+                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                </div>
+                <div>
+                  <p>平均词汇量</p>
+                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="list">
+                <h5>{{stuAdvanceRankData[1].group_item_name}}</h5>
+                <div>
+                  <p>总词汇量</p>
+                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                </div>
+                <div>
+                  <p>平均词汇量</p>
+                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div class="list">
+                <h5>{{stuAdvanceRankData[2].group_item_name}}</h5>
+                <div>
+                  <p>总词汇量</p>
+                  <p>{{stuAdvanceRankData[2].allFinishNum}}</p>
+                </div>
+                <div>
+                  <p>平均词汇量</p>
+                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
     </div>
     <div class="bottomChart">
-        <el-table boder :data="stuAdvanceRankData">
+        <el-table stripe :data="stuAdvanceRankData">
             <el-table-column
               property="rank"
               width="80"
@@ -19,20 +60,21 @@
             </el-table-column>
             <el-table-column
               property="group_item_name"
-              label="小组名"
-              width="120">
+              width="180"
+              label="小组名">
             </el-table-column>
             <el-table-column
               property="createTime"
+              width="180"
               label="创建时间">
             </el-table-column>
             <el-table-column
               property="curFinishNum"
-              label="总词汇量">
+              label="总词汇量" width="100">
             </el-table-column>
             <el-table-column
               property="curAvgNum"
-              label="平均词汇量">
+              label="平均词汇量" width="100">
             </el-table-column>
             <!-- <el-table-column
               property="curFinishNum"
@@ -96,41 +138,88 @@ export default {
 </script>
 <style lang="less" scope>
 .groupRank{
-  >p{
-    padding-left:20px;
+  padding:0 20px;
+  .title{
     margin:10px auto;
+    span{
+      background:#309BFF;
+      padding:5px 20px;
+      color:#fff;
+      border-radius:18px;
+    }
   }
   .topChart{
     padding:0 20px;
     overflow:hidden;
-    .rankBackground{ 
-      margin-right:50px;
-      height:300px;
-      width:400px;
-      background:url(../../assets/timg.png);
-      background-size:100%;
-      span{
-        font-size:28px;
-        display:inline-block;
-        width:33%;
-        text-align:center;
+    ul{
+      overflow:hidden;
+      width:100%;
+      min-width:1200px;
+      li{
         float:left;
-        color:#666;
-        padding-top:95px;
+        width:33.33%;
+        list-style: none;
+        .list{
+          
+          background:url(../../assets/redBackground.png);
+          width:377px;
+          height:203px;
+          h5{
+            height:100px;
+            line-height:76px;
+            padding-top:24px;
+            text-indent:20px;
+            font-size:36px;
+            margin:0;
+            color:#fff;
+          }
+          div{
+            width:50%;
+            height:100px;
+            float:left;
+            padding-left:30px;
+            p{
+              font-size:14px;
+              margin:0px;
+              line-height:40px;
+              color:#fff;
+              &:nth-child(2){
+                line-height:40px;
+                font-size:28px;
+              }
+            }
+          }
+          
+        }
         &:nth-child(2){
-          padding-top:35px;
+          .list{
+            background:url(../../assets/blueBackground.png);
+          }
         }
         &:nth-child(3){
-          padding-top:115px;
+          .list{
+            background:url(../../assets/greenBackground.png);
+          }
         }
       }
+      
     }
+    
   }
   
   padding-top:20px;
   /deep/ .el-table{
     margin:20px auto 0; 
-    
+    .el-table__header{
+      .has-gutter{
+        th{
+          background-color:#eee;
+        }
+      }
+    }
+    .el-table__body tr.el-table__row--striped td{
+      background:#E1F4FF;
+    }
     .progress{
       height:10px;
       width:300px;

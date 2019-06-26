@@ -6,6 +6,7 @@
     <h3>班级列表<small></small><el-checkbox type="checkbox" v-model="isAllClass" class="fr">显示全部班级</el-checkbox></h3>
     <div class="classList">
       <div class="classDeatils" v-for="(item,index) in classList" :key="index">
+          <i @click="deleteClass(item.id)">×</i>
           <p class="serialNumber">编号：{{item.id}}</p>
           <h5 class="grade" :title="item.className">{{item.className}}</h5>
           <p class="peopleNum">{{item.stuNum}}人</p>
@@ -19,7 +20,7 @@
 </template>
 
 <script>
-import { getList,getAllClass,createClass,getAllClassByTeacherId } from '@/api/table'
+import { getList,getAllClass,createClass,getAllClassByTeacherId,deleteClass } from '@/api/table'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import waves from '@/directive/waves' // Waves directive
 import {successShow,errorShow} from '@/utils/notice.js'
@@ -95,8 +96,11 @@ export default {
 			isDialog:false,
     }
   },
-  created() {
-    this.getAllClassByTeacherId()
+  mounted() {
+    let _this = this;
+    setTimeout(function(){
+      _this.getAllClassByTeacherId()
+    },100)
   },
   watch:{
     isAllClass(new_,old){
@@ -106,7 +110,7 @@ export default {
   methods: {
     getAllClassByTeacherId() {//查询班级列表
       this.listLoading = true
-      let isAll = this.isAllClass?1:0;
+      let isAll = this.isAllClass?1:0;console.log(store.getters.roles,111)
       if(store.getters.roles==1){
         getAllClassByTeacherId({isAll:isAll,pattern:this.pattern}).then(res => {
           this.classList = res.data.classList
@@ -116,6 +120,20 @@ export default {
           this.classList = res.data.classList
         })
       }
+    },
+    deleteClass(id){//删除班级
+      this.$confirm('是否确定删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(res=>{
+        deleteClass(id).then(res=>{
+          successShow('删除成功')
+          this.getAllClassByTeacherId();
+        })
+      }).catch(()=>{
+
+      })
     },
     randomNum(minNum,maxNum){ 
       switch(arguments.length){ 
@@ -171,6 +189,21 @@ export default {
       text-align:center;
       float:left;
       margin:20px 15px;
+      position: relative;
+      
+      i{
+        display:none;
+        font-size: 32px;
+        position: absolute;
+        right: 7px;
+        top: -5px;
+        cursor: pointer;
+      }
+      &:hover{
+        i{
+          display:block;
+        }
+      }
       .serialNumber{
         display:inline-block;
         width:140px;

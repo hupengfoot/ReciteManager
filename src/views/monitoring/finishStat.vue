@@ -1,6 +1,6 @@
 <template>
   <div class="finishStat">
-    <p>屏1：全员排名</p>
+    <p class="title"><span>屏1：全员排名</span></p>
     <div class="topChart">
         <div class="fl">
           <div class="rankBackground" v-if="stuRankData.length>0">
@@ -11,11 +11,11 @@
         </div>
         <div class="fl">
           <p style="text-align:center;font-size:18px;">班级历史平均词汇量</p>
-          <div id="finishStat" :style="{width: '100%', height: '300px'}"></div>
+          <div id="finishStat" :style="{margin:'0 auto',width: '100%', height: '300px'}"></div>
         </div>
     </div>
     <div class="bottomChart">
-        <el-table boder :data="stuRankData">
+        <el-table stripe :data="stuRankData">
             <el-table-column
               property="rank"
               label="排名">
@@ -33,7 +33,7 @@
               label="总词汇量">
             </el-table-column>
             <el-table-column
-              property="curAllNum"
+              property="curFinishNum"
               label="当前课次词汇量">
             </el-table-column>
             <el-table-column
@@ -152,9 +152,24 @@ export default {
 <style lang="less" scope>
 .finishStat{
   width:100%;
-  >p{
-    padding-left:20px;
+  .title{
     margin:10px auto;
+    span{
+      background:#309BFF;
+      padding:5px 20px;
+      color:#fff;
+      border-radius:18px;
+    }
+  }
+  .el-table__header{
+    .has-gutter{
+      th{
+        background-color:#eee;
+      }
+    }
+  }
+  .el-table__body tr.el-table__row--striped td{
+    background:#E1F4FF;
   }
   .bottomChart{
     width:90%;
@@ -170,22 +185,39 @@ export default {
     }
     .rankBackground{ 
       margin-right:50px;
-      height:300px;
-      background:url(../../assets/timg.jpg) no-repeat;
-      background-size:100% 380px;
+      background:url(../../assets/timg.png) no-repeat;
+      background-size:100% 100%;
+      width: 389px;
+      height: 191px;
+      margin-top: 130px;
       span{
-        font-size:38px;
+        font-size:28px;
         display:inline-block;
         width:33%;
         text-align:center;
         float:left;
         color:#666;
-        padding-top:95px;
+        padding-top:155px;
+        // text-align:right;
+        background:url(../../assets/second.png) no-repeat;
+        background-position: 18px 0px;
+        padding-top: 80px;
+        margin-top: -80px;
         &:nth-child(2){
-          padding-top:35px;
+          margin-top: -107px;
+          padding-top: 77px;
+          
+          text-align:center;
+          background:url(../../assets/first.png) no-repeat;
+          background-position: 17px 0px;
         }
         &:nth-child(3){
-          padding-top:115px;
+          // padding-top:175px;
+          margin-top: -51px;
+          text-indent: 10px;
+          text-align:left;
+          background:url(../../assets/third.png) no-repeat;
+          background-position: 5px 0px;
         }
       }
     }
