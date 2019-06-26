@@ -27,11 +27,11 @@
               label="创建时间">
             </el-table-column>
             <el-table-column
-              property="allFinishNum"
+              property="curFinishNum"
               label="总词汇量">
             </el-table-column>
             <el-table-column
-              property="curFinishNum"
+              property="curAvgNum"
               label="平均词汇量">
             </el-table-column>
             <!-- <el-table-column
@@ -81,6 +81,13 @@ export default {
             //  res.data.result.records[i].students = res.data.result.records[i].students.join(",");
           }
           this.stuAdvanceRankData=res.data.result.records;
+          for(let i in this.stuAdvanceRankData){
+            if(this.stuAdvanceRankData[i].students.length > 0){
+              this.stuAdvanceRankData[i].curAvgNum = Math.floor(this.stuAdvanceRankData[i].curFinishNum / this.stuAdvanceRankData[i].students.length);
+            }else{
+              this.stuAdvanceRankData[i].curAvgNum = 0;
+            }
+          }
           this.stuInfoPage.total=res.data.result.total
       })
     },
