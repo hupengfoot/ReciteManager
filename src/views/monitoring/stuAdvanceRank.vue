@@ -13,7 +13,7 @@
                 </div>
                 <div>
                   <p>上一次进步排名</p>
-                  <p>{{stuAdvanceRankData[0].advance}}</p>
+                  <p>{{stuAdvanceRankData[0].lastNum}}</p>
                 </div>
               </div>
             </li>
@@ -26,7 +26,7 @@
                 </div>
                 <div>
                   <p>上一次进步排名</p>
-                  <p>{{stuAdvanceRankData[1].advance}}</p>
+                  <p>{{stuAdvanceRankData[1].lastNum}}</p>
                 </div>
               </div>
             </li>
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                   <p>上一次进步排名</p>
-                  <p>{{stuAdvanceRankData[2].advance}}</p>
+                  <p>{{stuAdvanceRankData[2].lastNum}}</p>
                 </div>
               </div>
             </li>
@@ -63,7 +63,7 @@
               label="最后一次检测分数">
             </el-table-column>
             <el-table-column
-              property="rank"
+              property="lastNum"
               label="比上一次进步排名">
             </el-table-column>
             
