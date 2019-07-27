@@ -8,11 +8,11 @@
               <div class="list" v-if="stuAdvanceRankData.length>1">
                 <h5>{{stuAdvanceRankData[0].real_name}}</h5>
                 <div>
-                  <p>最后一次检测分数</p>
+                  <p>当前课次词汇量</p>
                   <p>{{stuAdvanceRankData[0].curNum}}</p>
                 </div>
                 <div>
-                  <p>上一次进步排名</p>
+                  <p>前一课次词汇量</p>
                   <p>{{stuAdvanceRankData[0].lastNum}}</p>
                 </div>
               </div>
@@ -21,11 +21,11 @@
               <div class="list">
                 <h5>{{stuAdvanceRankData[1].real_name}}</h5>
                 <div>
-                  <p>最后一次检测分数</p>
+                  <p>当前课次词汇量</p>
                   <p>{{stuAdvanceRankData[1].curNum}}</p>
                 </div>
                 <div>
-                  <p>上一次进步排名</p>
+                  <p>前一课次词汇量</p>
                   <p>{{stuAdvanceRankData[1].lastNum}}</p>
                 </div>
               </div>
@@ -34,11 +34,11 @@
               <div class="list">
                 <h5>{{stuAdvanceRankData[2].real_name}}</h5>
                 <div>
-                  <p>最后一次检测分数</p>
+                  <p>当前课次词汇量</p>
                   <p>{{stuAdvanceRankData[2].curNum}}</p>
                 </div>
                 <div>
-                  <p>上一次进步排名</p>
+                  <p>前一课次词汇量</p>
                   <p>{{stuAdvanceRankData[2].lastNum}}</p>
                 </div>
               </div>
@@ -60,11 +60,11 @@
             </el-table-column>
             <el-table-column
               property="curNum"
-              label="最后一次检测分数">
+              label="当前课次词汇量">
             </el-table-column>
             <el-table-column
               property="lastNum"
-              label="比上一次进步排名">
+              label="前一课次词汇量">
             </el-table-column>
             
         </el-table>
