@@ -20,6 +20,11 @@
       <div class="growth" v-show="type=='growth'">
         <h3>{{stuInfo.realName}}成长记录</h3>
         <div class="growthMain">
+          <div>
+            <el-date-picker  v-model="startDay" type="date" placeholder="开始时间" value-format="yyyy-MM-dd"></el-date-picker>
+            <el-date-picker  v-model="endDay" type="date" placeholder="结束时间" value-format="yyyy-MM-dd"></el-date-picker>
+            <el-button class="filter-item" type="primary" icon="el-icon-search" @click="searchHistory">{{ '查询' }}</el-button>
+          </div>
           <div id="getStuWordNumPerDay" :style="{width: '800px', height: '400px'}"></div>
           <div class="mask"></div>
           <div id="getStuGradeRankPer" :style="{width:'800px',height:'300px'}"></div>
@@ -97,6 +102,8 @@ export default {
         page:1,
         limit:10
       },
+      startDay:"",
+      endDay:"",
       stuInfoTotal:0,
       ClassExamCorrectRateData:[],
       earlyUnderstand:[],
@@ -123,6 +130,17 @@ export default {
     this.getStuAdmissionAnalysis()
   },
   methods:{
+    searchHistory(){
+      if(this.startDay === ""){
+        alert("请输入开始日期");
+        return;
+      }
+      if(this.endDay === ""){
+        alert("请输入结束日期");
+        return;
+      }
+      this.getStuWordNumPerDay();
+    },
     getClassUnitNum(){//总单元数
       getClassUnitNum(this.$route.query.stuId).then(res=>{
         // this.unitPassNum.push({value:res.data.unitNum,name:'总单元数'});
@@ -150,8 +168,19 @@ export default {
     getStuWordNumPerDay(){// 获取学生每天上午下午的熟词生词夹生词的数量
       getStuWordNumPerDay(this.$route.query.stuId).then(res=>{
         // this.stuWordNumPerDay = res.data.stuWordNum;
-        let nowDay = new Date();
-        let days = nowDay.getTime() - new Date(this.$route.query.startDate.replace(/-/g, "/"));
+        let startDay = this.$route.query.startDate;
+        let endDate = new Date();
+        let endDay = endDate.getFullYear() + "-" + (endDate.getMonth() + 1) + "-" + endDate.getDate();
+        if(this.startDay !== ""){
+          startDay = this.startDay;
+        }
+        if(this.endDay !== ""){
+          endDay = this.endDay;
+        }
+        let days = new Date(endDay.replace(/-/g, "/")).getTime() - new Date(startDay.replace(/-/g, "/"));
+        if(days < 0){
+          return;
+        }
         let time = parseInt(days / (1000 * 60 * 60 * 24));
         for(let i = 0; i < time; i ++){
           this.earlyUnderstand.push(0);
