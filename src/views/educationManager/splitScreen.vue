@@ -73,7 +73,10 @@ export default {
   methods: {
       setTimer: function () {
     　　　　this.timer = setInterval(() => {
-    　　　　　　this.firstSelect()　　
+    　　　　　　this.firstSelect()　
+              if(this.$route.query.second){
+                this.secondSelect();
+              }　
     　　　　}, 10000)
     　},
       firstSelect(){
