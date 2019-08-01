@@ -150,7 +150,10 @@ export default {
     getStuWordNumPerDay(){// 获取学生每天上午下午的熟词生词夹生词的数量
       getStuWordNumPerDay(this.$route.query.stuId).then(res=>{
         // this.stuWordNumPerDay = res.data.stuWordNum;
-        for(let i = 0; i < 6; i ++){
+        let nowDay = new Date();
+        let days = nowDay.getTime() - new Date(this.$route.query.startDate.replace(/-/g, "/"));
+        let time = parseInt(days / (1000 * 60 * 60 * 24));
+        for(let i = 0; i < time; i ++){
           this.earlyUnderstand.push(0);
           this.earlyHalfUnderstand.push(0);
           this.earlyNotUnderstand.push(0);
@@ -159,21 +162,12 @@ export default {
           this.eveningNotUnderstand.push(0);
         }
         for(let i=0;i<res.data.stuWordNum.length;i++){
-          let index = 0;
-          if(res.data.stuWordNum[i].date === this.$route.query.startDate){
-            index = 0;
-          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,1)){
-            index = 1;
-          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,2)){
-            index = 2;
-          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,3)){
-            index = 3;
-          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,4)){
-            index = 4;
-          }else if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,5)){
-            index = 5;
-          }else{
-            index = -1;
+          let index = -1;
+          for(let j = 0; j < time; j++){
+            if(res.data.stuWordNum[i].date === addDate(this.$route.query.startDate,j)){
+              index = j;
+              break;
+            }
           }
           if(index >= 0){
             if(res.data.stuWordNum[i].period===1){
@@ -187,7 +181,7 @@ export default {
             }
           }
         }
-        this.getStuWordNumPerEcharts()
+        this.getStuWordNumPerEcharts(time)
       })
     },
     getStuGradeRankPerDay(){//查询班级排名
@@ -240,10 +234,13 @@ export default {
             }]
         });
     },
-    getStuWordNumPerEcharts(){//成长记录
+    getStuWordNumPerEcharts(time){//成长记录
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('getStuWordNumPerDay'))
-        let xAxisData = [this.$route.query.startDate,addDate(this.$route.query.startDate,1),addDate(this.$route.query.startDate,2),addDate(this.$route.query.startDate,3),addDate(this.$route.query.startDate,4),addDate(this.$route.query.startDate,5)];
+        let xAxisData = [];
+        for(let i = 0; i < time; i++){
+          xAxisData.push(addDate(this.$route.query.startDate,i))
+        }
         // 绘制图表
         myChart.setOption({
             tooltip: {
