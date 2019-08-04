@@ -35,7 +35,8 @@
               {{scope.row.gender | gender}}
             </template>
           </el-table-column>
-          <el-table-column label="词汇量" prop="wordNum"></el-table-column>
+          <el-table-column label="已掌握的词汇量" prop="wordNum"></el-table-column>
+          <el-table-column label="已学到的词汇量" prop="learnWordNum"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
               <p class="progress"><span :style="{width:(scope.row.wordNum/maxWordNum)*300+'px'}"></span></p>
@@ -53,7 +54,8 @@
               {{scope.row.createTime}}
             </template>
           </el-table-column>
-          <el-table-column label="词汇量" prop="wordNum"></el-table-column>
+          <el-table-column label="已掌握的词汇量" prop="wordNum"></el-table-column>
+          <el-table-column label="已学到的词汇量" prop="learnWordNum"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
               <p class="progress groupProgress"><span :style="{width:(scope.row.wordNum/maxGroupWordNum)*300+'px'}"></span></p>
