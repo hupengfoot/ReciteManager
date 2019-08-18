@@ -37,6 +37,10 @@
           </el-table-column>
           <el-table-column label="已掌握的词汇量" prop="wordNum"></el-table-column>
           <el-table-column label="已学到的词汇量" prop="learnWordNum"></el-table-column>
+          <el-table-column label="看英选义" prop="englishToChinese"></el-table-column>
+          <el-table-column label="听音辨英" prop="listenToEnglish"></el-table-column>
+          <el-table-column label="看义拼词" prop="chineseToChoice"></el-table-column>
+          <el-table-column label="看义选英" prop="chineseToEnglish"></el-table-column>
           <el-table-column label="进度" width="400">
             <template slot-scope="scope">
               <p v-if="scope.row.wordNum==0" class="progress"><span :style="{width:0+'px'}"></span></p>
