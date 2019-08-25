@@ -26,7 +26,7 @@
         <span class="fr sort" v-if="type==2" @click="splitScreen">分屏展示</span>
           
       </div>
-      <div v-if="type==1">
+      <div v-show="type==1">
         <el-table border :data="eduList"  @row-click="stuInfo">
           <el-table-column label="ID" prop="stuId"></el-table-column>
           <el-table-column label="姓名" prop="realName"></el-table-column>
@@ -45,7 +45,7 @@
         </el-table>
         <pagination v-show="totalNum>0" :total="totalNum" :page.sync="search.page" :limit.sync="search.limit" @pagination="getClassGrade" />
       </div>
-      <div v-if="type==2">
+      <div v-show="type==2">
         <el-table border :data="groupList">
           <el-table-column label="ID" prop="id"></el-table-column>
           <el-table-column label="小组名" prop="groupItemName"></el-table-column>
