@@ -27,7 +27,7 @@
           </el-dropdown-menu>
         </el-dropdown>
         <el-row style="height:350px;background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-          <line-chart :chart-data="lineChartData" id="classcompareMain1" style="position: absolute; left: 0px; top: 0px; width: 1332px; "/>
+          <line-chart :chart-data="lineChartData" id="classcompareMain1" style="position: absolute; left:0; right:0; top:0; bottom:0; width: 1332px; margin:auto;"/>
         </el-row>
         <div class="dashboard">
           <h3>{{classInfo.className}}单词学习仪表盘</h3>
