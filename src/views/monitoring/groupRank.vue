@@ -44,7 +44,7 @@
                 </div>
                 <div>
                   <p>平均词汇量</p>
-                  <p>{{stuAdvanceRankData[2].curFinishNum}}</p>
+                  <p>{{stuAdvanceRankData[2].curAvgNum}}</p>
                 </div>
               </div>
             </li>
