@@ -33,7 +33,7 @@
 				<el-form-item label="复习任务" prop="completionTest">
 				  <!-- <el-checkbox v-model="temp.openRepeat">开启</el-checkbox>
 				  <el-checkbox v-model="temp.closeRepeat">关闭</el-checkbox> -->
-          <el-radio-group v-model="temp.reviewTask">
+          <el-radio-group v-model="temp.openRepeat">
               <el-radio :label="1">开启</el-radio>
               <el-radio :label="0">关闭</el-radio>
             </el-radio-group>
@@ -92,7 +92,7 @@ export default {
         completionTest:false,//结业测试
         isAdmissionTest:false,
         isComletionTest:false,
-        reviewTask:0,//复习任务
+        openRepeat:0,//复习任务
         teacherName:'',//老师姓名
       },
       courseIdList:[],
@@ -183,7 +183,7 @@ export default {
           this.temp.teacherInfo = res.data.class.teacherName+','+res.data.class.userTeacherId
           this.temp.isAdmissionTest = res.data.class.admissionTest===1?true:false;
           this.temp.isCompletionTest =res.data.class.completionTest===1?true:false;
-          this.temp.reviewTask = res.data.class.completionTest;
+          this.temp.openRepeat = res.data.class.openRepeat;
       })
     }
   },
