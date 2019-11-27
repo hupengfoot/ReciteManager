@@ -30,7 +30,7 @@
 				  <el-checkbox v-model="temp.isAdmissionTest">入学测评</el-checkbox>
 				  <el-checkbox v-model="temp.isCompletionTest">结业测评</el-checkbox>
 				</el-form-item>
-				<el-form-item label="复习任务" prop="reviewTask">
+				<el-form-item label="复习任务" prop="completionTest">
 				  <!-- <el-checkbox v-model="temp.openRepeat">开启</el-checkbox>
 				  <el-checkbox v-model="temp.closeRepeat">关闭</el-checkbox> -->
           <el-radio-group v-model="temp.reviewTask">
@@ -183,7 +183,7 @@ export default {
           this.temp.teacherInfo = res.data.class.teacherName+','+res.data.class.userTeacherId
           this.temp.isAdmissionTest = res.data.class.admissionTest===1?true:false;
           this.temp.isCompletionTest =res.data.class.completionTest===1?true:false;
-
+          this.temp.reviewTask = res.data.class.completionTest;
       })
     }
   },
