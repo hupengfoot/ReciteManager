@@ -1,6 +1,6 @@
-<template>  
+<template>
   <el-dialog :title="isUpdate?'编辑班级':'新增班级'" :visible.sync="dialogFormVisible">
-       
+
       <el-form ref="temp" :rules="rules" :model="temp" label-position="left" label-width="150px" style="width: 400px; margin-left:50px;">
 				<!-- <el-form-item label="选择学段" prop="phase">
 					<el-select v-model="temp.phase" class="filter-item" placeholder="Please select">
@@ -10,10 +10,10 @@
 				<el-form-item label="班级" prop="className">
 					<el-input v-model="temp.className" placeholder="请填写班级名称"/>
 				</el-form-item>
-        
+
 				<el-form-item label="选择课程" prop="courseIdList">
           <el-input @focus="treeShow = true" v-model="courseIdList"  placeholder="请选择课程"></el-input>
-          
+
 					<!-- <el-cascader :options="allCourse" placeholder="请选择课程" v-model="temp.courseIdList" :props="{label:'courseName',value:'id'}"></el-cascader>
           <cascaderMulti v-model="end_code" :data="allCourse" placeholder="请选择课程"></cascaderMulti> -->
         </el-form-item>
@@ -25,10 +25,18 @@
         <el-form-item label="开课时间" prop="startDate">
 					<el-date-picker type="datetime" placeholder="请选择开课时间" value-format="yyyy-MM-dd hh:mm:ss" v-model="temp.startDate"></el-date-picker>
 				</el-form-item>
-        
+
 				<el-form-item label="词汇量测试" prop="admissionTest">
-          <el-checkbox v-model="temp.isAdmissionTest">入学测评</el-checkbox>
-          <el-checkbox v-model="temp.isCompletionTest">结业测评</el-checkbox>
+				  <el-checkbox v-model="temp.isAdmissionTest">入学测评</el-checkbox>
+				  <el-checkbox v-model="temp.isCompletionTest">结业测评</el-checkbox>
+				</el-form-item>
+				<el-form-item label="复习任务" prop="reviewTask">
+				  <!-- <el-checkbox v-model="temp.openRepeat">开启</el-checkbox>
+				  <el-checkbox v-model="temp.closeRepeat">关闭</el-checkbox> -->
+          <el-radio-group v-model="temp.reviewTask">
+              <el-radio :label="1">开启</el-radio>
+              <el-radio :label="0">关闭</el-radio>
+            </el-radio-group>
 				</el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -46,7 +54,7 @@
             @check="handleNodeClick"
              :default-checked-keys="temp.courseIdList"
             >
-            
+
           </el-tree>
           <el-button @click="treeShow = false" type="primary" style="margin-right:20px;margin-top:20px;">确定</el-button>
       </el-dialog>
@@ -84,6 +92,7 @@ export default {
         completionTest:false,//结业测试
         isAdmissionTest:false,
         isComletionTest:false,
+        reviewTask:0,//复习任务
         teacherName:'',//老师姓名
       },
       courseIdList:[],
@@ -99,7 +108,7 @@ export default {
   mounted(){
     this.getSubjectList();
     this.getUserList();
-    
+
   },
   methods:{
     handleNodeClick(dd,data) {
@@ -169,12 +178,12 @@ export default {
                 }
               }
           }
-          
+
           this.temp.courseIdList = res.data.class.courseIdList;
-          console.log( this.temp.courseIdList);
           this.temp.teacherInfo = res.data.class.teacherName+','+res.data.class.userTeacherId
           this.temp.isAdmissionTest = res.data.class.admissionTest===1?true:false;
           this.temp.isCompletionTest =res.data.class.completionTest===1?true:false;
+
       })
     }
   },
@@ -182,7 +191,7 @@ export default {
     dialogFormVisible(new_,old){
       this.$emit('close')
     },
-    
+
   }
 }
 </script>
