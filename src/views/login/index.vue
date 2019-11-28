@@ -33,7 +33,7 @@
         <span> password: 123456</span>
       </div> -->
     </el-form>
-    <p style="position: absolute;bottom: 0;color: #fff;text-align: center;width: 100%;"><a style="font-size:12px;" href="http://www.beian.miit.gov.cn">沪ICP备18020666号-1</a></p>
+    <p style="position: absolute;bottom: 0;color: #fff;text-align: center;width: 100%;"><a style="font-size:12px;" target="_blank" href="http://www.beian.miit.gov.cn">沪ICP备18020666号-1</a></p>
   </div>
 </template>
 
