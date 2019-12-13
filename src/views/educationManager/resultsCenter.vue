@@ -13,6 +13,7 @@
       </el-select>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="selectFrom">查找</el-button>
+      <el-button type="primary" style="float:right;">颁发金币</el-button>
     </form>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="resultsMain">
