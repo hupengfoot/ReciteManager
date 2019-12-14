@@ -13,7 +13,7 @@
       </el-select>
       <el-input v-model="search.pattern" placeholder="请输入学生姓名或关键字进行查询"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="selectFrom">查找</el-button>
-      <el-button type="primary" style="float:right;">颁发金币</el-button>
+      <el-button type="primary" style="float:right;" @click="goldFormVisible = true">颁发金币</el-button>
     </form>
     <teaching-tab :classId="classId" ></teaching-tab>
     <div class="resultsMain">
@@ -70,18 +70,79 @@
         </el-table>
       </div>
     </div>
+    <el-dialog class="awardsDialog" title="颁发金币" :visible.sync="goldFormVisible">
+      <!-- <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="金币">
+          <el-input v-model="goldNum" @keyup.native="testNumber($event)" placeholder="请输入添加数量" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="remark" placeholder="请输入备注"  type="textarea" />
+        </el-form-item>
+      </el-form> -->
+      <el-form ref="goldForm" label-position="left" label-width="70px" style="width: 100%; margin-left:50px;">
+        <div class="awardsDialog">
+          <div class="formSearch">
+            <el-button class="awardsSubmit" @click="awardsSubmit" type="primary">颁奖</el-button>
+            <el-date-picker v-model="courseDate" @change="getWillRewardStuInfo" value-format="yyyy-MM-dd" placeholder="请选择日期"></el-date-picker>
+            <el-select v-model="courseTime"  @change="getWillRewardStuInfo">
+              <el-option value="00:00:00" label="AM"></el-option>
+              <el-option value="12:00:00" label="PM"></el-option>
+            </el-select>
+          </div>
+          <h6>当前课次</h6>
+          <ul v-if="goldList.wordKingList&&goldList.wordKingList.length!=0">
+            <li>
+              <label>1、单词王</label>
+              <span v-for="(list,index) in goldList.wordKingList" :key="index">
+                第{{index==0?'一':(index==1?'二':'三')}}名:
+              {{list.name}}
+              <el-input v-model="wordKingNum[index].value1" :value="index==0?'100':(index==1?'70':'50')" />
+              </span>
+            </li>
+            <li>
+              <label>2、团队冠军</label>
+              <span v-if="goldList.championGroup">{{goldList.championGroup.groupName}}:</span>
+              <span v-for="(list,index) in goldList.championGroup.stuGoldList" :key="index"><i v-if="index !=0">,</i>{{list.name}}</span>
+              <el-input :v-model="stuGoldNum" value="100" />
+            </li>
+            
+            <li>
+              <label>3、最快进步奖</label>
+              <span v-for="(list,index) in goldList.advanceList" :key="index">
+                第{{index==0?'一':(index==1?'二':'三')}}名:
+              {{list.name}}
+              <el-input :v-model="advanceNum+index" :value="index==0?'100':(index==1?'70':'50')" />
+              </span>
+            </li>
+            <li>
+              <label>4、测试排名</label>
+              <span v-for="(list,index) in goldList.testRankList" :key="index">
+                第{{index==0?'一':(index==1?'二':'三')}}名:
+              {{list.name}}
+              <el-input :v-model="testRank+index" :value="index==0?'100':(index==1?'70':'50')" />
+              </span>
+            </li>
+          </ul>
+        </div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="goldFormVisible = false">{{ '关闭' }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getClassGrade,getClassGroupGrade } from '@/api/table'
+import {getClassGrade,getClassGroupGrade,getWillRewardStuInfo,batchRewardGold } from '@/api/table'
 import Pagination from '@/components/Pagination'
 import teachingTab from '@/components/teaching/teachingTab'
+
 export default {
   name: 'resultsCenter',
   components: { teachingTab,Pagination },
   data(){
     return{
+      goldFormVisible:false,
       type:1,
       eduList:[],
       totalNum:0,
@@ -101,14 +162,62 @@ export default {
       },
       groupList:[],
       classId:0,
+      courseDate:'',
+      courseTime:'00:00:00',
+      goldList:[],
+      wordKingNum:[],
+      stuGoldNum:'',
+      advanceNum0:'',
+      advanceNum1:'',
+      advanceNum2:'',
+      testRank0:'',
+      testRank1:'',
+      testRank2:''
     }
   },
   mounted(){
     this.getClassGrade();
     this.getClassGroupGrade();
     this.classId = this.$route.query.classId*1;
+    
+  },
+  created(){
+    var len = 3;
+      for (var i = 0; i < len; i++) {
+        var item = {value1: 100};
+        this.wordKingNum.push(item);
+      }
   },
   methods:{
+    // 颁奖
+    awardsSubmit(){
+      let params = '';
+      if(this.wordKingNum[0]){
+        params=params.concat('{"name":\"'+this.goldList.wordKingList[0].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[0].value1+',"stuId": '+this.goldList.wordKingList[0].stuId+'}')
+      }
+      if(this.wordKingNum[1]){
+        params=params.concat('{"name":\"'+this.goldList.wordKingList[1].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[1].value1+',"stuId": '+this.goldList.wordKingList[1].stuId+'}')
+      }
+      if(this.wordKingNum[2]){
+        params=params.concat('{"name":\"'+this.goldList.wordKingList[2].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[2].value1+',"stuId": '+this.goldList.wordKingList[2].stuId+'}')
+      }
+      
+      batchRewardGold(JSON.parse(params)).then(res=>{
+        
+      })
+    },
+    // 查询颁奖
+    getWillRewardStuInfo(){
+      // let courseTime = new Date(parseInt(this.courseDate)).toLocaleString().replace(/:\d{1,2}$/,' ');
+      // let courseTime = date('Y-m-d',this.courseDate)+' '+this.courseTime;
+      // console.log(this.courseDate,this.courseTime,1)
+      getWillRewardStuInfo({classId:this.classId,courseTime:this.courseDate+' '+this.courseTime}).then(res=>{
+        // console.log(res.data,123)
+
+        this.goldList = res.data.data;
+        // console.log(this.goldList,111)
+      })
+    },
     selectFrom(){
       this.getClassGrade();
       this.getClassGroupGrade();
@@ -124,7 +233,6 @@ export default {
       })
     },
     getClassGrade(){//查询班级成绩
-    
       if(this.startTime){
         let half;
         this.startHalfDay=='AM'?half=0:half=43200;
@@ -299,6 +407,35 @@ export default {
       // }
     
 
+  }
+  .awardsDialog{
+    /deep/ .el-dialog__body{
+      padding:20px 20px;
+      .awardsSubmit{
+        float:right;
+        margin-top:50px;
+        margin-right:50px;
+      }
+      .formSearch{
+
+      }
+      h6{
+        margin:20px 0;
+      }
+      li{
+        list-style:none;
+        margin:10px 0;
+        .el-input{
+          width:60px;
+          height:25px;
+          input{
+            height:25px;
+          }
+        }
+      }
+    }
+    
+    
   }
   
 }

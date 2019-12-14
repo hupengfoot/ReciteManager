@@ -441,3 +441,19 @@ export function getHistoryGroup(params){
     params:params
   })
 }
+
+export function getWillRewardStuInfo(params){
+  return request({//查询颁奖记录记录
+    url:getUrlBase()+'/pkStudent/getWillRewardStuInfo',
+    method:'GET',
+    params:params
+  })
+}
+
+export function batchRewardGold(params){
+  return request({//颁奖
+    url:getUrlBase()+'/pkStudent/batchRewardGold',
+    method:'put',
+    data:params
+  })
+}
