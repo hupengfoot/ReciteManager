@@ -25,7 +25,7 @@
         <span class="fr sort" @click="orderButton('DESC')" v-if="search.order=='ASC'&&type==1">升序</span>
         <span class="fr sort" @click="orderButton('ASC')" v-if="search.order=='DESC'&&type==1">降序</span>
         <span class="fr sort" v-if="type==2" @click="splitScreen">分屏展示</span>
-          
+
       </div>
       <div v-show="type==1">
         <el-table border :data="eduList"  @row-click="stuInfo">
@@ -93,33 +93,73 @@
           <ul v-if="goldList.wordKingList&&goldList.wordKingList.length!=0">
             <li>
               <label>1、单词王</label>
-              <span v-for="(list,index) in goldList.wordKingList" :key="index">
-                第{{index==0?'一':(index==1?'二':'三')}}名:
-              {{list.name}}
-              <el-input v-model="wordKingNum[index].value1" :value="index==0?'100':(index==1?'70':'50')" />
+              <span>
+                第一名:
+              {{goldList.wordKingList[0].name}}
+              <el-input v-model="wordKingNum0"  />
+              </span>
+              <span v-if="goldList.wordKingList.length>1">
+                第二名:
+              {{goldList.wordKingList[1].name}}
+              <el-input v-model="wordKingNum1" />
+              </span>
+              <span v-if="goldList.wordKingList.length>2">
+                第三名:
+              {{goldList.wordKingList[2].name}}
+              <el-input v-model="wordKingNum2"  />
               </span>
             </li>
             <li>
               <label>2、团队冠军</label>
               <span v-if="goldList.championGroup">{{goldList.championGroup.groupName}}:</span>
               <span v-for="(list,index) in goldList.championGroup.stuGoldList" :key="index"><i v-if="index !=0">,</i>{{list.name}}</span>
-              <el-input :v-model="stuGoldNum" value="100" />
+              <el-input v-model="stuGoldNum"  />
             </li>
-            
+
             <li>
               <label>3、最快进步奖</label>
-              <span v-for="(list,index) in goldList.advanceList" :key="index">
+              <!-- <span v-for="(list,index) in goldList.advanceList" :key="index">
                 第{{index==0?'一':(index==1?'二':'三')}}名:
               {{list.name}}
               <el-input :v-model="advanceNum+index" :value="index==0?'100':(index==1?'70':'50')" />
+              </span> -->
+              <span v-if="goldList.advanceList.length>1">
+                第一名:
+              {{goldList.advanceList[0].name}}
+              <el-input v-model="advanceNum0"  />
+              </span>
+              <span v-if="goldList.advanceList.length>1">
+                第二名:
+              {{goldList.advanceList[1].name}}
+              <el-input v-model="advanceNum1" />
+              </span>
+              <span v-if="goldList.advanceList.length>2">
+                第三名:
+              {{goldList.advanceList[2].name}}
+              <el-input v-model="advanceNum2"  />
               </span>
             </li>
             <li>
               <label>4、测试排名</label>
-              <span v-for="(list,index) in goldList.testRankList" :key="index">
+              <!-- <span v-for="(list,index) in goldList.testRankList" :key="index">
                 第{{index==0?'一':(index==1?'二':'三')}}名:
               {{list.name}}
               <el-input :v-model="testRank+index" :value="index==0?'100':(index==1?'70':'50')" />
+              </span> -->
+              <span v-if="goldList.testRankList.length>0">
+                第一名:
+              {{goldList.testRankList[0].name}}
+              <el-input v-model="testRankNum0"  />
+              </span>
+              <span v-if="goldList.testRankList.length>1">
+                第二名:
+              {{goldList.testRankList[1].name}}
+              <el-input v-model="testRankNum1"  />
+              </span>
+              <span v-if="goldList.testRankList.length>2">
+                第三名:
+              {{goldList.testRankList[2].name}}
+              <el-input v-model="testRankNum2"  />
               </span>
             </li>
           </ul>
@@ -136,6 +176,7 @@
 import {getClassGrade,getClassGroupGrade,getWillRewardStuInfo,batchRewardGold } from '@/api/table'
 import Pagination from '@/components/Pagination'
 import teachingTab from '@/components/teaching/teachingTab'
+import {successShow,errorShow} from '@/utils/notice.js'
 
 export default {
   name: 'resultsCenter',
@@ -166,20 +207,23 @@ export default {
       courseTime:'00:00:00',
       goldList:[],
       wordKingNum:[],
-      stuGoldNum:'',
-      advanceNum0:'',
-      advanceNum1:'',
-      advanceNum2:'',
-      testRank0:'',
-      testRank1:'',
-      testRank2:''
+      wordKingNum0:100,
+      wordKingNum1:70,
+      wordKingNum2:50,
+      stuGoldNum:100,
+      advanceNum0:100,
+      advanceNum1:70,
+      advanceNum2:50,
+      testRankNum0:100,
+      testRankNum1:70,
+      testRankNum2:50
     }
   },
   mounted(){
     this.getClassGrade();
     this.getClassGroupGrade();
     this.classId = this.$route.query.classId*1;
-    
+
   },
   created(){
     var len = 3;
@@ -191,19 +235,41 @@ export default {
   methods:{
     // 颁奖
     awardsSubmit(){
-      let params = '';
-      if(this.wordKingNum[0]){
-        params=params.concat('{"name":\"'+this.goldList.wordKingList[0].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[0].value1+',"stuId": '+this.goldList.wordKingList[0].stuId+'}')
+      let params = [];
+      if(this.goldList.wordKingList.length>0){
+        params=params.concat({"name":this.goldList.wordKingList[0].name ,"remark":"", "rewardGold": this.wordKingNum0,"stuId": this.goldList.wordKingList[0].stuId})
       }
-      if(this.wordKingNum[1]){
-        params=params.concat('{"name":\"'+this.goldList.wordKingList[1].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[1].value1+',"stuId": '+this.goldList.wordKingList[1].stuId+'}')
+      if(this.goldList.wordKingList.length>1){
+        params=params.concat({"name":this.goldList.wordKingList[1].name ,"remark":"", "rewardGold": this.wordKingNum1,"stuId": this.goldList.wordKingList[1].stuId})      }
+      if(this.goldList.wordKingList.length>2){
+        params=params.concat({"name":this.goldList.wordKingList[2].name ,"remark":"", "rewardGold": this.wordKingNum2,"stuId": this.goldList.wordKingList[2].stuId})      }
+      if(this.goldList.championGroup.groupName){
+        for(let i=0;i<this.goldList.championGroup.stuGoldList.length;i++){
+          params=params.concat({"name":this.goldList.championGroup.stuGoldList[i].name ,"remark":"", "rewardGold": this.stuGoldNum,"stuId": this.goldList.championGroup.stuGoldList[i].stuId})
+        }
       }
-      if(this.wordKingNum[2]){
-        params=params.concat('{"name":\"'+this.goldList.wordKingList[2].name+'\" ,"remark":"", "rewardGold": '+this.wordKingNum[2].value1+',"stuId": '+this.goldList.wordKingList[2].stuId+'}')
+      //最快进不
+      if(this.goldList.advanceList.length>0){
+        params=params.concat({"name":this.goldList.advanceList[0].name ,"remark":"", "rewardGold": this.advanceList0,"stuId": this.goldList.advanceList[0].stuId})
       }
-      
-      batchRewardGold(JSON.parse(params)).then(res=>{
-        
+      if(this.goldList.advanceList.length>1){
+        params=params.concat({"name":this.goldList.advanceList[1].name ,"remark":"", "rewardGold": this.advanceList1,"stuId": this.goldList.advanceList[1].stuId})
+      }
+      if(this.goldList.advanceList.length>2){
+        params=params.concat({"name":this.goldList.advanceList[2].name ,"remark":"", "rewardGold": this.advanceList2,"stuId": this.goldList.advanceList[2].stuId})
+      }
+      //测试排名
+      if(this.goldList.testRankList.length>0){
+        params=params.concat({"name":this.goldList.testRankList[0].name ,"remark":"", "rewardGold": this.testRankNum0,"stuId": this.goldList.testRankList[0].stuId})
+      }
+      if(this.goldList.testRankList.length>1){
+        params=params.concat({"name":this.goldList.testRankList[1].name ,"remark":"", "rewardGold": this.testRankNum1,"stuId": this.goldList.testRankList[1].stuId})
+      }
+      if(this.goldList.testRankList.length>2){
+        params=params.concat({"name":this.goldList.testRankList[2].name ,"remark":"", "rewardGold": this.testRankNum2,"stuId": this.goldList.testRankList[2].stuId})
+      }
+      batchRewardGold(params).then(res=>{
+        successShow('颁奖成功')
       })
     },
     // 查询颁奖
@@ -215,6 +281,7 @@ export default {
         // console.log(res.data,123)
 
         this.goldList = res.data.data;
+        goldFormVisible = false
         // console.log(this.goldList,111)
       })
     },
@@ -302,8 +369,8 @@ export default {
           window.open('/splitScreen?classId='+this.$route.query.classId+'&first='+this.groupList[2*i].id+'&groupName='+this.groupList[2*i].groupItemName+'&firstRank='+((1+i)*2-1),'newwindows'+i,"height=800, width=800, top=100, left=100,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no");
         }
       }
-      
-      
+
+
     },
   }
 }
@@ -330,13 +397,13 @@ export default {
       text-align:center;
       .mainTopButton{
         display:inline-block;
-        
+
         .el-button{
           height:35px;
           padding:0;
           width:325px;
           border-radius:0;
-          
+
           &:first-child{
             border-top-left-radius:20px;
             border-bottom-left-radius:20px;
@@ -353,16 +420,16 @@ export default {
             color:#fff;
           }
         }
-        
+
       }
       .sort{
         margin-right:20px;
         font-size:14px;
-        line-height:35px; 
+        line-height:35px;
         cursor:pointer;
       }
     }
-    
+
   }
   .el-table{
     .progress{
@@ -380,7 +447,7 @@ export default {
         height:10px;
       }
     }
-    
+
       &:nth-child(1){
         .groupProgress{
           span{
@@ -405,7 +472,7 @@ export default {
       //     background:#f56c6c;
       //   }
       // }
-    
+
 
   }
   .awardsDialog{
@@ -434,9 +501,9 @@ export default {
         }
       }
     }
-    
-    
+
+
   }
-  
+
 }
 </style>
