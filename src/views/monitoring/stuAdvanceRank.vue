@@ -1,5 +1,6 @@
 <template>
   <div class="stuAdvanceRank">
+    <p class="small">*数据每十秒更新一次</p>
     <p class="title"><span>屏3：学员进步排名</span></p>
     <div class="topChart">
         <div>
@@ -94,7 +95,20 @@ export default {
   created() {
     this.stuAdvanceRank()
   },
+  mounted(){
+      clearInterval(this.setTimer())
+  },
+  distroyed: function () {
+　　clearInterval(this.setTimer())
+  },
+  
   methods: {
+    setTimer: function () {
+　　　　this.timer = setInterval(() => {
+　　　　　　this.stuAdvanceRank()　
+          
+　　　　}, 10000)
+　},
     stuAdvanceRank(){
       stuAdvanceRank({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
           this.stuAdvanceRankData=res.data.result.records;
@@ -110,6 +124,12 @@ export default {
 <style lang="less" scope>
 .stuAdvanceRank{
   padding:0 20px;
+  .small{
+        text-align: right;
+        font-size: 12px;
+        margin-right: 20px;
+        color: red;
+    }
   .title{
     margin:10px auto;
     span{

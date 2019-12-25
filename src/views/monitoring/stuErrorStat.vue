@@ -1,5 +1,6 @@
 <template>
   <div class="stuErrorStat">
+    <p class="small">*数据每十秒更新一次</p>
     <p class="title"><span>屏4：班级错题本</span></p>
     <el-table :data="stuErrorData" stripe>
       <el-table-column
@@ -58,7 +59,20 @@ export default {
   created() {
     this.stuErrorStat()
   },
+  mounted(){
+      clearInterval(this.setTimer())
+  },
+  distroyed: function () {
+　　clearInterval(this.setTimer())
+  },
+  
   methods: {
+    setTimer: function () {
+　　　　this.timer = setInterval(() => {
+　　　　　　this.stuErrorStat()　
+          
+　　　　}, 10000)
+　},
     stuErrorStat(){
       stuErrorStat({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
           this.stuErrorData=res.data.result.records;
@@ -71,6 +85,12 @@ export default {
 <style lang="less" scope>
 .stuErrorStat{
   padding:0 20px;
+  .small{
+        text-align: right;
+        font-size: 12px;
+        margin-right: 20px;
+        color: red;
+    }
   .title{
     margin:10px auto;
     span{

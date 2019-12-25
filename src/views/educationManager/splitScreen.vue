@@ -1,5 +1,6 @@
 <template>
   <div class="splitScreen">
+    <p class="small">*数据每十秒更新一次</p>
     <div class="first">
         <div>
             <label><span>{{$route.query.groupName}}</span></label>
@@ -120,6 +121,12 @@ export default {
 </script>
 <style lang="less" scope>
 .splitScreen{
+    .small{
+        text-align: right;
+        font-size: 12px;
+        margin-right: 20px;
+        color: red;
+    }
     .first,.second{
         float:left;
         padding:20px;

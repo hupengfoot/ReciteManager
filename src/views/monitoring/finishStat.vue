@@ -1,5 +1,6 @@
 <template>
   <div class="finishStat">
+    <p class="small">*数据每十秒更新一次</p>
     <p class="title"><span>屏1：全员排名</span></p>
     <div class="topChart">
         <div class="fl">
@@ -72,7 +73,19 @@ export default {
     // this.finishStat()
     this.stuRank()
   },
+  mounted(){
+      clearInterval(this.setTimer())
+  },
+  distroyed: function () {
+　　clearInterval(this.setTimer())
+  },
   methods: {
+    setTimer: function () {
+    　　　　this.timer = setInterval(() => {
+    　　　　　　this.stuRank()　
+              
+    　　　　}, 10000)
+    　},
     finishStat(){
       finishStat({classId:this.$route.query.classId,page:this.stuInfoPage.page,limit:this.stuInfoPage.limit}).then(res=>{
           this.finishData=res.data.result;
@@ -152,6 +165,12 @@ export default {
 <style lang="less" scope>
 .finishStat{
   width:100%;
+  .small{
+        text-align: right;
+        font-size: 12px;
+        margin-right: 20px;
+        color: red;
+    }
   .title{
     margin:10px auto;
     span{
