@@ -220,13 +220,14 @@ export const constantRouterMap = [
   {
     path: '/contrast',
     component: Layout,
+    hidden:true,
     children: [
       {
         path: 'index',
         name: 'index',
         component: () => import('@/views/contrast/index'),
         meta: { title: '成绩对比', icon: 'form' },
-        hidden:true
+        
       },
 
     ]
