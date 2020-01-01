@@ -8,35 +8,35 @@
       <div class="contrastLeft">
         <el-form>
           <el-form-item label="" prop="className">
-            <el-select>
-              <el-option>请选择班级</el-option>
+            <el-select v-model="classListSub[0]" value-key='id'>
+              <el-option v-for="(item,index) in classList" :label="item.className" :value="item.id"  :key="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="" prop="className">
+          <!-- <el-form-item label="" prop="className">
               <el-date-picker type="datetime" placeholder="请选择开课时间" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="" prop="className">
-            <el-select>
-              <el-option>请选择班级</el-option>
+            <el-select v-model="classListSub[1]" value-key='id'>
+              <el-option v-for="(item,index) in classList" :label="item.className" :value="item.id" :key="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="" prop="className">
+          <!-- <el-form-item label="" prop="className">
               <el-date-picker type="datetime" placeholder="请选择开课时间" value-format="yyyy-MM-dd hh:mm:ss"></el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
-        <el-table :data="tableData">
+        <el-table :data="classContrastData">
           <el-table-column
             prop="className"
             label=""
             width="180">
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="studyTime"
             label="学习时间"
             width="180">
           </el-table-column>
           <el-table-column
-            prop="num"
+            prop="stuNum"
             label="人数">
           </el-table-column>
         </el-table>
@@ -48,12 +48,13 @@
           </el-table-column>
           <el-table-column
             prop="Aclass"
-            label="A班"
+            :label="classA"
             width="180">
           </el-table-column>
           <el-table-column
             prop="Bclass"
-            label="B班">
+            :label="classB"
+            >
           </el-table-column>
           <el-table-column
             prop="differences"
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import {unitStudyInfo,unitWordNum,scoringAverage, getList,getAllClass,createClass,getAllClassByTeacherId,getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
+import {classContrast,unitStudyInfo,unitWordNum,scoringAverage, getList,getAllClass,createClass,getAllClassByTeacherId,getClassGradePerDay, getClassExamCorrectRate } from '@/api/table'
 import {successShow,errorShow} from '@/utils/notice.js'
 
 
@@ -86,6 +87,11 @@ export default {
 
   data() {
     return {
+      classContrastData:[],
+      classList:[],//班级列表
+      classListSub:[null,null],
+      classA:null,
+      classB:null,
       type:'classcompare',
       tableData:[{
         className:"A班",
@@ -96,22 +102,7 @@ export default {
         date:"2010-10-21",
         num:"24"
       }],
-      differencesData:[{
-          name:"已掌握的词汇量 (平均)",
-          Aclass:"3261",
-          Bclass:"3861",
-          differences:"50%"
-      },{
-          name:"已学到的词汇量 (平均)",
-          Aclass:"3261",
-          Bclass:"3861",
-          differences:"50%"
-      },{
-          name:"看英选义",
-          Aclass:"3261",
-          Bclass:"3861",
-          differences:"50%"
-      }],
+      differencesData:[],
       scoringAverageNum:[{
                 value : [4300, 10000, 28000, 35000, 50000, 19000],
                 name : '预算分配（Allocated Budget）'
@@ -125,6 +116,7 @@ export default {
   mounted() {
   // created(){
     this.newCharts()
+    this.selectClassList()
   },
   watch:{
     type: {
@@ -134,9 +126,49 @@ export default {
         }
       },
       deep: true
+    },
+    classListSub:{
+      handler:function(newVal,oldVal){
+        this.classContrast()
+      }
     }
   },
   methods: {
+    //查询班级列表
+    selectClassList(){
+      getAllClass({isAll:1}).then(res => {
+        this.classList = res.data.classList;
+        this.classListSub[0] = res.data.classList[0].id
+        this.classListSub[1] = res.data.classList[1].id
+        this.classListSub[0] = 50
+        this.classListSub[1] = 51
+        this.classContrast()
+      })
+    },
+    classContrast(){
+      classContrast(this.classListSub).then(res => {
+        this.classA = res.data.result.classStudyRecordList[0].className;
+        this.classB = res.data.result.classStudyRecordList[1].className;
+        console.log(res)
+        this.classContrastData = res.data.result.classStudyRecordList
+        this.differencesData= [{
+          name:"已掌握的词汇量 (平均)",
+          Aclass:this.classContrastData[0].studyRateInfo.familiarWordRate,
+          Bclass:this.classContrastData[1].studyRateInfo.familiarWordRate,
+          differences:(this.classContrastData[1].studyRateInfo.familiarWordRate-this.classContrastData[0].studyRateInfo.familiarWordRate).toFixed(2)
+      },{
+          name:"已学到的词汇量 (平均)",
+          Aclass:this.classContrastData[0].studyRateInfo.halfFamiliarWordRate,
+          Bclass:this.classContrastData[1].studyRateInfo.halfFamiliarWordRate,
+          differences:(this.classContrastData[1].studyRateInfo.halfFamiliarWordRate-this.classContrastData[0].studyRateInfo.halfFamiliarWordRate).toFixed(2)
+      },{
+          name:"看英选义",
+          Aclass:"3261",
+          Bclass:"3861",
+          differences:"50%"
+      }]
+      })
+    },
     //图表
     newCharts(){
       // 总词汇量对比

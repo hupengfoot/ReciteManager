@@ -457,3 +457,11 @@ export function batchRewardGold(params){
     data:params
   })
 }
+
+
+export function classContrast(params){console.log(params,1) 
+  return request({//班级成绩对比
+    url:getUrlBase()+'/pkClass/performance/contrast?classIds='+params[0]+"&classIds="+params[1],
+    method:'get',
+  })
+}
