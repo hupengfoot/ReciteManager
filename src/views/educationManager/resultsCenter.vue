@@ -210,13 +210,13 @@ export default {
       wordKingNum0:100,
       wordKingNum1:70,
       wordKingNum2:50,
-      stuGoldNum:100,
-      advanceNum0:100,
-      advanceNum1:70,
-      advanceNum2:50,
-      testRankNum0:100,
-      testRankNum1:70,
-      testRankNum2:50
+      stuGoldNum:50,
+      advanceNum0:50,
+      advanceNum1:30,
+      advanceNum2:20,
+      testRankNum0:50,
+      testRankNum1:30,
+      testRankNum2:20
     }
   },
   mounted(){
