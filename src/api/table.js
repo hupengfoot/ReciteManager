@@ -459,9 +459,16 @@ export function batchRewardGold(params){
 }
 
 
-export function classContrast(params){console.log(params,1) 
+export function classContrast(params){
   return request({//班级成绩对比
     url:getUrlBase()+'/pkClass/performance/contrast?classIds='+params[0]+"&classIds="+params[1],
     method:'get',
   })
 }
+export function studentContrast(params1,params2){console.log(params1,params2,222)
+  return request({//个人成绩对比
+    url:getUrlBase()+'/pkStudent/performance/contrast?classStuIdList='+params1+"&classStuIdList="+params2,
+    method:'get',
+  })
+}
+
