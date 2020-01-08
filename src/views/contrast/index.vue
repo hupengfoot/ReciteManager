@@ -216,19 +216,19 @@ export default {
     classListSub:{
       handler:function(newVal,oldVal){
         this.classContrast()
-        
+
       }
     },
     studentListSub1:{
       handler:function(newVal,oldVal){
         this.selectStudentList1()
-        
+
       }
     },
     studentListSub2:{
       handler:function(newVal,oldVal){
         this.selectStudentList2()
-        
+
       }
     },
     studentSub1:{
@@ -250,8 +250,8 @@ export default {
         this.classList = res.data.classList;
         this.classListSub[0] = res.data.classList[0].id
         this.classListSub[1] = res.data.classList[1].id
-        this.classListSub[0] = 50
-        this.classListSub[1] = 51
+        // this.classListSub[0] = 50
+        // this.classListSub[1] = 51
         this.classContrast()
       })
     },
@@ -464,7 +464,7 @@ export default {
                   left: 'center',
               },
               tooltip: {},
-              
+
               legend: {
                   data: [this.classA, this.classB],
                   top:25
@@ -487,7 +487,7 @@ export default {
                      { name: '综合得分', max: 100}
                   ]
               },
-              
+
               series: [{
                   name: '',
                   type: 'radar',
@@ -585,7 +585,7 @@ export default {
                   left: 'center',
               },
               tooltip: {},
-              
+
               legend: {
                   data: [this.classA1, this.classB1],
                   top:25
@@ -608,7 +608,7 @@ export default {
                      { name: '综合得分', max: 100}
                   ]
               },
-              
+
               series: [{
                   name: '',
                   type: 'radar',
@@ -730,6 +730,6 @@ export default {
     width:55%;
 
   }
-  
+
 }
 </style>
