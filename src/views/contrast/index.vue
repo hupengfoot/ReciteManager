@@ -280,6 +280,9 @@ export default {
     },
     //选择个人对比数据
     studentContrast(){
+      if(!this.studentSub1||!this.studentSub2){
+        return;
+      }
       studentContrast(this.studentSub1,this.studentSub2).then(res => {
         // this.classContrastData1 = res.data.result.classStudyRecordList;
         this.classA1 = res.data.result.studentStudyRecordList[0].studentName;
