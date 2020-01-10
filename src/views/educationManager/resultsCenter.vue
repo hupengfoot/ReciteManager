@@ -166,7 +166,7 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="goldFormVisible = false">{{ '关闭' }}</el-button>
+        <!-- <el-button @click="goldFormVisible = false">{{ '关闭' }}</el-button> -->
       </div>
     </el-dialog>
   </div>
@@ -279,7 +279,7 @@ export default {
             successShow('颁奖成功')
           })
       }).catch(()=>{
-      
+
       })
     },
     // 查询颁奖
