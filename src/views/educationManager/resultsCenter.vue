@@ -214,6 +214,7 @@ export default {
       advanceNum0:50,
       advanceNum1:30,
       advanceNum2:20,
+
       testRankNum0:50,
       testRankNum1:30,
       testRankNum2:20
@@ -234,42 +235,51 @@ export default {
   },
   methods:{
     // 颁奖
+
     awardsSubmit(){
       let params = [];
-      if(this.goldList.wordKingList.length>0){
-        params=params.concat({"name":this.goldList.wordKingList[0].name ,"remark":"", "rewardGold": this.wordKingNum0,"stuId": this.goldList.wordKingList[0].stuId})
-      }
-      if(this.goldList.wordKingList.length>1){
-        params=params.concat({"name":this.goldList.wordKingList[1].name ,"remark":"", "rewardGold": this.wordKingNum1,"stuId": this.goldList.wordKingList[1].stuId})      }
-      if(this.goldList.wordKingList.length>2){
-        params=params.concat({"name":this.goldList.wordKingList[2].name ,"remark":"", "rewardGold": this.wordKingNum2,"stuId": this.goldList.wordKingList[2].stuId})      }
-      if(this.goldList.championGroup.groupName){
-        for(let i=0;i<this.goldList.championGroup.stuGoldList.length;i++){
-          params=params.concat({"name":this.goldList.championGroup.stuGoldList[i].name ,"remark":"", "rewardGold": this.stuGoldNum,"stuId": this.goldList.championGroup.stuGoldList[i].stuId})
-        }
-      }
-      //最快进不
-      if(this.goldList.advanceList.length>0){
-        params=params.concat({"name":this.goldList.advanceList[0].name ,"remark":"", "rewardGold": this.advanceList0,"stuId": this.goldList.advanceList[0].stuId})
-      }
-      if(this.goldList.advanceList.length>1){
-        params=params.concat({"name":this.goldList.advanceList[1].name ,"remark":"", "rewardGold": this.advanceList1,"stuId": this.goldList.advanceList[1].stuId})
-      }
-      if(this.goldList.advanceList.length>2){
-        params=params.concat({"name":this.goldList.advanceList[2].name ,"remark":"", "rewardGold": this.advanceList2,"stuId": this.goldList.advanceList[2].stuId})
-      }
-      //测试排名
-      if(this.goldList.testRankList.length>0){
-        params=params.concat({"name":this.goldList.testRankList[0].name ,"remark":"", "rewardGold": this.testRankNum0,"stuId": this.goldList.testRankList[0].stuId})
-      }
-      if(this.goldList.testRankList.length>1){
-        params=params.concat({"name":this.goldList.testRankList[1].name ,"remark":"", "rewardGold": this.testRankNum1,"stuId": this.goldList.testRankList[1].stuId})
-      }
-      if(this.goldList.testRankList.length>2){
-        params=params.concat({"name":this.goldList.testRankList[2].name ,"remark":"", "rewardGold": this.testRankNum2,"stuId": this.goldList.testRankList[2].stuId})
-      }
-      batchRewardGold(params).then(res=>{
-        successShow('颁奖成功')
+      this.$confirm('是否确定颁奖?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(res=>{
+          if(this.goldList.wordKingList.length>0){
+            params=params.concat({"name":this.goldList.wordKingList[0].name ,"remark":"", "rewardGold": this.wordKingNum0,"stuId": this.goldList.wordKingList[0].stuId})
+          }
+          if(this.goldList.wordKingList.length>1){
+            params=params.concat({"name":this.goldList.wordKingList[1].name ,"remark":"", "rewardGold": this.wordKingNum1,"stuId": this.goldList.wordKingList[1].stuId})      }
+          if(this.goldList.wordKingList.length>2){
+            params=params.concat({"name":this.goldList.wordKingList[2].name ,"remark":"", "rewardGold": this.wordKingNum2,"stuId": this.goldList.wordKingList[2].stuId})      }
+          if(this.goldList.championGroup.groupName){
+            for(let i=0;i<this.goldList.championGroup.stuGoldList.length;i++){
+              params=params.concat({"name":this.goldList.championGroup.stuGoldList[i].name ,"remark":"", "rewardGold": this.stuGoldNum,"stuId": this.goldList.championGroup.stuGoldList[i].stuId})
+            }
+          }
+          //最快进不
+          if(this.goldList.advanceList.length>0){
+            params=params.concat({"name":this.goldList.advanceList[0].name ,"remark":"", "rewardGold": this.advanceNum0,"stuId": this.goldList.advanceList[0].stuId})
+          }
+          if(this.goldList.advanceList.length>1){
+            params=params.concat({"name":this.goldList.advanceList[1].name ,"remark":"", "rewardGold": this.advanceNum1,"stuId": this.goldList.advanceList[1].stuId})
+          }
+          if(this.goldList.advanceList.length>2){
+            params=params.concat({"name":this.goldList.advanceList[2].name ,"remark":"", "rewardGold": this.advanceNum2,"stuId": this.goldList.advanceList[2].stuId})
+          }
+          //测试排名
+          if(this.goldList.testRankList.length>0){
+            params=params.concat({"name":this.goldList.testRankList[0].name ,"remark":"", "rewardGold": this.testRankNum0,"stuId": this.goldList.testRankList[0].stuId})
+          }
+          if(this.goldList.testRankList.length>1){
+            params=params.concat({"name":this.goldList.testRankList[1].name ,"remark":"", "rewardGold": this.testRankNum1,"stuId": this.goldList.testRankList[1].stuId})
+          }
+          if(this.goldList.testRankList.length>2){
+            params=params.concat({"name":this.goldList.testRankList[2].name ,"remark":"", "rewardGold": this.testRankNum2,"stuId": this.goldList.testRankList[2].stuId})
+          }
+          batchRewardGold(params).then(res=>{
+            successShow('颁奖成功')
+          })
+      }).catch(()=>{
+      
       })
     },
     // 查询颁奖
