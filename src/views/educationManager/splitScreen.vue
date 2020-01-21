@@ -5,7 +5,7 @@
         <div>
             <label><span>{{$route.query.groupName}}</span></label>
             <h5>
-                <span>排名 {{$route.query.firstRank}} </span>
+                <span>排名 {{firstRank}}</span>
                 <span> 平均 {{firstAverage}} 单词量</span>
             </h5>
         </div>
@@ -21,7 +21,7 @@
         <div>
             <label><span>{{$route.query.groupSecondName}}</span></label>
             <h5>
-                <span>排名 {{$route.query.secondRank}} </span>
+                <span>排名 {{secondRank}} </span>
                 <span> 平均 {{secondAverage}} 单词量</span>
             </h5>
         </div>
@@ -51,7 +51,9 @@ export default {
       secondAverage:0,
       maxGroupWordNum:0,
       secondMaxGroupWordNum:0,
-      timer: null
+      timer: null,
+      firstRank:null,
+      secondRank:null
     }
   },
   
@@ -92,6 +94,7 @@ export default {
             for(let i=0;i< res.data.stuList.length;i++){
                 firstSub += res.data.stuList[i].wordNum;
             }
+            this.firstRank = res.data.groupInfo.rank;
             this.firstAverage = (Math.round((firstSub/res.data.stuList.length))).toString();
             
             for(let n=0;n<res.data.stuList.length;n++){
@@ -114,6 +117,7 @@ export default {
                 this.secondMaxGroupWordNum = this.secondMaxGroupWordNum>res.data.stuList[n].wordNum?this.secondMaxGroupWordNum:res.data.stuList[n].wordNum;
             }
             this.secondAverage = (Math.round((secondSub/res.data.stuList.length))).toString();
+            this.secondRank = res.data.groupInfo.rank;
         })
       }
   }
